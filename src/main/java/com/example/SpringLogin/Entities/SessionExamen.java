@@ -19,6 +19,8 @@ public class SessionExamen implements Serializable {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long sessionId;
 
+    private boolean isActive = true;
+
     @OneToMany(mappedBy = "sessionExamen",fetch = FetchType.LAZY,cascade = CascadeType.ALL)
     @JsonIgnore
     private Collection<Présences> présences = new ArrayList<>();

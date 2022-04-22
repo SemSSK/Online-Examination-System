@@ -15,6 +15,7 @@ import java.util.Collection;
 @AllArgsConstructor
 public class Copie  implements Serializable {
     @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long copieId;
     private String observation;
     private float note;
