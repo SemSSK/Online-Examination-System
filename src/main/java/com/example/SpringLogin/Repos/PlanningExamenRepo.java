@@ -13,4 +13,5 @@ public interface PlanningExamenRepo extends JpaRepository<PlanningExamen,Long> {
 
     public List<PlanningExamen> findAllByModule(Module module);
     public Optional<PlanningExamen> findByCodeEtudiant(String codeEtudiant);
+    public Optional<PlanningExamen> findByCodeSurveillant(String codeSurveillant);
 }
