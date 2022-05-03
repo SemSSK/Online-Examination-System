@@ -1,11 +1,12 @@
 package com.example.SpringLogin.Services.EnseignantService;
 
 import com.example.SpringLogin.Configrations.SecurityServices.ContextHandlerClass;
-import com.example.SpringLogin.Entities.Enseignant;
-import com.example.SpringLogin.Entities.PlanningExamen;
-import com.example.SpringLogin.Entities.SessionExamen;
+import com.example.SpringLogin.Entities.*;
+import com.example.SpringLogin.Enumarators.PrésenceEtats;
 import com.example.SpringLogin.Repos.PlanningExamenRepo;
+import com.example.SpringLogin.Repos.PrésencesRepo;
 import com.example.SpringLogin.Repos.SessionExamenRepo;
+import com.example.SpringLogin.Socket.WebSocketService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,7 +22,11 @@ public class SurveillantService {
     @Autowired
     private SessionExamenRepo sessionExamenRepo;
     @Autowired
+    private PrésencesRepo présencesRepo;
+    @Autowired
     private PlanningExamenRepo planningExamenRepo;
+    @Autowired
+    private WebSocketService webSocketService;
 
     public SurveillantService(){
         System.out.println("SurveillantService Initialized");
@@ -47,18 +52,37 @@ public class SurveillantService {
         return sessionExamen.get();
     }
 
-    @Transactional(readOnly = false)
-    public void StartSession(String codeSurveillant) throws Exception {
-        PlanningExamen currentExamen = getPlanningExamen(codeSurveillant);
-        SessionExamen currentSession = getSession(currentExamen);
-        currentSession.setActive(true);
+    private Présences getPrésenceOfEtudiant(SessionExamen sessionExamen,Etudiant etudiant) throws Exception{
+        Optional<Présences> currentPresence = présencesRepo.findByEtudiantAndSessionExamen(etudiant,sessionExamen);
+        if(currentPresence.isEmpty()){
+            throw new Exception("Aucun etudiant trouver");
+        }
+        return currentPresence.get();
     }
 
     @Transactional(readOnly = false)
-    public void endSession(String codeSurveillant) throws Exception {
+    public void ChangeSessionActivationState(String codeSurveillant,boolean state) throws Exception {
+        if(!webSocketService.sessionExists(getSurveillant())){
+            throw new Exception("Not connected to session");
+        }
         PlanningExamen currentExamen = getPlanningExamen(codeSurveillant);
         SessionExamen currentSession = getSession(currentExamen);
-        currentSession.setActive(false);
+        currentSession.setActive(state);
+        for(Présences p : currentSession.getPrésences()) {
+            webSocketService.sendPrésencesToEtudiant(p);
+        }
+    }
+
+    @Transactional(readOnly = false)
+    public void ChangeEtudiantPresenceState(String codeSurveillant, Etudiant etudiant,String Etat) throws Exception{
+        if(!webSocketService.sessionExists(getSurveillant())){
+            throw new Exception("Not connected to session");
+        }
+        PlanningExamen curreExamen = getPlanningExamen(codeSurveillant);
+        SessionExamen currentSession = getSession(curreExamen);
+        Présences présencesOfEtudiant = getPrésenceOfEtudiant(currentSession,etudiant);
+        présencesOfEtudiant.setState(Etat);
+        webSocketService.UpdatePrésence(présencesOfEtudiant);
     }
 
 

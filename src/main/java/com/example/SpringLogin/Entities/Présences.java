@@ -15,7 +15,7 @@ import java.io.Serializable;
 public class Présences implements Serializable{
 
     @EmbeddedId
-    private EtudiantSessionKey PrésenceId;
+    private EtudiantSessionKey PrésenceId = new EtudiantSessionKey();
 
     private String state;
     private String justification;
@@ -50,5 +50,8 @@ public class Présences implements Serializable{
         return this.PrésenceId.equals(présences.PrésenceId);
     }
 
-
+    @Override
+    public int hashCode() {
+        return this.PrésenceId.hashCode();
+    }
 }

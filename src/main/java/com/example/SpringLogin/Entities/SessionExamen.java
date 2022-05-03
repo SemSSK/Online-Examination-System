@@ -58,4 +58,8 @@ public class SessionExamen implements Serializable {
         return this.sessionId.equals(sessionExamen.sessionId);
     }
 
+    @Override
+    public int hashCode() {
+        return sessionId.hashCode();
+    }
 }

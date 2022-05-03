@@ -63,4 +63,9 @@ public class PlanningExamen implements Serializable {
 
         return this.planId.equals(planningExamen.planId);
     }
+
+    @Override
+    public int hashCode() {
+        return planId.hashCode();
+    }
 }

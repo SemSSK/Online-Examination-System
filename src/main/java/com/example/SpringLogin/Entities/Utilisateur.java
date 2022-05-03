@@ -53,4 +53,9 @@ public class Utilisateur implements Serializable {
 
         return this.userId.equals(user.userId);
     }
+
+    @Override
+    public int hashCode() {
+        return userId.hashCode();
+    }
 }

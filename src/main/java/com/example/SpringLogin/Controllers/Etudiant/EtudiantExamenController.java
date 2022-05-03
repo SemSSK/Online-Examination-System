@@ -30,7 +30,7 @@ public class EtudiantExamenController {
     public ResponseEntity<?> postCopie(@PathVariable(name = "codeetudiant") String codeEtudiant,@RequestBody Copie copie){
         try{
             etudiantExamenService.PostCopie(codeEtudiant,copie);
-            return new ResponseEntity<>("Copie successfully added",HttpStatus.FORBIDDEN);
+            return new ResponseEntity<>("Copie successfully added",HttpStatus.OK);
         }
         catch(Exception e){
             return new ResponseEntity<>(e.getMessage(),HttpStatus.FORBIDDEN);

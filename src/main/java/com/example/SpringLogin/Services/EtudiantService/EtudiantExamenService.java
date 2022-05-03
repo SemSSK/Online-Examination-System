@@ -4,6 +4,7 @@ import com.example.SpringLogin.Configrations.SecurityServices.ContextHandlerClas
 import com.example.SpringLogin.Entities.*;
 import com.example.SpringLogin.Enumarators.PrésenceEtats;
 import com.example.SpringLogin.Repos.*;
+import com.example.SpringLogin.Socket.WebSocketService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -29,6 +30,8 @@ public class EtudiantExamenService {
     private PlanningExamenRepo planningExamenRepo;
     @Autowired
     private CopieRepo copieRepo;
+    @Autowired
+    private WebSocketService webSocketService;
 
     public EtudiantExamenService(){
         System.out.println("EtudiantExamenService initialized");
@@ -78,6 +81,10 @@ public class EtudiantExamenService {
 
     public Examen getExamen(String codeEtudiant) throws Exception {
 
+        if(!webSocketService.sessionExists(getEtudiant())){
+            throw new Exception("Not connected to session");
+        }
+
         if(!canParticipateInExam(codeEtudiant)){
             throw new Exception("wrong code");
         }
@@ -105,6 +112,10 @@ public class EtudiantExamenService {
 
     @Transactional(readOnly = false)
     public void PostCopie(String codeEtudiant,Copie copie) throws Exception {
+
+        if(!webSocketService.sessionExists(getEtudiant())){
+            throw new Exception("Not connected to session");
+        }
         if(!canParticipateInExam(codeEtudiant)){
             throw new Exception("wrong code");
         }

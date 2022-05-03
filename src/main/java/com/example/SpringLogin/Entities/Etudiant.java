@@ -29,6 +29,10 @@ public class Etudiant extends Utilisateur {
     @JsonIgnore
     private Collection<Enregistrement> enregistrements = new ArrayList<>();
 
+    @OneToMany(mappedBy = "etudiant",fetch = FetchType.LAZY,cascade = CascadeType.ALL)
+    @JsonIgnore
+    private Collection<Présences> présences = new ArrayList<>();
+
     @ManyToMany(mappedBy = "etudiants",fetch = FetchType.LAZY)
     @JsonIgnore
     private Collection<PlanningExamen> planningExamens = new ArrayList<>();
