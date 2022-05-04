@@ -15,10 +15,10 @@ public class SurveillantController {
     @Autowired
     private SurveillantService surveillantService;
 
-    @PutMapping("/{codesurveillant}/activate")
-    private ResponseEntity<?> startSession(@PathVariable(name = "codesurveillant")String codeSurveillant){
+    @PutMapping("/{codesurveillant}/advance-state")
+    private ResponseEntity<?> advanceSessionState(@PathVariable(name = "codesurveillant")String codeSurveillant){
         try{
-            surveillantService.ChangeSessionActivationState(codeSurveillant,true);
+            surveillantService.ChangeSessionActivationState(codeSurveillant);
             return new ResponseEntity<>("Session started",HttpStatus.OK);
         }
         catch(Exception e){
@@ -26,16 +26,6 @@ public class SurveillantController {
         }
     }
 
-    @PutMapping("/{codesurveillant}/deactivate")
-    private ResponseEntity<?> endSession(@PathVariable(name = "codesurveillant")String codeSurveillant){
-        try{
-            surveillantService.ChangeSessionActivationState(codeSurveillant,false);
-            return new ResponseEntity<>("Session ended",HttpStatus.OK);
-        }
-        catch(Exception e){
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.FORBIDDEN);
-        }
-    }
 
 
     @PutMapping("/{codesurveillant}/présence")

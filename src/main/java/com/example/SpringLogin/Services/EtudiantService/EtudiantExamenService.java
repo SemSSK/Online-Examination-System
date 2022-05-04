@@ -3,6 +3,7 @@ package com.example.SpringLogin.Services.EtudiantService;
 import com.example.SpringLogin.Configrations.SecurityServices.ContextHandlerClass;
 import com.example.SpringLogin.Entities.*;
 import com.example.SpringLogin.Enumarators.PrésenceEtats;
+import com.example.SpringLogin.Enumarators.SessionExamenStates;
 import com.example.SpringLogin.Repos.*;
 import com.example.SpringLogin.Socket.WebSocketService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -92,7 +93,7 @@ public class EtudiantExamenService {
         SessionExamen sessionExamen = getCurrSession(codeEtudiant);
 
 
-        if(!sessionExamen.isActive()){
+        if(!sessionExamen.getState().equals(SessionExamenStates.STARTED)){
             throw new Exception("Exam Session hes not started yet");
         }
 
@@ -120,7 +121,7 @@ public class EtudiantExamenService {
             throw new Exception("wrong code");
         }
         SessionExamen sessionExamen = getCurrSession(codeEtudiant);
-        if(!sessionExamen.isActive()){
+        if(!sessionExamen.getState().equals(SessionExamenStates.STARTED)){
             throw new Exception("Exam Session hes not started yet");
         }
         if(!isPresent(sessionExamen)){

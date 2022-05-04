@@ -1,5 +1,6 @@
 package com.example.SpringLogin.Entities;
 
+import com.example.SpringLogin.Enumarators.SessionExamenStates;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
@@ -19,7 +20,7 @@ public class SessionExamen implements Serializable {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long sessionId;
 
-    private boolean isActive;
+    private String state = SessionExamenStates.CREATED;
 
     @OneToMany(mappedBy = "sessionExamen",fetch = FetchType.LAZY,cascade = CascadeType.ALL)
     @JsonIgnore
@@ -61,5 +62,19 @@ public class SessionExamen implements Serializable {
     @Override
     public int hashCode() {
         return sessionId.hashCode();
+    }
+
+    public void setToNextState(){
+        String nextState = SessionExamenStates.CREATED;
+        if(state.equals(SessionExamenStates.CREATED)){
+            nextState = SessionExamenStates.OPENED;
+        }
+        else if(state.equals(SessionExamenStates.OPENED)){
+            nextState = SessionExamenStates.STARTED;
+        }
+        else if(state.equals(SessionExamenStates.STARTED)){
+            nextState = SessionExamenStates.ENDED;
+        }
+        state = nextState;
     }
 }

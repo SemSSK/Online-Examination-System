@@ -12,7 +12,8 @@ import lombok.Setter;
 public class CustomMessage {
     static final String MESSAGE = "message",
     DATA = "data",
-    BLOCKED = "blocked";
+    BLOCKED = "blocked",
+    SESSIONINFO = "session-info";
     String type;
     Object payload;
 }

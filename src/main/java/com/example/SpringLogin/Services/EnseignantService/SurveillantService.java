@@ -2,7 +2,7 @@ package com.example.SpringLogin.Services.EnseignantService;
 
 import com.example.SpringLogin.Configrations.SecurityServices.ContextHandlerClass;
 import com.example.SpringLogin.Entities.*;
-import com.example.SpringLogin.Enumarators.PrésenceEtats;
+import com.example.SpringLogin.Enumarators.SessionExamenStates;
 import com.example.SpringLogin.Repos.PlanningExamenRepo;
 import com.example.SpringLogin.Repos.PrésencesRepo;
 import com.example.SpringLogin.Repos.SessionExamenRepo;
@@ -36,6 +36,14 @@ public class SurveillantService {
         return (Enseignant) contextHandlerClass.getCurrentLoggedInUser().getUtilisateur();
     }
 
+    private void canChangePresences(PlanningExamen planningExamen) throws Exception {
+        SessionExamen sessionExamen = getSession(planningExamen);
+        if(!(sessionExamen.getState().equals(SessionExamenStates.OPENED) ||
+                sessionExamen.getState().equals(SessionExamenStates.STARTED))){
+            throw new Exception("Session not started yet");
+        }
+    }
+
     private PlanningExamen getPlanningExamen(String codeSurveillant) throws Exception {
         Optional<PlanningExamen> planningExamen = planningExamenRepo.findByCodeSurveillant(codeSurveillant);
         if(planningExamen.isEmpty()){
@@ -61,24 +69,23 @@ public class SurveillantService {
     }
 
     @Transactional(readOnly = false)
-    public void ChangeSessionActivationState(String codeSurveillant,boolean state) throws Exception {
+    public void ChangeSessionActivationState(String codeSurveillant) throws Exception {
         if(!webSocketService.sessionExists(getSurveillant())){
             throw new Exception("Not connected to session");
         }
         PlanningExamen currentExamen = getPlanningExamen(codeSurveillant);
         SessionExamen currentSession = getSession(currentExamen);
-        currentSession.setActive(state);
+        currentSession.setToNextState();
         for(Présences p : currentSession.getPrésences()) {
             webSocketService.sendPrésencesToEtudiant(p);
         }
+        webSocketService.sendPrésencesToEnseignant(currentSession,getSurveillant());
     }
 
     @Transactional(readOnly = false)
     public void ChangeEtudiantPresenceState(String codeSurveillant, Etudiant etudiant,String Etat) throws Exception{
-        if(!webSocketService.sessionExists(getSurveillant())){
-            throw new Exception("Not connected to session");
-        }
         PlanningExamen curreExamen = getPlanningExamen(codeSurveillant);
+        canChangePresences(curreExamen);
         SessionExamen currentSession = getSession(curreExamen);
         Présences présencesOfEtudiant = getPrésenceOfEtudiant(currentSession,etudiant);
         présencesOfEtudiant.setState(Etat);

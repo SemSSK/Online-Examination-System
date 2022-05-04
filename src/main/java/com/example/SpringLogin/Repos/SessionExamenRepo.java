@@ -12,5 +12,6 @@ import java.util.Optional;
 @Repository
 public interface SessionExamenRepo extends JpaRepository<SessionExamen,Long> {
     List<SessionExamen> findByPlannings(PlanningExamen planningExamen);
+    List<SessionExamen> findBySurveillant(Enseignant enseignant);
     Optional<SessionExamen> findByPlanningsAndSurveillant(PlanningExamen planningExamen, Enseignant enseignant);
 }

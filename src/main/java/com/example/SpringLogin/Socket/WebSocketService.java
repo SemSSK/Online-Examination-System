@@ -3,6 +3,7 @@ package com.example.SpringLogin.Socket;
 import com.example.SpringLogin.Entities.*;
 import com.example.SpringLogin.Enumarators.PrésenceEtats;
 import com.example.SpringLogin.Enumarators.Role;
+import com.example.SpringLogin.Enumarators.SessionExamenStates;
 import com.example.SpringLogin.Repos.EtudiantRepo;
 import com.example.SpringLogin.Repos.PlanningExamenRepo;
 import com.example.SpringLogin.Repos.PrésencesRepo;
@@ -19,6 +20,7 @@ import org.springframework.web.socket.WebSocketSession;
 import javax.lang.model.type.ArrayType;
 import java.io.IOException;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional(readOnly = true)
@@ -34,9 +36,7 @@ public class WebSocketService {
     @Autowired
     private EtudiantRepo etudiantRepo;
     /*--------------------------------------------*/
-    private HashMap<Présences,Etudiant> currEtudiantPrésent = new HashMap<>();
-    private HashMap<PlanningExamen, ArrayList<Etudiant>> fileAttenteEtudiant = new HashMap<>(); // Pour enregistrer les etudiant arriver avant tous les surveillant et les affecter plus tard
-    private HashMap<SessionExamen, Enseignant> openSurveillantSessions = new HashMap<>();
+    private HashMap<PlanningExamen,ArrayList<Etudiant>> fileAttenteEtudiant = new HashMap<>();
     private HashMap<Utilisateur, WebSocketSession> sessionsUserMap = new HashMap<>();
 
     public WebSocketService() {
@@ -63,37 +63,13 @@ public class WebSocketService {
                 });
             }
         });
-        Présences currentPrésence = null;
-        for(Présences p : currEtudiantPrésent.keySet()){
-            if(p.getEtudiant().equals(etudiant)){
-                currentPrésence = p;
-            }
-        }
-        if(currentPrésence != null){
-            currEtudiantPrésent.remove(currentPrésence);
-            Enseignant surveillant = currentPrésence.getSessionExamen().getSurveillant();
-            if(surveillant != null && openSurveillantSessions.containsKey(currentPrésence.getSessionExamen())) {
-                sendPrésencesToEnseignant(currentPrésence.getSessionExamen(), surveillant);
-            }
-        }
     }
 
     private void removeSurveillantTrace(Enseignant enseignant) throws IOException {
-        ArrayList<SessionExamen> examenSessions = new ArrayList<>();
-        for (Map.Entry<SessionExamen, Enseignant> enseignantEntry : openSurveillantSessions.entrySet()) {
-            if (enseignantEntry.getValue().equals(enseignant)) {
-                examenSessions.add(enseignantEntry.getKey());
-            }
-        }
-        ArrayList<WebSocketSession> etudiantInSession = new ArrayList<>();
-        for(Présences p : currEtudiantPrésent.keySet()){
-            if(examenSessions.contains(p.getSessionExamen())){
-                WebSocketSession etudiantSession = sessionsUserMap.get(currEtudiantPrésent.get(p));
-            }
-        }
-        for (SessionExamen sessionExamen : examenSessions) {
-            openSurveillantSessions.remove(sessionExamen);
-        }
+        ArrayList<SessionExamen> listOfSessions = (ArrayList<SessionExamen>) sessionExamenRepo.findBySurveillant(enseignant);
+        listOfSessions.forEach(sessionExamen -> {
+            sessionExamen.setState(SessionExamenStates.ENDED);
+        });
     }
 
     public void CloseUserConnection(Utilisateur utilisateur) {
@@ -106,7 +82,8 @@ public class WebSocketService {
         PlanningExamen planningExamen = getPlanningFromEtudiant(codeEtudiant, etudiant);
         if (planningExamen == null) {
             sendData(etudiant,new CustomMessage(CustomMessage.MESSAGE,"Wrong code"));
-        } else {
+        }
+        else {
             Présences currentPrésence = getCurrentPrésence(etudiant,planningExamen);
             if(currentPrésence == null) {
                 ArrayList<SessionExamen> sessionsDispo = getSessionDispo(planningExamen);
@@ -119,12 +96,16 @@ public class WebSocketService {
                     etudiants.add(etudiant);
                 } else {
                     SessionExamen idealSession = getIdealSession(sessionsDispo);
-                    Présences newPrésence = addPrésences(idealSession, etudiant);
-                    currEtudiantPrésent.put(newPrésence,etudiant);
+                    addPrésences(idealSession, etudiant);
+                    Présences newPrésence = getCurrentPrésence(etudiant,planningExamen);
                     Enseignant surveillant = idealSession.getSurveillant();
-                    sendPrésencesToEnseignant(idealSession, surveillant);
+                    sendPrésencesToEnseignant(newPrésence.getSessionExamen(), surveillant);
                     sendPrésencesToEtudiant(newPrésence);
                 }
+            }
+            else if(currentPrésence.getSessionExamen().getState().equals(SessionExamenStates.ENDED)){
+                CustomMessage customMessage = new CustomMessage(CustomMessage.MESSAGE,"Cette session est déja terminer");
+                sendData(etudiant,customMessage);
             }
             else if(currentPrésence.getState().equals(PrésenceEtats.BLOQUER)){
                 CustomMessage customMessage = new CustomMessage(CustomMessage.MESSAGE,"Vous avez été bloquer de cette session");
@@ -132,11 +113,8 @@ public class WebSocketService {
             }
             else{
                 SessionExamen idealSession = currentPrésence.getSessionExamen();
-                currEtudiantPrésent.put(currentPrésence,etudiant);
                 Enseignant surveillant = idealSession.getSurveillant();
-                if(surveillant != null && openSurveillantSessions.containsKey(idealSession)) {
-                    sendPrésencesToEnseignant(idealSession, surveillant);
-                }
+                sendPrésencesToEnseignant(idealSession, surveillant);
                 sendPrésencesToEtudiant(currentPrésence);
             }
         }
@@ -148,18 +126,24 @@ public class WebSocketService {
         SessionExamen sessionExamen = getSessionExamenFromSurveillant(codeEnseignant, enseignant);
         if (sessionExamen == null) {
             sendData(enseignant,new CustomMessage(CustomMessage.MESSAGE,"Wrong code"));
-        } else {
-            openSurveillantSessions.put(sessionExamen, enseignant);
+        }
+        else if(sessionExamen.getState().equals(SessionExamenStates.ENDED)){
+            sendData(enseignant,new CustomMessage(CustomMessage.MESSAGE,"Session deja terminé"));
+        }
+        else {
+            if(sessionExamen.getState().equals(SessionExamenStates.CREATED)){
+                sessionExamen.setState(SessionExamenStates.OPENED);
+            }
             ArrayList<Etudiant> waitingEtudiant = fileAttenteEtudiant.get(sessionExamen.getPlannings());
             if (waitingEtudiant != null) {
                 for (Etudiant etudiant : waitingEtudiant) {
                     Présences newPrésence = addPrésences(sessionExamen, etudiant);
-                    currEtudiantPrésent.put(newPrésence,etudiant);
                     sendPrésencesToEtudiant(newPrésence);
                 }
                 fileAttenteEtudiant.remove(sessionExamen.getPlannings());
             }
-            sendPrésencesToEnseignant(sessionExamen, enseignant);
+            SessionExamen newSessionExamen = getSessionExamenFromSurveillant(codeEnseignant, enseignant);
+            sendPrésencesToEnseignant(newSessionExamen, enseignant);
         }
     }
 
@@ -171,10 +155,16 @@ public class WebSocketService {
             System.out.println(utilisateur.getEmail());
         });
         System.out.println("------------Open Surveillant Sessions------------");
-        openSurveillantSessions.forEach((sessionExamen, enseignant) -> {
-            String data = "Session:" + sessionExamen.getSessionId() + " Enseignants:" + enseignant.getEmail();
-            System.out.println(data);
-        });
+        ArrayList<SessionExamen> openSessions = (ArrayList<SessionExamen>) sessionExamenRepo.findAll();
+        for(SessionExamen sessionExamen : openSessions){
+            if(sessionExamen.getState().equals(SessionExamenStates.STARTED) || sessionExamen.getState().equals(SessionExamenStates.OPENED)) {
+                String line = "Surveillant: " + sessionExamen.getSurveillant().getEmail()
+                        + " Module: " + sessionExamen.getPlannings().getModule().getNomModule()
+                        + " n°Session: " + sessionExamen.getSessionId()
+                        + " State: " + sessionExamen.getState();
+                System.out.println(line);
+            }
+        }
         System.out.println("------------Files Attente Etudiants------------");
         fileAttenteEtudiant.forEach((planningExamen, etudiants) -> {
             String data = "Planning:" + planningExamen.getPlanId() + " Etudiants:";
@@ -184,37 +174,39 @@ public class WebSocketService {
             System.out.println(data);
         });
         System.out.println("------------Current Etudiant Présent------------");
-        currEtudiantPrésent.forEach((présences, etudiant) -> {
-            String data = "Session:" + présences.getSessionExamen().getSessionId()
-                    + " Surveillant:" + présences.getSessionExamen().getSurveillant().getEmail()
-                    + " Etudiant:" + présences.getEtudiant().getEmail();
-            System.out.println(data);
-        });
+        ArrayList<Présences> listPrésences = (ArrayList<Présences>) présencesRepo.findAll();
+        for(Présences p : listPrésences){
+            if(p.getSessionExamen().getState().equals(SessionExamenStates.STARTED) || p.getSessionExamen().getState().equals(SessionExamenStates.OPENED)){
+                String line = "Etudiant: " + p.getEtudiant().getEmail()
+                        + " Module: " + p.getSessionExamen().getPlannings().getModule().getNomModule()
+                        + " Etat: " + p.getState();
+                System.out.println(line);
+            }
+        }
         System.out.println("#############################################################");
     }
 
-
     public void UpdatePrésence(Présences présences) throws IOException {
-        if(présences.getState().equals(PrésenceEtats.BLOQUER)){
-            CustomMessage customMessage = new CustomMessage(CustomMessage.BLOCKED,"Le surveillant vous a bloquer pour triche");
-            sendData(présences.getEtudiant(),customMessage);
-            currEtudiantPrésent.remove(présences);
+        if(présences.getState().equals(PrésenceEtats.BLOQUER)) {
+            CustomMessage customMessage = new CustomMessage(CustomMessage.BLOCKED, "Le surveillant vous a bloquer pour triche");
+            sendData(présences.getEtudiant(), customMessage);
+        }
+        else if (présences.getSessionExamen().getState().equals(SessionExamenStates.ENDED)){
+            CustomMessage customMessage = new CustomMessage(CustomMessage.BLOCKED, "Le surveillant vous a bloquer pour triche");
+            sendData(présences.getEtudiant(), customMessage);
         }
         else{
-            for(Présences p : currEtudiantPrésent.keySet()) {
-                if (présences.equals(p)) {
-                    p = présences;
-                }
-            }
+            sendPrésencesToEtudiant(présences);
         }
         sendPrésencesToEnseignant(présences.getSessionExamen(),présences.getSessionExamen().getSurveillant());
-        sendPrésencesToEtudiant(présences);
     }
 
     //Sending methods
     public void sendPrésencesToEnseignant(SessionExamen sessionExamen, Enseignant enseignant) throws IOException {
-        CustomMessage customMessage = new CustomMessage(CustomMessage.DATA,sessionExamen.getPrésences());
-        sendData(enseignant,customMessage);
+        CustomMessage présences = new CustomMessage(CustomMessage.DATA,sessionExamen.getPrésences());
+        sendData(enseignant,présences);
+        CustomMessage session = new CustomMessage(CustomMessage.SESSIONINFO,sessionExamen);
+        sendData(enseignant,session);
     }
 
     public void sendPrésencesToEtudiant(Présences présences) throws IOException {
@@ -290,12 +282,11 @@ public class WebSocketService {
     }
 
     private ArrayList<SessionExamen> getSessionDispo(PlanningExamen planningExamen){
-        ArrayList<SessionExamen> result = new ArrayList<>();
-        for(SessionExamen key : openSurveillantSessions.keySet()){
-            if(key.getPlannings().equals(planningExamen)){
-                result.add(key);
-            }
-        }
+        ArrayList<SessionExamen> result = (ArrayList<SessionExamen>) sessionExamenRepo.findByPlannings(planningExamen);
+        result = (ArrayList<SessionExamen>) result.stream().filter(sessionExamen -> {
+            return (sessionExamen.getState().equals(SessionExamenStates.OPENED) ||
+                    (sessionExamen.getState().equals(SessionExamenStates.STARTED)));
+        }).collect(Collectors.toList());
         return result;
     }
 
