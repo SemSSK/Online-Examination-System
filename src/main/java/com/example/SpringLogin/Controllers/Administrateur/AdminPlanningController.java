@@ -22,7 +22,12 @@ public class AdminPlanningController {
 
     @GetMapping("/session/{id}")
     public ResponseEntity<?> getSessions(@PathVariable(name = "id") Long planId){
-        return new ResponseEntity<>(adminPlanningService.getSessionInPlanning(planId),HttpStatus.OK);
+        try{
+            return new ResponseEntity<>(adminPlanningService.getSessionInPlanning(planId),HttpStatus.OK);
+        }
+        catch(Exception e){
+            return new ResponseEntity<>(e.getMessage(),HttpStatus.OK);
+        }
     }
 
 
