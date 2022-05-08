@@ -3,6 +3,7 @@ package com.example.SpringLogin.Controllers.Enseignant;
 import com.example.SpringLogin.Configrations.SecurityServices.ContextHandlerClass;
 import com.example.SpringLogin.Entities.AffectationModule;
 import com.example.SpringLogin.Entities.Enseignant;
+import com.example.SpringLogin.Entities.PlanningExamen;
 import com.example.SpringLogin.Entities.Utilisateur;
 import com.example.SpringLogin.Repos.AffectationModuleRepo;
 import com.example.SpringLogin.Repos.ModuleRepo;
@@ -13,6 +14,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -30,5 +32,7 @@ public class enseignantController {
     private ResponseEntity<Enseignant> getProfil(){
         return new ResponseEntity<>((Enseignant)contextHandlerClass.getCurrentLoggedInUser().getUtilisateur(), HttpStatus.OK);
     }
+
+
 
 }

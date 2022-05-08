@@ -1,6 +1,8 @@
 package com.example.SpringLogin.Entities;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 
 import javax.persistence.*;
@@ -41,7 +43,7 @@ public class PlanningExamen implements Serializable {
     private Collection<Etudiant> etudiants = new ArrayList<>();
 
     @OneToMany(mappedBy = "plannings",fetch = FetchType.LAZY,cascade = CascadeType.ALL)
-    @JsonIgnore
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private Collection<SessionExamen> sessionExamens = new ArrayList<>();
 
     @ManyToOne(fetch = FetchType.EAGER)
