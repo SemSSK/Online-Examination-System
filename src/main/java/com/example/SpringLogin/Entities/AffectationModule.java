@@ -1,5 +1,6 @@
 package com.example.SpringLogin.Entities;
 
+import com.example.SpringLogin.Enumarators.teachingType;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
@@ -18,9 +19,14 @@ public class AffectationModule  implements Serializable {
     @Id
     @EmbeddedId
     private AffectationModuleKey affectationModuleId;
-    @Column(name = "valueType")
-    private String type;
+    @Column(name = "value_type")
+    private teachingType type;
     private Timestamp affectationDate;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "admin_id")
+    @JsonIgnore
+    private Administrateur admin;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "enseignant_id")
