@@ -14,6 +14,7 @@ import java.io.Serializable;
 public class AffectationModuleKey implements Serializable {
     @Column(name = "enseignant_Id")
     private Long enseignantId;
+
     @Column(name = "module_Id")
     private Long moduleId;
 

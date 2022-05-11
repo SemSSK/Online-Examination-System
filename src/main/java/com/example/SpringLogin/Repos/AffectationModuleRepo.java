@@ -4,6 +4,7 @@ import com.example.SpringLogin.Entities.AffectationModule;
 import com.example.SpringLogin.Entities.AffectationModuleKey;
 import com.example.SpringLogin.Entities.Enseignant;
 import com.example.SpringLogin.Entities.Module;
+import com.example.SpringLogin.Enumarators.teachingType;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -19,4 +20,8 @@ public interface AffectationModuleRepo
     public List<AffectationModule> findAllByEnseignant(Enseignant enseignant);
 
     public List<AffectationModule> findAllByModule(Module module);
+
+    public AffectationModule findAllByModuleAndType(Module module, teachingType course);
+
+    public void deleteByModuleAndEnseignant(Module module, Enseignant enseignant);
 }
