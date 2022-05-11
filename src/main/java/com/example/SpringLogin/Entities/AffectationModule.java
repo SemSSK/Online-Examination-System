@@ -19,11 +19,14 @@ public class AffectationModule  implements Serializable {
     @Id
     @EmbeddedId
     private AffectationModuleKey affectationModuleId;
-    @Column(name = "value_type")
+
+    @Column(name = "type")
+    @Enumerated(EnumType.STRING)
     private teachingType type;
+
     private Timestamp affectationDate;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "admin_id")
     @JsonIgnore
     private Administrateur admin;

@@ -8,7 +8,6 @@ import com.example.SpringLogin.Enumarators.teachingType;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
@@ -22,7 +21,7 @@ public interface AffectationModuleRepo
 
     public List<AffectationModule> findAllByModule(Module module);
 
-    public AffectationModule findAllByModuleAndValue_type(Module module, teachingType course);
+    public AffectationModule findAllByModuleAndType(Module module, teachingType course);
 
     public void deleteByModuleAndEnseignant(Module module, Enseignant enseignant);
 }
