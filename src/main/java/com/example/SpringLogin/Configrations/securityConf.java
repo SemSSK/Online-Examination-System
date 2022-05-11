@@ -45,14 +45,14 @@ public class securityConf extends WebSecurityConfigurerAdapter {
         http.cors().configurationSource(corsConfigurationSource());
 
         //Configuring allowed and forbidden paths depending on roles and authentications
-//        http.authorizeRequests()
-//                .antMatchers("/admin","/admin/*").hasRole(Role.ADMIN)                 //Only admin can access the  RESTControllers mapped with /admin
-//                .antMatchers("/etudiant","/etudiant/*").hasRole(Role.ETUDIANT)           //Only Etudiant can access the  RESTControllers mapped with /etudiant
-//                .antMatchers("/enseignant","/enseignant/*").hasRole(Role.ENSEIGNANT)       //Only Enseignant can access the  RESTControllers mapped with /enseignant
-//                .antMatchers("/examRoom").hasAnyRole(Role.ETUDIANT,Role.ENSEIGNANT)  //Only Enseignant and Etudiant can access the  Exam WebSocket
-//                .antMatchers("/authorization/*").authenticated()     //Only Not activated logins can access RESTControllers mapped with /activate
-//                .anyRequest().authenticated()                                      //For Every other request user needs to be authenticated
-//                .and().addFilter(authFilter);                                      //Adding the custom Authentication Filter
+        http.authorizeRequests()
+                .antMatchers("/admin","/admin/*").hasRole(Role.ADMIN)                 //Only admin can access the  RESTControllers mapped with /admin
+                .antMatchers("/etudiant","/etudiant/*").hasRole(Role.ETUDIANT)           //Only Etudiant can access the  RESTControllers mapped with /etudiant
+                .antMatchers("/enseignant","/enseignant/*").hasRole(Role.ENSEIGNANT)       //Only Enseignant can access the  RESTControllers mapped with /enseignant
+                .antMatchers("/examRoom").hasAnyRole(Role.ETUDIANT,Role.ENSEIGNANT)  //Only Enseignant and Etudiant can access the  Exam WebSocket
+                .antMatchers("/authorization/*").authenticated()     //Only Not activated logins can access RESTControllers mapped with /activate
+                .anyRequest().authenticated()                                      //For Every other request user needs to be authenticated
+                .and().addFilter(authFilter);                                      //Adding the custom Authentication Filter
         //****************************************************************
 
     }
