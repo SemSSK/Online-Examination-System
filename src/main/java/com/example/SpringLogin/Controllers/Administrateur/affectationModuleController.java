@@ -60,8 +60,6 @@ public class affectationModuleController {
     @PostMapping("")
     public ResponseEntity<?> addAffectationModule(@RequestBody AffectationModule affectationModule){
         try{
-            System.out.println("moduleId: "+ affectationModule.getAffectationModuleId().getModuleId());
-            System.out.println("enseignantId: " + affectationModule.getAffectationModuleId().getEnseignantId());
 
             return new ResponseEntity<>(affectationModuleService.makeAffectation(affectationModule),HttpStatus.OK);
         }
