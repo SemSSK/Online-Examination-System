@@ -81,7 +81,10 @@ public class WebSocketService {
         WebSocketSession session = sessionsUserMap.get(etudiant);
         PlanningExamen planningExamen = getPlanningFromEtudiant(codeEtudiant, etudiant);
         if (planningExamen == null) {
-            sendData(etudiant,new CustomMessage(CustomMessage.MESSAGE,"Wrong code"));
+            sendData(etudiant,new CustomMessage(CustomMessage.MESSAGE,"Wrong code "));
+        }
+        else if(!isExamTime(planningExamen)){
+            sendData(etudiant,new CustomMessage(CustomMessage.MESSAGE,"Not time for exam"));
         }
         else {
             Présences currentPrésence = getCurrentPrésence(etudiant,planningExamen);
@@ -103,18 +106,15 @@ public class WebSocketService {
                     sendPrésencesToEtudiant(newPrésence);
                 }
             }
-            else if(currentPrésence.getSessionExamen().getState().equals(SessionExamenStates.ENDED)){
-                CustomMessage customMessage = new CustomMessage(CustomMessage.MESSAGE,"Cette session est déja terminer");
-                sendData(etudiant,customMessage);
-            }
-            else if(currentPrésence.getState().equals(PrésenceEtats.BLOQUER)){
-                CustomMessage customMessage = new CustomMessage(CustomMessage.MESSAGE,"Vous avez été bloquer de cette session");
+            else if(currentPrésence.getSessionExamen().getState().equals(SessionExamenStates.ENDED)
+                || currentPrésence.getSessionExamen().getState().equals(SessionExamenStates.STARTED)){
+                CustomMessage customMessage = new CustomMessage(CustomMessage.MESSAGE,"Cette session ne vous est plus disponible");
                 sendData(etudiant,customMessage);
             }
             else{
-                SessionExamen idealSession = currentPrésence.getSessionExamen();
-                Enseignant surveillant = idealSession.getSurveillant();
-                sendPrésencesToEnseignant(idealSession, surveillant);
+                SessionExamen sessionExamen = currentPrésence.getSessionExamen();
+                Enseignant surveillant = sessionExamen.getSurveillant();
+                sendPrésencesToEnseignant(sessionExamen, surveillant);
                 sendPrésencesToEtudiant(currentPrésence);
             }
         }
@@ -145,6 +145,12 @@ public class WebSocketService {
             SessionExamen newSessionExamen = getSessionExamenFromSurveillant(codeEnseignant, enseignant);
             sendPrésencesToEnseignant(newSessionExamen, enseignant);
         }
+    }
+
+    public void transmitSignal(Utilisateur user,CustomMessage message) throws IOException {
+        Utilisateur receiver = message.getTo();
+        message.setFrom(user);
+        sendData(receiver,message);
     }
 
     //Verification Method
@@ -203,7 +209,10 @@ public class WebSocketService {
 
     //Sending methods
     public void sendPrésencesToEnseignant(SessionExamen sessionExamen, Enseignant enseignant) throws IOException {
-        CustomMessage présences = new CustomMessage(CustomMessage.DATA,sessionExamen.getPrésences());
+        List<Présences> currentPrésences = sessionExamen.getPrésences().stream().filter(présences -> {
+            return sessionsUserMap.containsKey(présences.getEtudiant()) && !présences.getState().equals(PrésenceEtats.BLOQUER);
+        }).collect(Collectors.toList());
+        CustomMessage présences = new CustomMessage(CustomMessage.DATA,currentPrésences);
         sendData(enseignant,présences);
         CustomMessage session = new CustomMessage(CustomMessage.SESSIONINFO,sessionExamen);
         sendData(enseignant,session);
@@ -300,5 +309,14 @@ public class WebSocketService {
             }
         }
         return idealSession;
+    }
+
+    private boolean isExamTime(PlanningExamen planningExamen){
+        Long examTime = planningExamen.getDateOfExame().getTime();
+        Long durationOfExam = planningExamen.getDuration().getTime();
+        Long currentTime = System.currentTimeMillis();
+        Long advanceTime = 30L * 60L * 1000L;
+        return (currentTime + advanceTime > examTime) && (currentTime < examTime + durationOfExam);
+
     }
 }

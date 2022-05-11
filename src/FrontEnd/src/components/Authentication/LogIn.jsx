@@ -18,6 +18,7 @@ const LogIn = () => {
         activated: false });
     const [activation, setActivation] = useState(false);
     const loginUrl = "http://localhost:8080/login";
+
     const login = () => {
         setIsLoading(true);
         const credentials = new FormData();
@@ -38,6 +39,7 @@ const LogIn = () => {
             setIsLoading(false);
         });
     };
+    
     return (<Grid container alignItems={"center"} width={"100vw"} height={"100vh"}>
                 <Grid item xs={4}></Grid>
                 <Grid item xs={3}>

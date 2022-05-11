@@ -1,8 +1,9 @@
 import { Container, FormControl, FormControlLabel, Radio, RadioGroup } from "@mui/material";
 import axios from "axios";
-import {convertPlanningToAppointments} from './Conversions.js';
+import {convertPlanningToAppointments} from '../../Conversions.js';
 import React, { useEffect, useState } from "react";
 import Schedule from "./Schedule";
+
 
 const setAppointments = (setModuleAppo, setSurveillanceAppo) => {
     const url = "http://localhost:8080/enseignant/planning/module";
@@ -30,7 +31,6 @@ const setAppointments = (setModuleAppo, setSurveillanceAppo) => {
         console.log(error);
     });
 };
-
 
 
 const Planning = () => {

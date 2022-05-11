@@ -3,6 +3,7 @@ package com.example.SpringLogin.Controllers.Utilisateur;
 import com.example.SpringLogin.Configrations.SecurityServices.ActivationCodeService;
 import com.example.SpringLogin.Configrations.SecurityServices.ContextHandlerClass;
 import com.example.SpringLogin.Configrations.SecurityServices.CustomUserDetails;
+import com.example.SpringLogin.Entities.Utilisateur;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -34,6 +35,11 @@ public class AuthorizationController {
         }
         return new ResponseEntity<String>("Invalide activation code", HttpStatus.BAD_REQUEST);
 
+    }
+
+    @GetMapping("/userData")
+    public ResponseEntity<Utilisateur> getUser(){
+        return new ResponseEntity<>(contextHandlerClass.getCurrentLoggedInUser().getUtilisateur(),HttpStatus.OK);
     }
 
     @PostMapping("/logout")

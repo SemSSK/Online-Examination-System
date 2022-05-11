@@ -12,9 +12,10 @@ import LogOut from "../Authentication/LogOut";
 import { Box } from "@mui/system";
 import Module from "./Module/Module";
 import axios from "axios";
-import Profile from "./Profile";
+import Profile from "../Profile";
 import Examen from "./Examen/Examen";
-import Planning from "./Planning/Planning";
+import Planning from "./Planning/Planning"
+
 const useStyle = makeStyles((theme) => {
     return {
         drawer: {
@@ -25,18 +26,19 @@ const useStyle = makeStyles((theme) => {
         }
     };
 });
+
 const Enseignant = () => {
     const navigate = useNavigate();
     const classes = useStyle();
     const [affectationModule, setAffectationModule] = useState();
     const [currentModule, setCurrentModule] = useState(null);
     const [isLoaded, setIsLoaded] = useState(false);
-    const [enseignant, setEnseigant] = useState({});
+
     const menuItems = [
         {
             text: 'Schedule',
             icon: <DateRangeIcon />,
-            path: "/enseignant/schedule",
+            path: "/enseignant/schedual",
             alwaysShow: true
         },
         {
@@ -58,6 +60,8 @@ const Enseignant = () => {
             alwaysShow: true
         }
     ];
+    
+
     useEffect(() => {
         const AffectationsURL = "http://localhost:8080/enseignant/module";
         axios.get(AffectationsURL, { withCredentials: true })
@@ -66,7 +70,6 @@ const Enseignant = () => {
                 setAffectationModule(response.data);
                 console.log(affectationModule);
                 setCurrentModule(response.data[0]);
-                setEnseigant(response.data[0].enseignant);
             }
             setIsLoaded(true);
         })
@@ -77,6 +80,8 @@ const Enseignant = () => {
     const goTo = (item) => {
         navigate(item.path);
     };
+
+
     return (<div className="enseignant-container">
             {isLoaded &&
             <>
@@ -88,7 +93,7 @@ const Enseignant = () => {
                                     <Module affectationList={affectationModule} currentModule={currentModule} setCurrentModule={setCurrentModule}></Module>
                                 </Grid>
                                 <Grid item xs={2} display={"flex"} justifyContent={"end"}>
-                                    <Profile enseigant={enseignant}></Profile>
+                                    <Profile></Profile>
                                 </Grid>
                                 <Grid item xs={1} display={"flex"} justifyContent={"end"}>
                                     <LogOut></LogOut>
@@ -103,18 +108,18 @@ const Enseignant = () => {
                                 </Typography>
                                 <List>
                                     {menuItems.map(item => {
-                    return (<ListItem key={item.text} button disabled={!(item.alwaysShow || (currentModule.type === "COURS"))} onClick={(e) => { goTo(item); }}>
-                                                    <ListItemIcon>{item.icon}</ListItemIcon>
-                                                    <ListItemText primary={item.text}></ListItemText>
-                                                </ListItem>);
-                })}
+                                        return (<ListItem key={item.text} button disabled={!(item.alwaysShow || (currentModule.type === "COURS"))} onClick={(e) => { goTo(item); }}>
+                                                                        <ListItemIcon>{item.icon}</ListItemIcon>
+                                                                        <ListItemText primary={item.text}></ListItemText>
+                                                                    </ListItem>);
+                                                })}
                                 </List>
                 </Drawer>
                 <Box width={"80%"} marginLeft={"15%"} marginTop={"5%"}>
                     <Grid container justifyContent={"center"} alignContent={"start"}>
                         <Grid item xs={12}>
                             <Routes>
-                                <Route path="/schedule" element={<Planning></Planning>}></Route>
+                                <Route path="/schedual" element={<Planning></Planning>}></Route>
                                 <Route path="/questions" element={<QuestionConsultation currentAffectation={currentModule}></QuestionConsultation>}></Route>
                                 <Route path="/questions/add" element={<QuestionCreator currentAffectation={currentModule}></QuestionCreator>}></Route>
                                 {(currentModule.type === "COURS") && <Route path="/exam" element={<Examen currentAffectation={currentModule}></Examen>}></Route>}

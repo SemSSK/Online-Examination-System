@@ -3,6 +3,8 @@ package com.example.SpringLogin.Socket;
 import com.example.SpringLogin.Configrations.SecurityServices.ContextHandlerClass;
 import com.example.SpringLogin.Entities.*;
 import com.example.SpringLogin.Enumarators.Role;
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.CloseStatus;
 import org.springframework.web.socket.TextMessage;
@@ -30,15 +32,26 @@ public class ExamRoomWebsocket extends TextWebSocketHandler {
 
     @Override
     protected void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
-        String code = message.getPayload().toString();
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES,false);
+        CustomMessage customMessage = objectMapper.readValue(message.getPayload().getBytes(),CustomMessage.class);
         Utilisateur user = contextHandlerClass.getUserFromWebSocketSession(session);
-        webSocketService.removeUserTrace(user);
-        if(user.getUserRole().equals(Role.ETUDIANT)){
-            webSocketService.OnEtudiantJoin((Etudiant) user,code);
+
+        if(customMessage.type.equals(CustomMessage.CODE)){
+            String code = (String) customMessage.getPayload();
+            webSocketService.removeUserTrace(user);
+            if(user.getUserRole().equals(Role.ETUDIANT)){
+                webSocketService.OnEtudiantJoin((Etudiant) user,code);
+            }
+            else if(user.getUserRole().equals(Role.ENSEIGNANT)){
+                webSocketService.OnSurveillantJoin((Enseignant) user,code);
+            }
         }
-        else if(user.getUserRole().equals(Role.ENSEIGNANT)){
-            webSocketService.OnSurveillantJoin((Enseignant) user,code);
+        else if(customMessage.type.equals(CustomMessage.SIGNAL)){
+             webSocketService.transmitSignal(user,customMessage);
         }
+
         webSocketService.printData();
     }
 

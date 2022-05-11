@@ -55,7 +55,7 @@ const Question = (props) => {
 
                 <Collapse in={isExpanded} timeout="auto" unmountOnExit>
                     {!canMod &&
-            <>
+                        <>
                             <CardContent>
                                 <Typography>
                                     <div className="Question-content">{parse(props.data.content)}</div>

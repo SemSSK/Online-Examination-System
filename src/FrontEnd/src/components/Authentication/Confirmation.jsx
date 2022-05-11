@@ -10,6 +10,7 @@ const Confirmation = () => {
     const [activationCode, setActivationCode] = useState("");
     const activationUrl = "http://localhost:8080/authorization/activate";
     const navigate = useNavigate();
+
     const confirm = () => {
         const content = {
             code: activationCode
@@ -22,7 +23,7 @@ const Confirmation = () => {
             .then(response => {
             if (response.status == 200) {
                 console.log("login confirmed");
-                navigate("/" + response.data.toLowerCase());
+                navigate("/" + response.data.toLowerCase() + "/schedual");
             }
             else {
                 throw "error";
@@ -38,6 +39,7 @@ const Confirmation = () => {
             console.log("hello");
         });
     };
+
     return (<Grid container alignItems={"center"} width={"100vw"} height={"100vh"}>
             <Grid item xs={4}></Grid>
             <Grid item xs={3}>

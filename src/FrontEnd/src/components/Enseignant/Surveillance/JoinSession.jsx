@@ -1,34 +1,21 @@
 import { Button, Card, CardContent, CardHeader, Grid, TextField } from "@mui/material";
 import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import SimplePeer from "simple-peer";
+
 const JoinSession = (props) => {
     const navigate = useNavigate();
-    useEffect(() => {
-        const ws = new WebSocket("ws://localhost:8080/examRoom");
-        if (ws !== null) {
-            ws.onmessage = e => {
-                const data = JSON.parse(e.data);
-                if (data.type === "message") {
-                    alert(data.payload);
-                    navigate("/surveillant");
-                }
-                else if (data.type === "data") {
-                    props.setListEtudiant(data.payload);
-                }
-                else if (data.type === "session-info") {
-                    props.setSession(data.payload);
-                }
-                console.log(data);
-            };
-            ws.onclose = e => {
-                navigate("/enseignant");
-            };
-            props.setSocket(ws);
-        }
-    }, []);
+
+
+    
+
     const joinSession = () => {
-        props.socket.send(props.code);
+        props.socket.send(JSON.stringify({
+            type:"code",
+            payload:props.code
+        }));
     };
+    
     return (<Grid container display={"flex"} justifyContent={"center"}>
             <Grid item xs={4}>
                 <Card variant="outlined">

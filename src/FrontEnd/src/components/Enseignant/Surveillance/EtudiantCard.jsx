@@ -1,8 +1,21 @@
 import { Button, Card, CardContent, Box, Typography } from "@mui/material";
 import axios from "axios";
-import React from "react";
+import React, { useEffect, useRef } from "react";
 const EtudiantCard = (props) => {
     const etudiant = props.presence.etudiant;
+    const videoRef = useRef();
+    
+    useEffect(()=>{
+        if(props.presence.peer !== undefined){
+            console.log(props.presence) 
+            props.presence.peer.on("stream",(stream)=>{
+                const video = videoRef.current;
+                video.srcObject = stream;
+                video.play();
+            })
+        }
+    },[props.presence])
+
     const markPresent = () => {
         const url = `http://localhost:8080/enseignant/surveillance/${props.code}/présence`;
         axios.put(url, etudiant, { withCredentials: true });
@@ -19,6 +32,7 @@ const EtudiantCard = (props) => {
         const url = `http://localhost:8080/enseignant/surveillance/${props.code}/unblock`;
         axios.put(url, etudiant, { withCredentials: true });
     };
+
     const displayPresenceActions = () => {
         const etat = props.presence.state;
         switch (etat) {
@@ -31,6 +45,7 @@ const EtudiantCard = (props) => {
             default: return (<></>);
         }
     };
+
     const displayBlockingActions = () => {
         const etat = props.presence.state;
         switch (etat) {
@@ -40,6 +55,7 @@ const EtudiantCard = (props) => {
             default: return (<Button onClick={e => { block(); }}>Bloquer</Button>);
         }
     };
+
     return (<Card>
             <CardContent>
                 <Typography>
@@ -55,7 +71,11 @@ const EtudiantCard = (props) => {
                 </Typography>
             </CardContent>
             <CardContent>
-                <Box width={"300px"} height={"300px"} style={{ backgroundColor: "black" }}></Box>
+                <Box width={"300px"} height={"300px"}>
+                    <video style={{width:"300px",height:"300px"}} ref={videoRef}>
+
+                    </video>    
+                </Box>
             </CardContent>
             <CardContent>
                 {displayPresenceActions()}
