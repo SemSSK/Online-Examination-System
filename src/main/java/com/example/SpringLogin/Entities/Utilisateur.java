@@ -1,6 +1,7 @@
 package com.example.SpringLogin.Entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 
 import javax.persistence.*;
@@ -21,7 +22,6 @@ public class Utilisateur implements Serializable {
     @Column(nullable = false,unique = true)
     private String email;
     @Column(nullable = false)
-    @JsonIgnore
     private String password;
     @Column(nullable = false)
     private String name;
