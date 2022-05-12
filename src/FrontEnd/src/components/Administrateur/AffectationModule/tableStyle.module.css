@@ -46,7 +46,7 @@
   cursor: pointer;
 }
 
-.content-box {
+.content_box {
   padding: 20px;
   display: flex;
   flex-direction: column;
@@ -67,7 +67,7 @@
   cursor: default;
 }
 
-table {
+.content_box table {
   font-family: arial, sans-serif;
   border-collapse: collapse;
   width: 100%;
@@ -75,27 +75,26 @@ table {
 
   cursor: default;
 }
-
-thead,
-tbody {
+.content_box thead,
+.content_box tbody {
   display: block;
   width: 100%;
 }
 
-tbody {
+.content_box tbody {
   height: 300px;
   /* min-height: 240px; */
   width: 100%;
   overflow-y: auto; /* Trigger vertical scroll    */
   overflow-x: hidden; /* Hide the horizontal scroll */
 }
-tr {
+.content_box tr {
   width: 100%;
   display: flex;
   justify-content: center;
 }
 
-td {
+.content_box td {
   color: var(--body-font-color-dark);
   font-family: var(--body-font);
   font-size: 1.5rem;
@@ -103,7 +102,7 @@ td {
   cursor: pointer;
 }
 
-th {
+.content_box th {
   background-color: var(--secondary-font-color);
   color: white;
   font-family: var(--body-font);
@@ -112,15 +111,15 @@ th {
   border-radius: 10px;
 }
 
-td,
-th {
+.content_box td,
+.content_box th {
   text-align: left;
   flex: 1;
   padding: 10px 15px;
 }
 
-tr td:last-child,
-tr th:last-child {
+.content_box tr td:last-child,
+.content_box tr th:last-child {
   text-align: center !important;
   flex: 0.4 !important;
 }

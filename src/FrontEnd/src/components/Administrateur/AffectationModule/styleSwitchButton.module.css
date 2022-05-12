@@ -4,29 +4,29 @@
   margin: 0;
 }
 
-.switch-button {
+.switch_button {
   height: 50px;
   background: rgba(180, 31, 58, 0.56);
   border-radius: 30px;
   overflow: hidden;
-  width: 240px;
+  width: 200px;
   text-align: center;
-  font-size: 18px;
-  letter-spacing: 1px;
+  font-size: 14px;
+  /*letter-spacing: 1px;*/
   color: #fff;
   position: relative;
-  padding-right: 120px;
+  padding-right: 90px;
   position: relative;
   margin: 20px;
 }
 
-.switch-button:before {
+.switch_button:before {
   content: "TD_TP";
   position: absolute;
   top: 0;
   bottom: 0;
   right: 0;
-  width: 120px;
+  width: 90px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -34,7 +34,7 @@
   pointer-events: none;
 }
 
-.switch-button-checkbox {
+.switch_button_checkbox {
   cursor: pointer;
   position: absolute;
   top: 0;
@@ -46,19 +46,19 @@
   z-index: 2;
 }
 
-.switch-button-checkbox:checked + .switch-button-label:before {
-  transform: translateX(120px);
+.switch_button_checkbox:checked + .switch_button_label:before {
+  transform: translateX(90px);
   transition: transform 300ms linear;
 }
 
-.switch-button-checkbox + .switch-button-label {
+.switch_button_checkbox + .switch_button_label {
   position: relative;
   padding: 15px 0;
   display: block;
   user-select: none;
   pointer-events: none;
 }
-.switch-button-checkbox + .switch-button-label:before {
+.switch_button_checkbox + .switch_button_label:before {
   content: "";
   background: #b41f3a;
   height: 100%;
@@ -71,7 +71,7 @@
   transition: transform 300ms;
 }
 
-.switch-button-label-span {
+.switch_button .switch_button_label_span {
   position: relative;
 }
 
