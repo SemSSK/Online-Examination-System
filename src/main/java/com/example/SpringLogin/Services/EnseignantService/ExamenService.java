@@ -3,6 +3,7 @@ package com.example.SpringLogin.Services.EnseignantService;
 import com.example.SpringLogin.Entities.*;
 import com.example.SpringLogin.Entities.Module;
 import com.example.SpringLogin.Configrations.SecurityServices.ContextHandlerClass;
+import com.example.SpringLogin.Enumarators.teachingType;
 import com.example.SpringLogin.Repos.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -43,7 +44,7 @@ public class ExamenService {
         if(affectationModule.isEmpty()){
             return false;
         }
-        return affectationModule.get().getType().equals("COURS");
+        return affectationModule.get().getType().equals(teachingType.COURSE);
     }
 
     public Examen getModuleExam(Long moduleId) throws Exception{

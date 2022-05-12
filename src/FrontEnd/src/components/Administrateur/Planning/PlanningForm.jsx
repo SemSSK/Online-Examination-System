@@ -138,7 +138,7 @@ const PlanningForm = ({onFieldChange,appointmentData,...restProps}) => {
         <Container>
                 <FormControl fullWidth>
                     <InputLabel>{appointmentData.module ? appointmentData.module.nomModule : "Module"}</InputLabel>
-                    <Select variant="standard" value={appointmentData.module !== undefined ? appointmentData.module : null}  onChange={e=>{onModuleChange(e)}}>
+                    <Select variant="standard" value={appointmentData.module}  onChange={e=>{onModuleChange(e)}}>
                         {moduleList.map(module=>{
                             return <MenuItem value={module} key={module.id}>{module.nomModule}</MenuItem>
                         })}

@@ -1,6 +1,6 @@
 package com.example.SpringLogin.Enumarators;
 
 public class TypeModuleAffectation {
-    public final static String COURS = "COURS",
-    TD_TP = "TD";
+    public final static String COURS = "COURSE",
+    TD_TP = "TD_TP";
 }

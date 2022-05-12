@@ -7,7 +7,7 @@ const Module = (props) => {
     };
     return (<FormControl fullWidth>
             <InputLabel id="demo-simple-select-label">Module</InputLabel>
-            <Select variant="standard" id="module" defaultValue={props.currentModule} label="Module" onChange={e => { changeModule(e.target.value); }}>
+            <Select variant="standard" id="module" value={props.currentModule} label="Module" onChange={e => { changeModule(e.target.value); }}>
                 {affectationList.map(affectation => {
             return <MenuItem value={affectation} key={affectation.module.id}>{affectation.module.nomModule}</MenuItem>;
         })}

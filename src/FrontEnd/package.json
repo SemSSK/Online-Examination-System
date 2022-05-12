@@ -19,7 +19,6 @@
     "@testing-library/user-event": "^13.5.0",
     "axios": "^0.26.1",
     "ckeditor5-build-classic-base64-upload": "^27.0.2",
-    "ckeditor5-custom-build": "file:../../../../CKEditor",
     "html-react-parser": "^1.4.10",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",

@@ -19,10 +19,12 @@ import Planning from "./Planning/Planning"
 const useStyle = makeStyles((theme) => {
     return {
         drawer: {
-            width: "15%"
+            width: "15%",
+            position:"fixed"
         },
         appBar: {
-            width: "85%"
+            width: "85%",
+            position:"fixed"
         }
     };
 });
@@ -86,7 +88,7 @@ const Enseignant = () => {
             {isLoaded &&
             <>
                 <Box sx={{ flexGrow: 1 }} position={"fixed"} width={"100%"} top={0}>
-                    <AppBar position="static">
+                    <AppBar position="fixed">
                         <Toolbar>
                             <Grid container alignItems={"center"} justifyContent={"end"}>
                                 <Grid item xs={1}>
@@ -108,7 +110,7 @@ const Enseignant = () => {
                                 </Typography>
                                 <List>
                                     {menuItems.map(item => {
-                                        return (<ListItem key={item.text} button disabled={!(item.alwaysShow || (currentModule.type === "COURS"))} onClick={(e) => { goTo(item); }}>
+                                        return (<ListItem key={item.text} button disabled={!(item.alwaysShow || (currentModule.type === "COURSE"))} onClick={(e) => { goTo(item); }}>
                                                                         <ListItemIcon>{item.icon}</ListItemIcon>
                                                                         <ListItemText primary={item.text}></ListItemText>
                                                                     </ListItem>);
@@ -122,7 +124,7 @@ const Enseignant = () => {
                                 <Route path="/schedual" element={<Planning></Planning>}></Route>
                                 <Route path="/questions" element={<QuestionConsultation currentAffectation={currentModule}></QuestionConsultation>}></Route>
                                 <Route path="/questions/add" element={<QuestionCreator currentAffectation={currentModule}></QuestionCreator>}></Route>
-                                {(currentModule.type === "COURS") && <Route path="/exam" element={<Examen currentAffectation={currentModule}></Examen>}></Route>}
+                                {(currentModule.type === "COURSE") && <Route path="/exam" element={<Examen currentAffectation={currentModule}></Examen>}></Route>}
                             </Routes>
                         </Grid>
                     </Grid>

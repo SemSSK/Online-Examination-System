@@ -11,6 +11,7 @@ const Examen = (props) => {
     const [selectedQuestions, setSelectedQuestions] = useState([]);
     const [module, setModule] = useState(props.currentAffectation.module);
     const [isAdding, setIsAdding] = useState(false);
+
     useEffect(() => {
         const getExamUrl = "http://localhost:8080/enseignant/examen/" + module.id;
         axios.get(getExamUrl, {
@@ -24,6 +25,7 @@ const Examen = (props) => {
             }
         });
     }, [module]);
+
     const AddQuestion = (question) => {
         setQuestions(questions.filter(q => { return q.questionId !== question.question.questionId; }));
         selectedQuestions.push(question);
@@ -42,6 +44,7 @@ const Examen = (props) => {
         }
         setSelectedQuestions([]);
     };
+
     return (<Container>
             <Card variant="outlined">
                 <CardHeader title="Creation d'examen :"/>
