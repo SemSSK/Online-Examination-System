@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.example.SpringLogin.Entities.Etudiant;
 
 @RestController
-@RequestMapping("/admin/api/Etudiant")
+@RequestMapping("/admin/api/gesetudiant")
 public class Etudiantcontrole {
 
 	@Autowired

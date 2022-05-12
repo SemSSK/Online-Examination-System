@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.example.SpringLogin.Entities.Module;
 
 @RestController
-@RequestMapping("/admin/api/Module")
+@RequestMapping("/admin/api/gesmodule")
 public class Modulecontrole {
 
 	@Autowired

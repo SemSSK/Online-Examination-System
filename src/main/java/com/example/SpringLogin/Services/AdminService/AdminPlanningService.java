@@ -85,10 +85,12 @@ public class AdminPlanningService {
         }
 
         PlanningExamen currentPlanning = optCurrentPlanning.get();
-
         currentPlanning.setDuration(planningExamen.getDuration());
         currentPlanning.setDateOfExame(planningExamen.getDateOfExame());
         currentPlanning.setModule(planningExamen.getModule());
+        currentPlanning.getSessionExamens().forEach(sessionExamen -> {
+            sessionExamen.setPlannings(null);
+        });
         sessionExamenRepo.deleteAll(currentPlanning.getSessionExamens());
         currentPlanning.setSessionExamens(planningExamen.getSessionExamens());
         currentPlanning.getSessionExamens().forEach(sessionExamen -> {

@@ -9,9 +9,7 @@ const ProtectedPath = (props) => {
         axios.get("http://localhost:8080/authorization/loggedIn", { withCredentials: true })
             .then(res => {
             if (res.status == 200) {
-                if(res.data === props.role || props.role === undefined){
-                    setIsAuthenticated(true);
-                }
+                setIsAuthenticated(true);
             }
             setIsLoading(false);
         })

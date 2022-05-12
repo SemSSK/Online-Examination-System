@@ -5,7 +5,6 @@ import java.util.List;
 import com.example.SpringLogin.Repos.EnseignantRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -19,11 +18,12 @@ import com.example.SpringLogin.Entities.Enseignant;
 
 
 @RestController
-@RequestMapping("/admin/api/Enseignant")
+@RequestMapping("/admin/api/gesenseignant")
 public class Enseignantcontrole {
 	
 	@Autowired
 	private EnseignantRepo enseignantRespository ;
+
 	@PostMapping("/save")
 	public Enseignant saveEnseignantcontrole(@RequestBody Enseignant enseignant) {
 		System.out.println(enseignant.getPassword());
@@ -37,39 +37,40 @@ public class Enseignantcontrole {
 		
 	}
 
-@GetMapping("/getEnseignant")
-public List<Enseignant> getEnseignantcontrole() {
-	return enseignantRespository.findAll();
-	
-}
+	@GetMapping("/getEnseignant")
+	public List<Enseignant> getEnseignantcontrole() {
+		return enseignantRespository.findAll();
 
-@GetMapping("/getEnseignantbyidcontrole/{userId}") 
-public Enseignant getEnseignantbyidcontrole(@PathVariable Long userId) {
-	System.out.println(userId);
-	Enseignant enseignant= enseignantRespository.findById(userId).orElse(null);
-	return enseignant;
-}
-@PutMapping("/updateEnseignantcontrole/{userId}")
-public Enseignant updateEnseignantcontrole(@PathVariable Long userId ,@RequestBody Enseignant enseignantdetail) {
-	
-	Enseignant updateenseignant= enseignantRespository.findById(userId).orElse(null);
-	updateenseignant.setAdmin(enseignantdetail.getAdmin());
-	updateenseignant.setEmail(enseignantdetail.getEmail());
-	updateenseignant.setLastName(enseignantdetail.getLastName());
-	updateenseignant.setName(enseignantdetail.getName());
-	updateenseignant.setPassword(enseignantdetail.getPassword());
-	updateenseignant.setUrlProfile(enseignantdetail.getUrlProfile());
-	updateenseignant.setUserRole(enseignantdetail.getUserRole());
-	updateenseignant.setGrade(enseignantdetail.getGrade());
-	Enseignant enseignant =enseignantRespository.save(updateenseignant);
-	return enseignant;
-}
-@DeleteMapping("/deleteEnseignant/{userId}")
-public String deleteEnseignant(@PathVariable Long userId) {
-	enseignantRespository.deleteById(userId);
-	return "Enseignant removed"+userId;
-	
-}
+	}
+
+	@GetMapping("/getEnseignantbyidcontrole/{userId}")
+	public Enseignant getEnseignantbyidcontrole(@PathVariable Long userId) {
+		System.out.println(userId);
+		Enseignant enseignant= enseignantRespository.findById(userId).orElse(null);
+		return enseignant;
+	}
+	@PutMapping("/updateEnseignantcontrole/{userId}")
+	public Enseignant updateEnseignantcontrole(@PathVariable Long userId ,@RequestBody Enseignant enseignantdetail) {
+
+		Enseignant updateenseignant= enseignantRespository.findById(userId).orElse(null);
+		updateenseignant.setAdmin(enseignantdetail.getAdmin());
+		updateenseignant.setEmail(enseignantdetail.getEmail());
+		updateenseignant.setLastName(enseignantdetail.getLastName());
+		updateenseignant.setName(enseignantdetail.getName());
+		updateenseignant.setPassword(enseignantdetail.getPassword());
+		updateenseignant.setUrlProfile(enseignantdetail.getUrlProfile());
+		updateenseignant.setUserRole(enseignantdetail.getUserRole());
+		updateenseignant.setGrade(enseignantdetail.getGrade());
+		Enseignant enseignant =enseignantRespository.save(updateenseignant);
+		return enseignant;
+	}
+
+	@DeleteMapping("/deleteEnseignant/{userId}")
+	public String deleteEnseignant(@PathVariable Long userId) {
+		enseignantRespository.deleteById(userId);
+		return "Enseignant removed"+userId;
+
+	}
 /*
 @GetMapping("/getEnseignantbyidcontrole/{userId}") 
 public  Enseignant getEnseignantbyidcontrole(@PathVariable(name = "userId") Long Id) {

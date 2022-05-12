@@ -1,9 +1,9 @@
 import axios from 'axios';
-const ENSEIGNANT_API_BASE_URL1="http://localhost:8080/admin/api/Enseignant/getEnseignant";
-const ENSEIGNANT_API_BASE_URL2="http://localhost:8080/admin/api/Enseignant/save";
-const ENSEIGNANT_API_BASE_URL3="http://localhost:8080/admin/api/Enseignant/getEnseignantbyidcontrole";
-const ENSEIGNANT_API_BASE_URL4="http://localhost:8080/admin/api/Enseignant/updateEnseignantcontrole";
-const ENSEIGNANT_API_BASE_URL5="http://localhost:8080/admin/api/Enseignant/deleteEnseignant"
+const ENSEIGNANT_API_BASE_URL1="http://localhost:8080/admin/api/gesenseignant/getEnseignant";
+const ENSEIGNANT_API_BASE_URL2="http://localhost:8080/admin/api/gesenseignant/save";
+const ENSEIGNANT_API_BASE_URL3="http://localhost:8080/admin/api/gesenseignant/getEnseignantbyidcontrole";
+const ENSEIGNANT_API_BASE_URL4="http://localhost:8080/admin/api/gesenseignant/updateEnseignantcontrole";
+const ENSEIGNANT_API_BASE_URL5="http://localhost:8080/admin/api/gesenseignant/deleteEnseignant"
 class EnseignantServive {
 
     getAllEnseignants(){

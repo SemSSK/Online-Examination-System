@@ -10,6 +10,7 @@ const changePlanning = (planning,appointments,setAppointments)=>{
     const url = "http://localhost:8080/admin/planning";
     axios.put(url,planning,{withCredentials:true})
     .then(response => {
+        console.log(planning);
         if(response.status === 200){
             const newPlanning = response.data;
             const newAppo = convertPlanToAppo(newPlanning);
@@ -89,7 +90,6 @@ const Planning = () => {
             addPlanning(planning,appointments,setAppointments);
         }
         if(changed){
-            console.log(changed);
             let newAppointments = appointments;
             console.log(newAppointments);
             newAppointments.forEach(appo => {

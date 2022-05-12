@@ -1,9 +1,9 @@
 import axios from 'axios';
-const Module_API_BASE_URL1="http://localhost:8080/admin/api/Module/getModulecontrole";
-const Module_API_BASE_URL2="http://localhost:8080/admin/api/Module/save";
-const Module_API_BASE_URL3="http://localhost:8080/admin/api/Module/getModulebyidcontrole";
-const Module_API_BASE_URL4="http://localhost:8080/admin/api/Module/updateModulecontrole";
-const Module_API_BASE_URL5="http://localhost:8080/admin/api/Module/deleteModule"
+const Module_API_BASE_URL1="http://localhost:8080/admin/api/gesmodule/getModulecontrole";
+const Module_API_BASE_URL2="http://localhost:8080/admin/api/gesmodule/save";
+const Module_API_BASE_URL3="http://localhost:8080/admin/api/gesmodule/getModulebyidcontrole";
+const Module_API_BASE_URL4="http://localhost:8080/admin/api/gesmodule/updateModulecontrole";
+const Module_API_BASE_URL5="http://localhost:8080/admin/api/gesmodule/deleteModule"
 class Moduleservice {
 
     getAllModules(){
@@ -20,7 +20,7 @@ class Moduleservice {
     updateModule(id,Module){
         return axios.put(Module_API_BASE_URL4+'/'+id,Module,{withCredentials:true})
     }
-    deleteModule(id){
+    deleteModule(id){ 
         return axios.delete(Module_API_BASE_URL5+'/'+ id,{withCredentials:true})
     }
 }
