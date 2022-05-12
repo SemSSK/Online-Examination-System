@@ -1,7 +1,7 @@
 import React from 'react'
 import AffectationForum from './AffectationForum'
 import AffectationsTable from './AffectationsTable'
-import './tableStyle.css'
+import './tableStyle.module.css'
 
 export default function AffectationPage (){
     return(

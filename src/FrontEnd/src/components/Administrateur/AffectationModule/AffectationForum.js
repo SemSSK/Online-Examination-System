@@ -1,5 +1,6 @@
-import "./styles.css";
-import "./styleSwitchButton.css"
+import styles from "./styles.module.css";
+import styleSwitchButton from "./styleSwitchButton.module.css";
+import "./react-select-search.css"
 import SelectSearch from "react-select-search";
 import React, { useRef,useState, useEffect } from "react";
 import { styled } from '@mui/material/styles';
@@ -258,8 +259,8 @@ export default function AffectationForum({enseignements,setEnseignements}) {
  
   return (
     <div>    
-      <div className="btns">
-        <a className="btn bg" onClick={handleExpandClick}>Ajouter Affectation</a>
+      <div className={styles.btns}>
+        <a className={styles.btn +' '+ styles.bg} onClick={handleExpandClick}>Ajouter Affectation</a>
         <ExpandMore
               expand={expanded}
               onClick={handleExpandClick}
@@ -271,8 +272,8 @@ export default function AffectationForum({enseignements,setEnseignements}) {
       </div>
       <Card >
         <Collapse in={expanded} timeout="auto" unmountOnExit>
-          <div className="affectationContainer">
-              <div className="affectationForum">
+          <div className={styles.affectationContainer}>
+              {/*<div className={styles.affectationForum}>*/}
                   <SelectSearch
                       ref={searchInput}
                       options={modulesOptions}
@@ -297,18 +298,18 @@ export default function AffectationForum({enseignements,setEnseignements}) {
                       onChange={setSelectedTeacher}
                       closeOnSelect={true}
                   />
-                  <div className="switch-button">
-                      <input className="switch-button-checkbox" 
+                  <div className={styleSwitchButton.switch_button}>
+                      <input className={styleSwitchButton.switch_button_checkbox}
                           type="checkbox" 
                           onClick={(event)=> setCours(!event.target.checked)}
                       >   
                       </input>
-                      <label className="switch-button-label" ><span className="switch-button-label-span">COURS</span></label>
+                      <label className={styleSwitchButton.switch_button_label} ><span className={styleSwitchButton.switch_button_label_span}>COURS</span></label>
                   </div>
-              </div>
+              {/*</div>*/}
               <Divider orientation="vertical" flexItem />
-              <div className="affectationSubmit">
-                <button className="button-29" role="button" onClick={addAffectationToDB}>Affecter</button>
+              <div className={styles.affectationSubmit}>
+                <button className={styles.button_29} role="button" onClick={addAffectationToDB}>Affecter</button>
               </div>
           </div>
         </Collapse>

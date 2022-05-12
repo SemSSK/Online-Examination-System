@@ -2,7 +2,7 @@ import React,{useState,useEffect} from "react"
 import AffectationForum from "./AffectationForum"
 import DeleteIcon from '@mui/icons-material/Delete';
 import IconButton from '@mui/material/IconButton';
-import './tableStyle.css';
+import tableStyle from './tableStyle.module.css';
 import api from './api/backendRestApi';
 
 export default function AffectationsTable() {
@@ -93,14 +93,14 @@ export default function AffectationsTable() {
     }
 
     return(
-        <div className="container">
+        <div className={tableStyle.container}>
             
-            <div className="content-box">
+            <div className={tableStyle.content_box}>
                 <AffectationForum 
                     enseignements={enseignements} 
                     setEnseignements={setEnseignements}
                 />
-                <div className="pageHeader">
+                <div className={tableStyle.pageHeader}>
                     <h1>Enseignement :</h1>
                 </div>
                 <table>
