@@ -63,7 +63,7 @@ const getSessions = (id,onFieldChange)=>{
     })
     .catch(error=>{ 
         console.log(error);
-    })
+    }) 
 }
 
 
@@ -78,12 +78,13 @@ const PlanningForm = ({onFieldChange,appointmentData,...restProps}) => {
         getModules(setModuleList);
         getEtudiants(setEtudiantList);
         getEnseignant(setEnseignantList);
-        if(appointmentData.id !== undefined){
+        if(appointmentData.id !== undefined){ 
             getSessions(appointmentData.id,onFieldChange);
         }
         else {
             onFieldChange({etudiants:[],sessionExamens:[]}); 
         }
+        console.log(appointmentData);
     },[])
 
     const onModuleChange = (event)=>{

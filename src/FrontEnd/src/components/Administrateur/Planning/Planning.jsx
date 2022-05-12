@@ -67,6 +67,7 @@ const getPlannings = (setAppointments) => {
             throw response.data;
         }
         const appointments = convertPlanningToAppointments(response.data); 
+        console.log(appointments)
         setAppointments(appointments);
     })
         .catch((error) => {
@@ -80,7 +81,6 @@ const Planning = () => {
 
     useEffect(()=>{
         getPlannings(setAppointments);
-        console.log(appointments)
     },[])
 
     const onChanges = ({added,changed,deleted})=>{
@@ -91,17 +91,17 @@ const Planning = () => {
         }
         if(changed){
             let newAppointments = appointments;
-            console.log(newAppointments);
+            console.log(appointments);
             newAppointments.forEach(appo => {
                 if(changed[appo.id])
                 {
                     appo = {...appo,...changed[appo.id]};
                     const planning = convertAppoToPlan(appo);
-                    console.log(planning);
+                    console.log("changed planning:");
+                    console.log(changed[appo.id]);
                     changePlanning(planning,appointments,setAppointments);
                 }
             })
-            console.log(newAppointments);
         }
         if(deleted !== undefined){
             deletePlanning(deleted,appointments,setAppointments);

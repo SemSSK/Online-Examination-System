@@ -15,7 +15,7 @@ const convertAppoToPlan = (appointment) => {
         duration:duration,
         module:appointment.module,
         etudiants: appointment.etudiants ? [...appointment.etudiants] : [],
-        sessionExamens: appointment.sessionExamens ? [...appointment.sessionExamens] : []
+        sessionExamens: appointment.sessionExamens ? [...appointment.sessionExamens] : null
     };
 };
 
@@ -40,11 +40,11 @@ const convertPlanToAppo = (plan) => {
         title: title,
         module:plan.module,
         etudiants:plan.etudiants,
-        sessionsExamens:plan.sessionExamens
+        sessionExamens:plan.sessionExamens
     };
 };
 
-const convertPlanningToAppointments = (plannings) => {
+const convertPlanningToAppointments = (plannings) => { 
     const size = plannings.length;
     const appointments = new Array(size);
     for (let i = 0; i < size; i++) {

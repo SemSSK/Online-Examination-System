@@ -14,8 +14,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.crypto.KeyGenerator;
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional(readOnly = true)
@@ -56,7 +58,7 @@ public class AdminPlanningService {
             throw new Exception("Cannot plan exam at this date");
         }
         planningExamen.getSessionExamens().forEach(sessionExamen -> {
-            sessionExamen.setState(SessionExamenStates.OPENED);
+            sessionExamen.setState(SessionExamenStates.CREATED);
         });
         planningExamen.setAdmin(getAdmin());
         Base64StringKeyGenerator generator = new Base64StringKeyGenerator();
@@ -71,7 +73,6 @@ public class AdminPlanningService {
 
     @Transactional(readOnly = false)
     public PlanningExamen modPlanning(PlanningExamen planningExamen) throws Exception {
-
         Optional<PlanningExamen> optCurrentPlanning = planningExamenRepo.findById(planningExamen.getPlanId());
         if(optCurrentPlanning.isEmpty()){
             throw new Exception("Planning doesn't exist");
@@ -88,14 +89,17 @@ public class AdminPlanningService {
         currentPlanning.setDuration(planningExamen.getDuration());
         currentPlanning.setDateOfExame(planningExamen.getDateOfExame());
         currentPlanning.setModule(planningExamen.getModule());
-        currentPlanning.getSessionExamens().forEach(sessionExamen -> {
-            sessionExamen.setPlannings(null);
-        });
-        sessionExamenRepo.deleteAll(currentPlanning.getSessionExamens());
-        currentPlanning.setSessionExamens(planningExamen.getSessionExamens());
-        currentPlanning.getSessionExamens().forEach(sessionExamen -> {
-            sessionExamen.setPlannings(currentPlanning);
-        });
+        if(planningExamen.getSessionExamens() != null) {
+            Collection<SessionExamen> oldSessions = currentPlanning.getSessionExamens();
+            sessionExamenRepo.deleteAll(oldSessions);
+            currentPlanning.getSessionExamens().clear();
+            currentPlanning.setSessionExamens(planningExamen.getSessionExamens());
+            currentPlanning.getSessionExamens().forEach(sessionExamen -> {
+                sessionExamen.setSessionId(null);
+                sessionExamen.setPlannings(currentPlanning);
+                sessionExamenRepo.save(sessionExamen);
+            });
+        }
         currentPlanning.setEtudiants(planningExamen.getEtudiants());
         return planningExamen;
     }
