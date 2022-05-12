@@ -50,6 +50,6 @@ public class AuthorizationController {
 
     @GetMapping("/loggedIn")
     public ResponseEntity<?> checkIfLoggedIn(){
-        return ResponseEntity.ok().body("You are logged in");
+        return ResponseEntity.ok().body(contextHandlerClass.getCurrentLoggedInUser().getUtilisateur().getUserRole());
     }
 }

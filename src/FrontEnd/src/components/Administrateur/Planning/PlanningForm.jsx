@@ -87,8 +87,9 @@ const PlanningForm = ({onFieldChange,appointmentData,...restProps}) => {
     },[])
 
     const onModuleChange = (event)=>{
-        const module = event.target.value
-        onFieldChange({module:null,title:module.nomModule,module: module});
+        const module = event.target.value;
+        console.log(module);
+        onFieldChange({title:module.nomModule,module: module});
         console.log(appointmentData) 
     }
 
