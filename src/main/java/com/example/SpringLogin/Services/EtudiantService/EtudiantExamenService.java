@@ -129,7 +129,7 @@ public class EtudiantExamenService {
         Optional<Examen> currentExamen = examenRepo.findByModule(sessionExamen.getPlannings().getModule());
         copie.setNote(0);
         copie.setEtudiant(getEtudiant());
-        copie.setObservation(null);
+        copie.setObservation("Non corrigé");
         copie.setReclamation(null);
         copie.getReponses().forEach(reponse -> {
             reponse.setCopie(copie);

@@ -72,12 +72,16 @@ const Surveillance = () => {
                 setSession(data.payload);
             }
             else if(data.type === "signal"){
+
                 console.log("received signal");
+
                 const peer = new SimplePeer({
                     initiator:false,
-                    trickle:false
+                    trickle:false,
+                    config: { iceServers: [{ urls: 'stun:stun.l.google.com:19302' }, { urls: 'stun:global.stun.twilio.com:3478?transport=udp' }] }
                 });
                 const sender = data.from;
+
                 peer.on("signal",(data)=>{
                     socket.send(JSON.stringify({
                         type:"signal",
@@ -85,11 +89,19 @@ const Surveillance = () => {
                         to:sender
                     }))
                 })
+
+                peer.on("close",()=>{
+                    console.log("disconnected");
+                    peer.destroy();
+                })
+
                 addPeerToPresence(peer,sender);
                 peer.on("connect",()=>{
                     console.log("connected");
                 })
+
                 peer.signal(data.payload);
+
             }
             console.log(data);
             };

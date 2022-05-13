@@ -5,52 +5,74 @@ import React, { useEffect, useState } from "react";
 import Schedule from "./Schedule";
 
 
-const setAppointments = (setModuleAppo, setSurveillanceAppo) => {
+const getAppointmentes = (setAppointments) => {
     const url = "http://localhost:8080/enseignant/planning/module";
+    let currentAppos = [];
+
     axios.get(url, { withCredentials: true })
         .then(response => {
         if (response.status !== 200) {
             throw response.data;
         }
         const data = response.data;
-        setModuleAppo(convertPlanningToAppointments(data));
+        currentAppos = convertPlanningToAppointments(data).map(appointment => {
+            return {...appointment,type: [2]};
+        });
+        console.log(currentAppos);
     })
-        .catch(error => {
-        console.log(error);
-    });
-    const url2 = "http://localhost:8080/enseignant/planning/surveillance";
-    axios.get(url2, { withCredentials: true })
+    .then(()=>{
+        const url2 = "http://localhost:8080/enseignant/planning/surveillance";
+        axios.get(url2, { withCredentials: true })
         .then(response => {
         if (response.status !== 200) {
             throw response.data;
         }
         const data = response.data;
-        setSurveillanceAppo(convertPlanningToAppointments(data));
+        let appointments = convertPlanningToAppointments(data);
+        console.log(appointments);
+        appointments.forEach(appointment => {
+                const foundAppoIndex = currentAppos.findIndex(a => a.id === appointment.id);
+                if(foundAppoIndex == -1){
+                    currentAppos.push({...appointment,type:[1]})
+                }
+                else{
+                    console.log(currentAppos[foundAppoIndex] );
+                    currentAppos[foundAppoIndex].type = [1,2];
+                }
+            })
+        })
+        .then(()=>{
+            console.log(currentAppos);
+            setAppointments(currentAppos);
+        })
     })
-        .catch(error => {
+    .catch(error => {
         console.log(error);
     });
 };
 
 
+
+
 const Planning = () => {
-    const [surveillanceAppo, setSurveillanceAppo] = useState([]);
-    const [moduleAppo, setModuleAppo] = useState([]);
-    const [mode, setMode] = useState("module");
+    const [resources,setResources] = useState([
+        {
+            fieldName:'type',
+            allowMultiple:true,
+            instances:[
+                {id:1,text:"examen à surveillance"},
+                {id:2,text:"examen de module enseigner"}
+            ] 
+        }
+    ]);
+    const [appointments,setAppointments] = useState([]);
     useEffect(() => {
-        setAppointments(setModuleAppo, setSurveillanceAppo);
+        getAppointmentes(setAppointments);
+        console.log(appointments)
     }, []);
-    return (<Container>
-            <FormControl>
-                <RadioGroup row name="row-radio-buttons-group" value={mode} onChange={e => {
-            setMode(e.target.value);
-        }}>
-                    <FormControlLabel value="module" control={<Radio />} label="module"/>
-                    <FormControlLabel value="surveillance" control={<Radio />} label="surveillance"/>
-                </RadioGroup>
-            </FormControl>
-            {mode === "module" && <Schedule appointments={moduleAppo}></Schedule>}
-            {mode === "surveillance" && <Schedule appointments={surveillanceAppo}></Schedule>}
-        </Container>);
+
+    return (
+        <Schedule appointments={appointments} resources={resources}></Schedule>
+    )
 };
 export default Planning;

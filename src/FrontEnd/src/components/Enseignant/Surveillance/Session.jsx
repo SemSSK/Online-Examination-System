@@ -4,6 +4,7 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import EtudiantCard from "./EtudiantCard";
 const Session = (props) => {
+
     const navigate = useNavigate();
     const getSessionState = () => {
         return props.session.state;
@@ -23,6 +24,7 @@ const Session = (props) => {
             navigate("/enseignant");
         });
     };
+    
     return (<Card>
             <CardContent>
                 <Grid container>

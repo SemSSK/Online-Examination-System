@@ -36,6 +36,7 @@ public class ExamRoomWebsocket extends TextWebSocketHandler {
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES,false);
         CustomMessage customMessage = objectMapper.readValue(message.getPayload().getBytes(),CustomMessage.class);
+
         Utilisateur user = contextHandlerClass.getUserFromWebSocketSession(session);
 
         if(customMessage.type.equals(CustomMessage.CODE)){
@@ -58,7 +59,6 @@ public class ExamRoomWebsocket extends TextWebSocketHandler {
     @Override
     public void afterConnectionClosed(WebSocketSession session, CloseStatus status) throws Exception {
         Utilisateur utilisateur = contextHandlerClass.getUserFromWebSocketSession(session);
-        webSocketService.removeUserTrace(utilisateur);
         webSocketService.CloseUserConnection(utilisateur);
         webSocketService.printData();
     }

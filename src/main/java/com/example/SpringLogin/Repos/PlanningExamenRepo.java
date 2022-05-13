@@ -18,4 +18,5 @@ public interface PlanningExamenRepo extends JpaRepository<PlanningExamen,Long> {
     public List<PlanningExamen> findAllBySessionExamensSurveillant(Enseignant surveillant);
     public List<PlanningExamen> findAllByModuleIn(List<Module> module);
     public List<PlanningExamen> findByEtudiantsContaining(Etudiant etudiant);
+    public Optional<PlanningExamen> findByEtudiantsContainingAndCodeEtudiant(Etudiant etudiant,String codeEtudiant);
 }

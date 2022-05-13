@@ -8,16 +8,14 @@ import com.example.SpringLogin.Enumarators.SessionExamenStates;
 import com.example.SpringLogin.Repos.PlanningExamenRepo;
 import com.example.SpringLogin.Repos.SessionExamenRepo;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.parameters.P;
 import org.springframework.security.crypto.keygen.Base64StringKeyGenerator;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.crypto.KeyGenerator;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
+import java.util.UUID;
 
 @Service
 @Transactional(readOnly = true)
@@ -61,9 +59,10 @@ public class AdminPlanningService {
             sessionExamen.setState(SessionExamenStates.CREATED);
         });
         planningExamen.setAdmin(getAdmin());
-        Base64StringKeyGenerator generator = new Base64StringKeyGenerator();
-        planningExamen.setCodeEtudiant(generator.generateKey());
-        planningExamen.setCodeSurveillant(generator.generateKey());
+        String codeEtudiant = UUID.randomUUID().toString();
+        String codeSurveillant = UUID.randomUUID().toString();
+        planningExamen.setCodeEtudiant(codeEtudiant);
+        planningExamen.setCodeSurveillant(codeSurveillant);
         planningExamen.getSessionExamens().forEach(sessionExamen -> {
             sessionExamen.setPlannings(planningExamen);
         });

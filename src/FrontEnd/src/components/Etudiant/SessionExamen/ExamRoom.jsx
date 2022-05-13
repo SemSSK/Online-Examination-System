@@ -92,16 +92,15 @@ const ExamRoom = (props) => {
                             <Grid item xs={3} height={"100%"} display={"flex"} justifyContent={"center"} alignItems={"center"}>
                                 <Box width={"400px"} height={"400px"}>
                                     <VideoSending 
+                                    setVideoState={props.setVideoState}
                                     socket={props.socket} 
                                     surveillant={props.presence.sessionExamen.surveillant}
-                                    peer={props.peer}>
+                                    setPeer={props.setPeer}>
                                     </VideoSending>
                                 </Box>
                             </Grid>
-                            <Grid item xs={5} display={"flex"} justifyContent={"center"}>
+                            <Grid item xs={4} display={"flex"} justifyContent={"center"}>
                                 {isLoading && <Copie code={props.code} copy={copy} setCopy={setCopy}></Copie>}
-                            </Grid>
-                            <Grid item xs={4} height={"100%"} display={"flex"} flexDirection={"column"} justifyContent={"space-around"} alignItems={"center"}>
                             </Grid>
                         </Grid>
                     </> : 

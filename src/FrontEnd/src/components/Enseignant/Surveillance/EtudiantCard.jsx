@@ -4,14 +4,24 @@ import React, { useEffect, useRef } from "react";
 const EtudiantCard = (props) => {
     const etudiant = props.presence.etudiant;
     const videoRef = useRef();
+    const recordRef = useRef();
     
     useEffect(()=>{
         if(props.presence.peer !== undefined){
             console.log(props.presence) 
-            props.presence.peer.on("stream",(stream)=>{
-                const video = videoRef.current;
-                video.srcObject = stream;
-                video.play();
+            props.presence.peer.on("stream",(mediaStream)=>{
+                const log = (mediaStream);
+                console.log(log);
+                if(videoRef.current.srcObject === null){
+                    const video = videoRef.current;
+                    video.srcObject = mediaStream;
+                    video.play();
+                }
+                else{
+                    const record = recordRef.current;
+                    record.srcObject = mediaStream;
+                    record.play();
+                }
             })
         }
     },[props.presence])
@@ -75,6 +85,9 @@ const EtudiantCard = (props) => {
                     <video style={{width:"300px",height:"300px"}} ref={videoRef}>
 
                     </video>    
+                    <video style={{width:"300px",height:"300px"}} ref={recordRef}>
+
+                    </video> 
                 </Box>
             </CardContent>
             <CardContent>

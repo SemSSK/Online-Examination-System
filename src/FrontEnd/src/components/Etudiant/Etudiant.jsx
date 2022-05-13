@@ -7,6 +7,7 @@ import LogOut from "../Authentication/LogOut";
 import { Box } from "@mui/system";
 import Schedual from "./Planning/Schedual"
 import Profile from "../Profile";
+import { PlayArrow } from "@mui/icons-material";
 
 
 const useStyle = makeStyles((theme) => {
@@ -30,6 +31,12 @@ const Etudiant = () => {
             text: 'Schedual',
             icon: <DateRangeIcon/>,
             path: "/etudiant/schedual",
+            alwaysShow: true
+        },
+        {
+            text: 'Join exam',
+            icon: <PlayArrow/>,
+            path: "/examroom",
             alwaysShow: true
         }
     ];
