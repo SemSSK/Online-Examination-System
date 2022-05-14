@@ -13,6 +13,26 @@ const Surveillance = () => {
     const [sessionLoaded, setSessionLoaded] = useState(false);
     const navigate = useNavigate();
 
+    const updateList = (newList)=>{
+        let resultList = newList;
+        listEtudiant.forEach(etudiant => {
+            const indexOfFoundEtudiant = newList.findIndex(e => {return e.etudiant.userId === etudiant.etudiant.userId});
+            if(indexOfFoundEtudiant !== -1){
+                resultList[indexOfFoundEtudiant] = {...etudiant,...resultList[indexOfFoundEtudiant] }
+                console.log(resultList[indexOfFoundEtudiant] )
+            }
+        })
+        console.log("new List");
+        console.log(resultList)
+        setListEtudiant(resultList);
+    }
+    useEffect(()=>{
+        if(socket instanceof WebSocket){
+        return ()=>{
+            socket.close();
+        }}
+    },[socket])
+
     useEffect(()=>{
         const ws = new WebSocket("ws://localhost:8080/examRoom");
         if (ws !== null) {
@@ -23,7 +43,8 @@ const Surveillance = () => {
                     navigate("/surveillant");
                 }
                 else if (data.type === "data") {
-                    setListEtudiant(data.payload);
+                    let newList = data.payload;
+                    updateList(newList);
                 }
                 else if (data.type === "session-info") {
                     setSession(data.payload);
@@ -66,7 +87,8 @@ const Surveillance = () => {
                 navigate("/surveillant");
             }
             else if (data.type === "data") {
-                setListEtudiant(data.payload);
+                let newList = data.payload;
+                updateList(newList);
             }
             else if (data.type === "session-info") {
                 setSession(data.payload);
@@ -109,6 +131,7 @@ const Surveillance = () => {
                 navigate("/enseignant");
             };
         }
+
             
     }, [listEtudiant,session]);
 

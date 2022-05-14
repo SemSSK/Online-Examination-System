@@ -70,12 +70,14 @@ public class SurveillantService {
 
     @Transactional(readOnly = false)
     public void ChangeSessionActivationState(String codeSurveillant) throws Exception {
-        if(!webSocketService.sessionExists(getSurveillant())){
-            throw new Exception("Not connected to session");
-        }
+
         PlanningExamen currentExamen = getPlanningExamen(codeSurveillant);
         SessionExamen currentSession = getSession(currentExamen);
+        if(!webSocketService.sessionExists(getSurveillant(),currentSession)){
+            throw new Exception("Not connected to session");
+        }
         currentSession.setToNextState();
+
         for(Présences p : currentSession.getPrésences()) {
             webSocketService.sendPrésencesToEtudiant(p);
         }
@@ -84,12 +86,12 @@ public class SurveillantService {
 
     @Transactional(readOnly = false)
     public void ChangeEtudiantPresenceState(String codeSurveillant, Etudiant etudiant,String Etat) throws Exception{
-        if(!webSocketService.sessionExists(getSurveillant())){
-            throw new Exception("Not connected to session");
-        }
         PlanningExamen curreExamen = getPlanningExamen(codeSurveillant);
         canChangePresences(curreExamen);
         SessionExamen currentSession = getSession(curreExamen);
+        if(!webSocketService.sessionExists(getSurveillant(),currentSession)){
+            throw new Exception("Not connected to session");
+        }
         Présences présencesOfEtudiant = getPrésenceOfEtudiant(currentSession,etudiant);
         présencesOfEtudiant.setState(Etat);
         webSocketService.UpdatePrésence(présencesOfEtudiant);

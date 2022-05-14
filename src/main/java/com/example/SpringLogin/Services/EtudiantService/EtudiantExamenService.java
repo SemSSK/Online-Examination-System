@@ -80,16 +80,15 @@ public class EtudiantExamenService {
     }
 
     public Examen getExamen(String codeEtudiant) throws Exception {
-
-        if(!webSocketService.sessionExists(getEtudiant())){
-            throw new Exception("Not connected to session");
-        }
-
         if(!canParticipateInExam(codeEtudiant)){
             throw new Exception("wrong code");
         }
 
         SessionExamen sessionExamen = getCurrSession(codeEtudiant);
+
+        if(!webSocketService.sessionExists(getEtudiant(),sessionExamen)){
+            throw new Exception("Not connected to session");
+        }
 
 
         if(!sessionExamen.getState().equals(SessionExamenStates.STARTED)){
@@ -112,14 +111,13 @@ public class EtudiantExamenService {
 
     @Transactional(readOnly = false)
     public void PostCopie(String codeEtudiant,Copie copie) throws Exception {
-
-        if(!webSocketService.sessionExists(getEtudiant())){
-            throw new Exception("Not connected to session");
-        }
         if(!canParticipateInExam(codeEtudiant)){
             throw new Exception("wrong code");
         }
         SessionExamen sessionExamen = getCurrSession(codeEtudiant);
+        if(!webSocketService.sessionExists(getEtudiant(),sessionExamen)){
+            throw new Exception("Not connected to session");
+        }
         if(!sessionExamen.getState().equals(SessionExamenStates.STARTED)){
             throw new Exception("Exam Session hes not started yet");
         }

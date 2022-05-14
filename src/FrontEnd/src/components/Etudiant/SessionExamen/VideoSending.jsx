@@ -10,6 +10,12 @@ const VideoSending = ({surveillant,socket,setPeer,setVideoState}) => {
     const [videoStarted,setVideoStarted] = useState(false);
     const [recordStarted,setRecordStarted] = useState(false);
 
+    const stopVideo = (video)=>{
+        video.srcObject.getTracks().forEach((track) => {
+            track.stop();
+        });
+    }
+
     const startWebCamStream = ()=>{
         navigator.mediaDevices.getUserMedia({video:true,audio:false})
         .then(mediaStream => {
@@ -64,7 +70,10 @@ const VideoSending = ({surveillant,socket,setPeer,setVideoState}) => {
 
         sp.on("close",()=>{
             console.log("on close event for peer")
+            stopVideo(videoRef.current);
+            stopVideo(recordRef.current);
         })
+
         console.log(sp)
         setPeer(sp);
 

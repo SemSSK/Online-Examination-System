@@ -85,6 +85,8 @@ const EtudiantCard = (props) => {
                     <video style={{width:"300px",height:"300px"}} ref={videoRef}>
 
                     </video>    
+                </Box>
+                <Box width={"300px"} height={"300px"}>
                     <video style={{width:"300px",height:"300px"}} ref={recordRef}>
 
                     </video> 

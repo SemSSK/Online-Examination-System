@@ -15,6 +15,13 @@ const PassExam = () => {
     const navigate = useNavigate();
     
     useEffect(()=>{
+        if(socket instanceof WebSocket){
+        return ()=>{
+            socket.close();
+        }}
+    },[socket])
+
+    useEffect(()=>{
         console.log("reload socket");
         console.log(peer);
         if(socket !== undefined){
@@ -41,7 +48,6 @@ const PassExam = () => {
         };
         socket.onclose = e => {
                 console.log("close Event")
-                stopVideo();
                 navigate("/etudiant");
             } 
         }
@@ -62,7 +68,6 @@ const PassExam = () => {
                     console.log(data.payload);
                 }
                 else if (data.type === "blocked") {
-                    ws.close();
                     alert(data.payload);
                 }
                 else if (data.type === "signal") {
@@ -73,15 +78,16 @@ const PassExam = () => {
             };
             ws.onclose = e => {
                 console.log("close Event")
-                stopVideo();
+                if(peer instanceof SimplePeer){
+                    console.log("destroying peer")
+                    peer.destroy();
+                }
                 navigate("/etudiant");
             };
             setSocket(ws);
         }
     }, []);
 
-    const stopVideo = ()=>{
-    }
     
     return (<Box width={"100%"} height={"100%"} justifyContent={"center"}>
             {!inSession && <JoinExamRoom code={code} setCode={setCode} setInSession={setInSession} setPresence={setPresence} socket={socket} peer={peer}>
