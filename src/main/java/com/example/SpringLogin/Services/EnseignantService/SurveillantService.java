@@ -70,7 +70,6 @@ public class SurveillantService {
 
     @Transactional(readOnly = false)
     public void ChangeSessionActivationState(String codeSurveillant) throws Exception {
-
         PlanningExamen currentExamen = getPlanningExamen(codeSurveillant);
         SessionExamen currentSession = getSession(currentExamen);
         if(!webSocketService.sessionExists(getSurveillant(),currentSession)){
@@ -79,7 +78,7 @@ public class SurveillantService {
         currentSession.setToNextState();
 
         for(Présences p : currentSession.getPrésences()) {
-            webSocketService.sendPrésencesToEtudiant(p);
+            webSocketService.UpdatePrésence(p);
         }
         webSocketService.sendPrésencesToEnseignant(currentSession);
     }
@@ -95,6 +94,7 @@ public class SurveillantService {
         Présences présencesOfEtudiant = getPrésenceOfEtudiant(currentSession,etudiant);
         présencesOfEtudiant.setState(Etat);
         webSocketService.UpdatePrésence(présencesOfEtudiant);
+        webSocketService.sendPrésencesToEnseignant(présencesOfEtudiant.getSessionExamen());
     }
 
 

@@ -163,18 +163,22 @@ public class WebSocketService {
             CustomMessage customMessage = new CustomMessage(CustomMessage.BLOCKED, "Le surveillant vous a bloquer pour triche");
             sendData(présences.getEtudiant(), customMessage);
         }
+        else if (présences.getSessionExamen().getState().equals(SessionExamenStates.STARTED) && présences.getState().equals(PrésenceEtats.ABSENT)){
+            CustomMessage customMessage = new CustomMessage(CustomMessage.BLOCKED, "Le surveillant vous a juger absent dans cette session");
+            sendData(présences.getEtudiant(), customMessage);
+        }
         else if (présences.getSessionExamen().getState().equals(SessionExamenStates.ENDED)){
             CustomMessage customMessage = new CustomMessage(CustomMessage.BLOCKED, "Le surveillant vous a bloquer pour triche");
             sendData(présences.getEtudiant(), customMessage);
         }
         sendPrésencesToEtudiant(présences);
-        sendPrésencesToEnseignant(présences.getSessionExamen());
     }
 
     //Sending methods
     public void sendPrésencesToEnseignant(SessionExamen sessionExamen) throws IOException {
 
         Enseignant enseignant = sessionExamen.getSurveillant();
+
         List<Présences> currentPrésences = sessionExamen.getPrésences().stream().filter(présences -> {
             Etudiant etudiant = présences.getEtudiant();
             WebSocketUser etudiantSession = sessionsUserMap.get(etudiant);

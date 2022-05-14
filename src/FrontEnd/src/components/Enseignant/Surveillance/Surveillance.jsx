@@ -15,15 +15,6 @@ const Surveillance = () => {
 
     const updateList = (newList)=>{
         let resultList = newList;
-        listEtudiant.forEach(etudiant => {
-            const indexOfFoundEtudiant = newList.findIndex(e => {return e.etudiant.userId === etudiant.etudiant.userId});
-            if(indexOfFoundEtudiant !== -1){
-                resultList[indexOfFoundEtudiant] = {...etudiant,...resultList[indexOfFoundEtudiant] }
-                console.log(resultList[indexOfFoundEtudiant] )
-            }
-        })
-        console.log("new List");
-        console.log(resultList)
         setListEtudiant(resultList);
     }
     useEffect(()=>{
