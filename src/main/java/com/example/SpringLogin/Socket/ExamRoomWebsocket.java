@@ -1,11 +1,14 @@
 package com.example.SpringLogin.Socket;
 
 import com.example.SpringLogin.Configrations.SecurityServices.ContextHandlerClass;
-import com.example.SpringLogin.Entities.*;
+import com.example.SpringLogin.Entities.Enseignant;
+import com.example.SpringLogin.Entities.Etudiant;
+import com.example.SpringLogin.Entities.Utilisateur;
 import com.example.SpringLogin.Enumarators.Role;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.stereotype.Component;
+import org.springframework.web.socket.BinaryMessage;
 import org.springframework.web.socket.CloseStatus;
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
@@ -21,6 +24,11 @@ public class ExamRoomWebsocket extends TextWebSocketHandler {
     public ExamRoomWebsocket(ContextHandlerClass contextHandlerClass,WebSocketService webSocketService){
         this.contextHandlerClass = contextHandlerClass;
         this.webSocketService = webSocketService;
+    }
+
+    @Override
+    protected void handleBinaryMessage(WebSocketSession session, BinaryMessage message) {
+        super.handleBinaryMessage(session, message);
     }
 
     @Override

@@ -15,6 +15,23 @@ const Surveillance = () => {
 
     const updateList = (newList)=>{
         let resultList = newList;
+        resultList.forEach(function(presence,index) {
+            console.log("looping")
+            const foundIndex = listEtudiant.findIndex(p => {
+                return p.etudiant.userId === presence.etudiant.userId;
+            })
+            console.log(foundIndex);
+            if(foundIndex !== -1){
+                console.log(listEtudiant[foundIndex]);
+                if(listEtudiant[foundIndex].peer !== undefined){
+                    console.log("Altering Element");
+                    console.log(this[index])
+                    this[index].peer = listEtudiant[foundIndex].peer;
+                    console.log(this[index])
+                }
+            }
+        },resultList)
+        console.log("new List");
         setListEtudiant(resultList);
     }
     useEffect(()=>{
@@ -54,13 +71,12 @@ const Surveillance = () => {
                             to:sender
                         }))
                     })
-                    addPeerToPresence(peer,sender);
                     peer.on("connect",()=>{
                         console.log("connected");
                     })
+                    addPeerToPresence(peer,sender);
                     peer.signal(data.payload);
                 }
-                console.log(data);
                 };
                 ws.onclose = e => {
                     navigate("/enseignant");
@@ -134,6 +150,7 @@ const Surveillance = () => {
         )));
         console.log(listEtudiant);
     }
+
 
     return (<Box width={"100%"} height={"100%"} justifyContent={"center"}>
             {(session == undefined) &&

@@ -17,7 +17,7 @@ const EtudiantCard = (props) => {
                     video.srcObject = mediaStream;
                     video.play();
                 }
-                else{
+                else{ 
                     const record = recordRef.current;
                     record.srcObject = mediaStream;
                     record.play();
