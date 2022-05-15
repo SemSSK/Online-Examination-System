@@ -48,7 +48,6 @@ const VideoSending = ({surveillant,socket,setPeer,setVideoState}) => {
         const sp = new SimplePeer({
             initiator:true,
             trickle:false,
-            config: { iceServers: [{ urls: 'stun:stun.l.google.com:19302' }, { urls: 'stun:global.stun.twilio.com:3478?transport=udp' }] },
             streams:[webCamStream,screenRecordStream]
         });
         
@@ -63,15 +62,10 @@ const VideoSending = ({surveillant,socket,setPeer,setVideoState}) => {
                 to:surveillant
             }))
         })
+        
 
         sp.on("connect",()=>{
             console.log("connected");
-        })
-
-        sp.on("close",()=>{
-            console.log("on close event for peer")
-            stopVideo(videoRef.current);
-            stopVideo(recordRef.current);
         })
 
         console.log(sp)

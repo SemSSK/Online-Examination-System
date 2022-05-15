@@ -1,11 +1,11 @@
-import { Button, Card, CardContent, Box, Typography } from "@mui/material";
+import { Button, Card, CardContent, Box, Typography ,TextField} from "@mui/material";
 import axios from "axios";
 import React, { useEffect, useRef } from "react";
 const EtudiantCard = (props) => {
     const etudiant = props.presence.etudiant;
     const videoRef = useRef();
     const recordRef = useRef();
-    
+
     useEffect(()=>{
         if(props.presence.peer !== undefined){
             console.log(props.presence) 
@@ -24,7 +24,7 @@ const EtudiantCard = (props) => {
                 }
             })
         }
-    },[props.presence])
+    },[props])
 
     const markPresent = () => {
         const url = `http://localhost:8080/enseignant/surveillance/${props.code}/présence`;

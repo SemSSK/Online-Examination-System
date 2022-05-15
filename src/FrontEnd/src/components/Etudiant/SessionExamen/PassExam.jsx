@@ -1,8 +1,7 @@
 import { Box } from "@mui/material";
-import React, { useState,useEffect, useRef } from "react";
+import React, { useState,useEffect } from "react";
 import ExamRoom from "./ExamRoom";
 import JoinExamRoom from "./JoinExamRoom";
-import SimplePeer from "simple-peer";
 import { useNavigate } from "react-router-dom";
 
 const PassExam = () => {
@@ -15,43 +14,37 @@ const PassExam = () => {
     const navigate = useNavigate();
     
     useEffect(()=>{
-        if(socket instanceof WebSocket){
-        return ()=>{
-            socket.close();
-        }}
+        if(socket !== undefined){
+            return (()=>{
+                socket.close();
+            })
+        }
     },[socket])
 
     useEffect(()=>{
-        console.log("reload socket");
-        console.log(peer);
         if(socket !== undefined){
             socket.onmessage = e => {
-            const data = JSON.parse(e.data);
-            console.log(data);
-            if (data.type === "message") {
-                setInSession(false);
-                alert(data.payload);
-            }
-            else if (data.type === "data") {
-                setPresence(data.payload);
-                console.log(data.payload);
-            }
-            else if (data.type === "blocked") {
-                socket.close();
-                alert(data.payload);
-            }
-            else if (data.type === "signal") {
-                console.log("answer")
-                peer.signal(data.payload);
-            }
-            console.log(data);
-        };
-        socket.onclose = e => {
-                console.log("close Event")
-                navigate("/etudiant");
-            } 
+                const data = JSON.parse(e.data);
+                console.log(data);
+                if (data.type === "message") {
+                    setInSession(false);
+                    alert(data.payload);
+                }
+                else if (data.type === "data") {
+                    setPresence(data.payload);
+                    console.log(data.payload);
+                }
+                else if (data.type === "blocked") {
+                    alert(data.payload);
+                }
+                else if (data.type === "signal") {
+                    console.log("answer")
+                    peer.signal(data.payload);
+                }
+                console.log(data);
+            };
         }
-    },[peer,videoState])
+    },[peer])
 
     useEffect(() => {
         const ws = new WebSocket("ws://localhost:8080/examRoom");
@@ -70,17 +63,12 @@ const PassExam = () => {
                 else if (data.type === "blocked") {
                     alert(data.payload);
                 }
-                else if (data.type === "signal") {
-                    console.log("answer")
-                    peer.current.signal(data.payload);
-                }
                 console.log(data);
             };
             ws.onclose = e => {
                 console.log("close Event")
-                if(peer instanceof SimplePeer){
-                    console.log("destroying peer")
-                    peer.destroy();
+                if(peer !== undefined){
+                    peer.close();
                 }
                 navigate("/etudiant");
             };

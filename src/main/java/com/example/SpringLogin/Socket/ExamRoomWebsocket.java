@@ -26,10 +26,6 @@ public class ExamRoomWebsocket extends TextWebSocketHandler {
         this.webSocketService = webSocketService;
     }
 
-    @Override
-    protected void handleBinaryMessage(WebSocketSession session, BinaryMessage message) {
-        super.handleBinaryMessage(session, message);
-    }
 
     @Override
     public void afterConnectionEstablished(WebSocketSession session) throws Exception {

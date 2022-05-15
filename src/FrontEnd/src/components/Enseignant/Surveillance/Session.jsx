@@ -38,8 +38,8 @@ const Session = (props) => {
             <CardContent>
                 <Grid container>
                     {props.ListEtudiant.map(e => {
-            return (<Grid item xs={3} key={e.userId}>
-                                <EtudiantCard presence={e} code={props.code}></EtudiantCard>
+                    return (<Grid item xs={3} key={e.userId}>
+                                <EtudiantCard presence={e} code={props.code} ></EtudiantCard>
                             </Grid>);
         })}
                     

@@ -1,5 +1,5 @@
 import { Box } from "@mui/system";
-import React, { useState,useEffect } from "react";
+import React, { useState,useEffect, useRef } from "react";
 import JoinSession from "./JoinSession";
 import Session from "./Session";
 import SimplePeer from "simple-peer";
@@ -30,16 +30,18 @@ const Surveillance = () => {
                     console.log(this[index])
                 }
             }
-        },resultList)
+        },resultList) 
         console.log("new List");
         setListEtudiant(resultList);
     }
+
     useEffect(()=>{
-        if(socket instanceof WebSocket){
+        if(socket !== undefined){
         return ()=>{
             socket.close();
         }}
     },[socket])
+
 
     useEffect(()=>{
         const ws = new WebSocket("ws://localhost:8080/examRoom");
@@ -107,7 +109,6 @@ const Surveillance = () => {
                 const peer = new SimplePeer({
                     initiator:false,
                     trickle:false,
-                    config: { iceServers: [{ urls: 'stun:stun.l.google.com:19302' }, { urls: 'stun:global.stun.twilio.com:3478?transport=udp' }] }
                 });
                 const sender = data.from;
 
@@ -139,7 +140,7 @@ const Surveillance = () => {
             };
         }
 
-            
+        console.log(listEtudiant);
     }, [listEtudiant,session]);
 
 
@@ -148,7 +149,6 @@ const Surveillance = () => {
         setListEtudiant(listEtudiant.map(presence => (
             presence.etudiant.userId === sender.userId ? {...presence,peer:peer} : presence
         )));
-        console.log(listEtudiant);
     }
 
 
@@ -162,7 +162,7 @@ const Surveillance = () => {
                 setSessionLoaded={setSessionLoaded} 
             ></JoinSession>}
             {(session !== undefined) &&
-            <Session socket={socket} code={code} session={session} ListEtudiant={listEtudiant}></Session>}
+            <Session socket={socket} code={code} session={session} ListEtudiant={listEtudiant} ></Session>}
         </Box>);
 };
 export default Surveillance;
