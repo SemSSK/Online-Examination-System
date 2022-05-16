@@ -4,6 +4,9 @@ import com.example.SpringLogin.Entities.SessionExamen;
 import com.example.SpringLogin.Entities.Utilisateur;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.*;
+import org.springframework.web.socket.WebSocketSession;
+
+import java.util.Set;
 
 @Getter
 @Setter
@@ -13,19 +16,14 @@ import lombok.*;
 @EqualsAndHashCode
 @ToString
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class CustomMessage {
+public class WebRTCMessage {
 
-    String type;
-    Object payload;
-    private Utilisateur from = null; //
+    private Utilisateur from; //
     private Utilisateur to; //
     private SessionExamen sessionExamen;
+    private String type;
     private Object candidate;
     private Object sdp;
 
 
-    public CustomMessage(String type,Object payload){
-        this.type = type;
-        this.payload = payload;
-    }
 }

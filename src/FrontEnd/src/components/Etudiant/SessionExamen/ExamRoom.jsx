@@ -6,7 +6,7 @@ import { useNavigate } from "react-router-dom";
 import Copie from "./Copie";
 import VideoSending from "./VideoSending"
 
-const ExamRoom = (props) => {
+const ExamRoom = ({socket, ...props}) => {
     const [isLoading, setIsLoading] = useState(false);
     const [copy, setCopy] = useState({});
     const navigate = useNavigate();
@@ -92,10 +92,12 @@ const ExamRoom = (props) => {
                             <Grid item xs={3} height={"100%"} display={"flex"} justifyContent={"center"} alignItems={"center"}>
                                 <Box width={"400px"} height={"400px"}>
                                     <VideoSending 
-                                    setVideoState={props.setVideoState}
-                                    socket={props.socket} 
-                                    surveillant={props.presence.sessionExamen.surveillant}
-                                    setPeer={props.setPeer}>
+                                        
+                                        surveillant={props.presence.sessionExamen.surveillant}
+                                        etudiant={props.presence.etudiant}
+                                        sessionExamen={props.presence.sessionExamen}
+                                        socket={socket}
+                                    >
                                     </VideoSending>
                                 </Box>
                             </Grid>

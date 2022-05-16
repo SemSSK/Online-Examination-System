@@ -17,7 +17,7 @@ public class WebSocketUser {
     private Utilisateur utilisateur;
     private SessionExamen sessionExamen;
 
-    public WebSocketUser(WebSocketSession webSocketSession,Utilisateur utilisateur){
+    public WebSocketUser(WebSocketSession webSocketSession, Utilisateur utilisateur){
         this.webSocketSession = webSocketSession;
         this.utilisateur = utilisateur;
         this.sessionExamen = null;

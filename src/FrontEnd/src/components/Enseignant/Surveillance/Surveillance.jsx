@@ -1,5 +1,5 @@
 import { Box } from "@mui/system";
-import React, { useState,useEffect, useRef } from "react";
+import React, { useState,useEffect } from "react";
 import JoinSession from "./JoinSession";
 import Session from "./Session";
 import SimplePeer from "simple-peer";
@@ -8,6 +8,7 @@ import { useNavigate } from "react-router-dom";
 const Surveillance = () => {
     const [code, setCode] = useState('');
     const [socket, setSocket] = useState();
+    
     const [listEtudiant, setListEtudiant] = useState([]);
     const [session, setSession] = useState();
     const [sessionLoaded, setSessionLoaded] = useState(false);
@@ -30,126 +31,38 @@ const Surveillance = () => {
                     console.log(this[index])
                 }
             }
-        },resultList) 
+        },resultList)
         console.log("new List");
         setListEtudiant(resultList);
     }
 
     useEffect(()=>{
-        if(socket !== undefined){
-        return ()=>{
-            socket.close();
-        }}
-    },[socket])
-
-
-    useEffect(()=>{
         const ws = new WebSocket("ws://localhost:8080/examRoom");
+        console.log(ws);
         if (ws !== null) {
             ws.onmessage = e => {
-                const data = JSON.parse(e.data);
-                if (data.type === "message") {
-                    alert(data.payload);
-                    navigate("/surveillant");
-                }
-                else if (data.type === "data") {
-                    let newList = data.payload;
-                    updateList(newList);
-                }
-                else if (data.type === "session-info") {
-                    setSession(data.payload);
-                }
-                else if(data.type === "signal"){
-                    console.log("received signal");
-                    const peer = new SimplePeer({
-                        initiator:false,
-                        trickle:false
-                    });
-                    const sender = data.from;
-                    peer.on("signal",(data)=>{
-                        ws.send(JSON.stringify({
-                            type:"signal",
-                            payload:data,
-                            to:sender
-                        }))
-                    })
-                    peer.on("connect",()=>{
-                        console.log("connected");
-                    })
-                    addPeerToPresence(peer,sender);
-                    peer.signal(data.payload);
-                }
+                    const data = JSON.parse(e.data);
+                    if (data.type === "message") {
+                        alert(data.payload);
+                        navigate("/surveillant");
+                    }
+                    else if (data.type === "data") {
+                        let newList = data.payload;
+                        updateList(newList);
+                    }
+                    else if (data.type === "session-info") {
+                        setSession(data.payload);
+                    }
                 };
                 ws.onclose = e => {
                     navigate("/enseignant");
                 };
             setSocket(ws);
         }
+
+
     },[])
-
-    useEffect(() => {
-        if(socket !== undefined){
-            socket.onmessage = e => {
-            const data = JSON.parse(e.data);
-            if (data.type === "message") {
-                alert(data.payload);
-                navigate("/surveillant");
-            }
-            else if (data.type === "data") {
-                let newList = data.payload;
-                updateList(newList);
-            }
-            else if (data.type === "session-info") {
-                setSession(data.payload);
-            }
-            else if(data.type === "signal"){
-
-                console.log("received signal");
-
-                const peer = new SimplePeer({
-                    initiator:false,
-                    trickle:false,
-                });
-                const sender = data.from;
-
-                peer.on("signal",(data)=>{
-                    socket.send(JSON.stringify({
-                        type:"signal",
-                        payload:data,
-                        to:sender
-                    }))
-                })
-
-                peer.on("close",()=>{
-                    console.log("disconnected");
-                    peer.destroy();
-                })
-
-                addPeerToPresence(peer,sender);
-                peer.on("connect",()=>{
-                    console.log("connected");
-                })
-
-                peer.signal(data.payload);
-
-            }
-            console.log(data);
-            };
-            socket.onclose = e => {
-                navigate("/enseignant");
-            };
-        }
-
-        console.log(listEtudiant);
-    }, [listEtudiant,session]);
-
-
-    const addPeerToPresence = (peer,sender)=>{
-        console.log(listEtudiant);
-        setListEtudiant(listEtudiant.map(presence => (
-            presence.etudiant.userId === sender.userId ? {...presence,peer:peer} : presence
-        )));
-    }
+    
 
 
     return (<Box width={"100%"} height={"100%"} justifyContent={"center"}>
@@ -162,7 +75,14 @@ const Surveillance = () => {
                 setSessionLoaded={setSessionLoaded} 
             ></JoinSession>}
             {(session !== undefined) &&
-            <Session socket={socket} code={code} session={session} ListEtudiant={listEtudiant} ></Session>}
+                <Session 
+                    socket={socket} 
+                    code={code} 
+                    session={session} 
+                    ListEtudiant={listEtudiant}
+                >
+                </Session>
+            }
         </Box>);
 };
 export default Surveillance;

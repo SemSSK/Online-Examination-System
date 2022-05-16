@@ -64,14 +64,14 @@ public class WebSocketService {
     }
 
     @Transactional(readOnly = false)
-    private void removeSurveillantTrace(Enseignant enseignant) throws IOException {
+     void removeSurveillantTrace(Enseignant enseignant) throws IOException {
         if(sessionsUserMap.containsKey(enseignant)){
             SessionExamen currentSession = sessionsUserMap.get(enseignant).getSessionExamen();
             if(currentSession != null) {
                 SessionExamen sessionExamen = sessionExamenRepo.findById(currentSession.getSessionId()).get();
                 sessionExamen.setState("ENDED");
             }
-                sessionsUserMap.get(enseignant).setSessionExamen(null);
+            sessionsUserMap.get(enseignant).setSessionExamen(null);
         }
     }
 
@@ -86,14 +86,14 @@ public class WebSocketService {
         WebSocketUser etudiantSession = sessionsUserMap.get(etudiant);
         PlanningExamen planningExamen = getPlanningFromEtudiant(codeEtudiant, etudiant);
         if (planningExamen == null) {
-            sendData(etudiant,new CustomMessage(CustomMessage.MESSAGE,"Wrong code "));
+            sendData(etudiant,new CustomMessage(ExamRoomWebsocket.MESSAGE,"Wrong code "));
         }
         else {
             Présences currentPrésence = getCurrentPrésence(etudiant,planningExamen);
             if(currentPrésence == null) {
                 ArrayList<SessionExamen> sessionsDispo = getSessionDispo(planningExamen);
                 if (sessionsDispo.size() == 0) {
-                    sendData(etudiant,new CustomMessage(CustomMessage.MESSAGE,
+                    sendData(etudiant,new CustomMessage(ExamRoomWebsocket.MESSAGE,
                             "Aucune Surveillant pour l'instant impossible de rejoindre la session"));
                 } else {
                     SessionExamen idealSession = getIdealSession(sessionsDispo);
@@ -106,9 +106,9 @@ public class WebSocketService {
                 }
             }
             else if(currentPrésence.getSessionExamen().getState().equals(SessionExamenStates.ENDED)
-                || currentPrésence.getSessionExamen().getState().equals(SessionExamenStates.STARTED)
-                || currentPrésence.getState().equals(PrésenceEtats.BLOQUER)){
-                CustomMessage customMessage = new CustomMessage(CustomMessage.MESSAGE,"Cette session ne vous est plus disponible");
+                    || currentPrésence.getSessionExamen().getState().equals(SessionExamenStates.STARTED)
+                    || currentPrésence.getState().equals(PrésenceEtats.BLOQUER)){
+                CustomMessage customMessage = new CustomMessage(ExamRoomWebsocket.MESSAGE,"Cette session ne vous est plus disponible");
                 sendData(etudiant,customMessage);
             }
             else {
@@ -125,10 +125,10 @@ public class WebSocketService {
         WebSocketUser surveillantSession = sessionsUserMap.get(enseignant);
         SessionExamen sessionExamen = getSessionExamenFromSurveillant(codeEnseignant, enseignant);
         if (sessionExamen == null) {
-            sendData(enseignant,new CustomMessage(CustomMessage.MESSAGE,"Wrong code"));
+            sendData(enseignant,new CustomMessage(ExamRoomWebsocket.MESSAGE,"Wrong code"));
         }
         else if(sessionExamen.getState().equals(SessionExamenStates.ENDED)){
-            sendData(enseignant,new CustomMessage(CustomMessage.MESSAGE,"Session deja terminé"));
+            sendData(enseignant,new CustomMessage(ExamRoomWebsocket.MESSAGE,"Session deja terminé"));
         }
         else {
             surveillantSession.setSessionExamen(sessionExamen);
@@ -162,15 +162,15 @@ public class WebSocketService {
 
     public void UpdatePrésence(Présences présences) throws IOException {
         if(présences.getState().equals(PrésenceEtats.BLOQUER)) {
-            CustomMessage customMessage = new CustomMessage(CustomMessage.BLOCKED, "Le surveillant vous a bloquer pour triche");
+            CustomMessage customMessage = new CustomMessage(ExamRoomWebsocket.BLOCKED, "Le surveillant vous a bloquer pour triche");
             sendData(présences.getEtudiant(), customMessage);
         }
         else if (présences.getSessionExamen().getState().equals(SessionExamenStates.STARTED) && présences.getState().equals(PrésenceEtats.ABSENT)){
-            CustomMessage customMessage = new CustomMessage(CustomMessage.BLOCKED, "Le surveillant vous a juger absent dans cette session");
+            CustomMessage customMessage = new CustomMessage(ExamRoomWebsocket.BLOCKED, "Le surveillant vous a juger absent dans cette session");
             sendData(présences.getEtudiant(), customMessage);
         }
         else if (présences.getSessionExamen().getState().equals(SessionExamenStates.ENDED)){
-            CustomMessage customMessage = new CustomMessage(CustomMessage.BLOCKED, "Le surveillant vous a bloquer pour triche");
+            CustomMessage customMessage = new CustomMessage(ExamRoomWebsocket.BLOCKED, "Le surveillant vous a bloquer pour triche");
             sendData(présences.getEtudiant(), customMessage);
         }
         sendPrésencesToEtudiant(présences);
@@ -190,9 +190,9 @@ public class WebSocketService {
             return false;
         }).collect(Collectors.toList());
 
-        CustomMessage présences = new CustomMessage(CustomMessage.DATA,currentPrésences);
+        CustomMessage présences = new CustomMessage(ExamRoomWebsocket.DATA,currentPrésences);
         sendData(enseignant,présences);
-        CustomMessage session = new CustomMessage(CustomMessage.SESSIONINFO,sessionExamen);
+        CustomMessage session = new CustomMessage(ExamRoomWebsocket.SESSIONINFO,sessionExamen);
         sendData(enseignant,session);
 
     }
@@ -215,7 +215,7 @@ public class WebSocketService {
                 etudiantSession.getWebSocketSession().close();
             }
             else {
-                CustomMessage message = new CustomMessage(CustomMessage.DATA, présences);
+                CustomMessage message = new CustomMessage(ExamRoomWebsocket.DATA, présences);
                 sendData(etudiant, message);
             }
         }
@@ -267,12 +267,12 @@ public class WebSocketService {
     }
 
     @Transactional(readOnly = true)
-    private List<Présences> getPrésencesInSession(SessionExamen sessionExamen) {
+     List<Présences> getPrésencesInSession(SessionExamen sessionExamen) {
         return présencesRepo.findAllBySessionExamen(sessionExamen);
     }
 
     @Transactional(readOnly = false)
-    private Présences addPrésences(SessionExamen sessionExamen,Etudiant etudiant){
+     Présences addPrésences(SessionExamen sessionExamen,Etudiant etudiant){
         Etudiant dbEtudiant = etudiantRepo.findById(etudiant.getUserId()).get();
         SessionExamen dbSession = sessionExamenRepo.findById(sessionExamen.getSessionId()).get();
         Présences présences = new Présences();
@@ -281,9 +281,9 @@ public class WebSocketService {
         présences.setState(PrésenceEtats.ABSENT);
         return présencesRepo.save(présences);
     }
-    
+
     @Transactional(readOnly = true)
-    private Présences getCurrentPrésence(Etudiant etudiant,PlanningExamen planningExamen){
+     Présences getCurrentPrésence(Etudiant etudiant,PlanningExamen planningExamen){
         Optional<Présences> currentPrésence = présencesRepo.findByEtudiantAndSessionExamenPlannings(etudiant,planningExamen);
         if(currentPrésence.isEmpty()){
             return null;
