@@ -1,4 +1,4 @@
-import { Card, CardContent, CardHeader } from "@mui/material";
+import { Card, CardContent, CardHeader,Box } from "@mui/material";
 import React from "react";
 import Reponse from "./Reponse";
 const Copie = (props) => {
@@ -10,13 +10,15 @@ const Copie = (props) => {
         props.setCopy(newCopy);
         console.log(props.copy);
     };
-    return (<Card>
-            <CardHeader title={`Examen de ${props.copy.exam.module.nomModule}`}></CardHeader>
-            <CardContent>
-                {props.copy.reponses.map(reponse => {
-            return (<Reponse reponse={reponse} editReponse={editReponse}></Reponse>);
-        })}
-            </CardContent>
-        </Card>);
+    return (<Box>
+                <Card>
+                    <CardHeader title={`Examen de ${props.copy.exam.module.nomModule}`}></CardHeader>
+                    <CardContent>
+                        {props.copy.reponses.map(reponse => {
+                    return (<Reponse reponse={reponse} editReponse={editReponse}></Reponse>);
+                })}
+                    </CardContent>
+                </Card>
+            </Box>);
 };
 export default Copie;

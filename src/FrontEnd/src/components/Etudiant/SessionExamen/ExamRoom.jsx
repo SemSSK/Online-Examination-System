@@ -32,7 +32,7 @@ const ExamRoom = ({socket, ...props}) => {
             for (let i = 0; i < numberOfQuestions; i++) {
                 copy.reponses[i] = {
                     content: '',
-                    question: examen.examenQuestions[i].question
+                    question: examen.examenQuestions[i]
                 };
             }
             setCopy(copy);
@@ -46,7 +46,7 @@ const ExamRoom = ({socket, ...props}) => {
             } })
             .then(response => {
             console.log(response.data);
-            props.socket.close();
+            socket.close();
             navigate("/etudiant");
         })
             .catch(error => {
@@ -101,7 +101,7 @@ const ExamRoom = ({socket, ...props}) => {
                                     </VideoSending>
                                 </Box>
                             </Grid>
-                            <Grid item xs={4} display={"flex"} justifyContent={"center"}>
+                            <Grid item xs={8} display={"flex"} justifyContent={"center"} >
                                 {isLoading && <Copie code={props.code} copy={copy} setCopy={setCopy}></Copie>}
                             </Grid>
                         </Grid>

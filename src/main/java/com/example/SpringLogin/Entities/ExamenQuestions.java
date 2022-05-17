@@ -9,6 +9,8 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Collection;
 
 @Entity
 @Getter
@@ -34,6 +36,11 @@ public class ExamenQuestions implements Serializable {
     @MapsId("examId")
     @JsonIgnore
     private Examen examen;
+
+
+    @OneToMany(mappedBy = "question",fetch = FetchType.LAZY,cascade = CascadeType.ALL)
+    @JsonIgnore
+    private Collection<Reponse> reponses = new ArrayList<>();
 
     public void removeQuestion(){
         this.examen.removeQuestion(this);

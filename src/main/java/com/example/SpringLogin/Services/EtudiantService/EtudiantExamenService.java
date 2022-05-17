@@ -103,7 +103,7 @@ public class EtudiantExamenService {
 
         currentExamen.get().getExamenQuestions().forEach(examenQuestions -> {
             examenQuestions.getQuestion().setTypeAnswer("");
-            examenQuestions.getQuestion().setReponses(new ArrayList<>());
+            examenQuestions.setReponses(new ArrayList<>());
         });
 
         return currentExamen.get();

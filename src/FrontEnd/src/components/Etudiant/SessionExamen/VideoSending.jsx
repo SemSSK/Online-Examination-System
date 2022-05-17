@@ -200,7 +200,7 @@ const VideoSending = ({surveillant,socket,etudiant,sessionExamen}) => {
             stop();
 
         // peer connection configuration (STUN & TURN srever configuration)
-         const peerConnectionConfig = null;
+         const peerConnectionConfig  = null;
         // {
         //     'iceServers': [
         //          {'urls': 'stun:stun.gmx.net:3478'},

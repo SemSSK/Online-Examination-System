@@ -24,8 +24,7 @@ public class Reponse implements Serializable {
     private Copie copie;
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "question_id")
-    private Question question;
+    private ExamenQuestions question;
 
     @Override
     public boolean equals(Object obj) {

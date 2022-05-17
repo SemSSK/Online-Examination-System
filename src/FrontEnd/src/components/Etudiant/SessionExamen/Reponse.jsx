@@ -8,7 +8,7 @@ const Reponse = (props) => {
             <Typography>
                 Enoncé:
                 <div>
-                    {parse(props.reponse.question.content)}
+                    {parse(props.reponse.question.question.content)}
                 </div>
             </Typography>
             <Typography>

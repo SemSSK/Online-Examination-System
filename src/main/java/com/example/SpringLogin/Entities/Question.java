@@ -43,9 +43,6 @@ public class Question implements Serializable {
     @JoinColumn(name = "module_id")
     private Module module;
 
-    @OneToMany(mappedBy = "question",fetch = FetchType.LAZY,cascade = CascadeType.ALL)
-    @JsonIgnore
-    private Collection<Reponse> reponses = new ArrayList<>();
 
     public void removeFromAllExams(){
         this.examenQuestions.forEach(examenQuestions -> {
