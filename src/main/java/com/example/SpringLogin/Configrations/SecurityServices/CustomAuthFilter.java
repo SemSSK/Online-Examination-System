@@ -1,18 +1,28 @@
 package com.example.SpringLogin.Configrations.SecurityServices;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.core.log.LogMessage;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.event.InteractiveAuthenticationSuccessEvent;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextChangedEvent;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.context.SecurityContextHolderStrategy;
+import org.springframework.security.core.session.SessionRegistry;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
+import org.springframework.security.web.authentication.session.ConcurrentSessionControlAuthenticationStrategy;
+import org.springframework.security.web.authentication.session.RegisterSessionAuthenticationStrategy;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.List;
+
 
 public class CustomAuthFilter extends UsernamePasswordAuthenticationFilter {
 
@@ -23,24 +33,4 @@ public class CustomAuthFilter extends UsernamePasswordAuthenticationFilter {
         this.setFilterProcessesUrl("/login");
     }
 
-    @Override
-    protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response,
-                                            FilterChain chain, Authentication authResult)
-            throws IOException, ServletException {
-        request.getSession().setMaxInactiveInterval(TIMEOUT_INTERVAL);
-        SecurityContext context = SecurityContextHolder.createEmptyContext();
-        context.setAuthentication(authResult);
-        SecurityContextHolder.setContext(context);
-        if (this.logger.isDebugEnabled()) {
-            this.logger.debug(LogMessage.format("Set SecurityContextHolder to %s", authResult));
-        }
-
-        super.getRememberMeServices().loginSuccess(request, response, authResult);
-        if (this.eventPublisher != null) {
-            this.eventPublisher.publishEvent(new InteractiveAuthenticationSuccessEvent(authResult, this.getClass()));
-        }
-
-        response.setStatus(HttpServletResponse.SC_OK);
-
-    }
 }

@@ -8,7 +8,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.session.SessionRegistry;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.context.request.RequestContextHolder;
 
 import java.util.Map;
 
@@ -21,6 +23,7 @@ public class AuthorizationController {
 
     @Autowired
     private ActivationCodeService activationCodeService;
+
 
     @PostMapping("/activate")
     public ResponseEntity<String> activate(@RequestBody Map<String,String> activation_code){

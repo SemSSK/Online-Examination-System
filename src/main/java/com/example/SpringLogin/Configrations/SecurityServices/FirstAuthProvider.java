@@ -6,8 +6,17 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.session.SessionInformation;
+import org.springframework.security.core.session.SessionRegistry;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.web.authentication.session.RegisterSessionAuthenticationStrategy;
 import org.springframework.stereotype.Component;
+
+import javax.security.auth.login.LoginException;
+import javax.servlet.http.HttpServletResponse;
+import java.security.Principal;
+import java.util.*;
 
 @Component
 public class FirstAuthProvider implements AuthenticationProvider {
@@ -18,8 +27,8 @@ public class FirstAuthProvider implements AuthenticationProvider {
     @Autowired
     private ActivationCodeService activationCodeService;
 
-    //@Autowired
-    //private EmailServiceImpl emailService;
+
+
 
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
@@ -34,9 +43,6 @@ public class FirstAuthProvider implements AuthenticationProvider {
             if(!user.getUtilisateur().getPassword().equals(password)){
                 throw new BadCredentialsException("invalid login details");
             }
-
-            activationCodeService.MakeActivationCode(email);
-            //emailService.sendTextEmail(user.getUsername(),"Activation Code",code);
 
             return new UsernamePasswordAuthenticationToken(user,authentication.getCredentials(),user.getAuthorities());
         }catch(UsernameNotFoundException e) {

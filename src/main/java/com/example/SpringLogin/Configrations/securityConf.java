@@ -1,5 +1,8 @@
 package com.example.SpringLogin.Configrations;
 
+import com.example.SpringLogin.Configrations.SecurityServices.AuthHandlers.CustomAuthenticationFailureHandler;
+import com.example.SpringLogin.Configrations.SecurityServices.AuthHandlers.CustomAuthenticationSuccessHandler;
+import com.example.SpringLogin.Configrations.SecurityServices.AuthHandlers.CustomLogOutSuccessHandler;
 import com.example.SpringLogin.Enumarators.Role;
 import com.example.SpringLogin.Configrations.SecurityServices.CustomAuthFilter;
 import com.example.SpringLogin.Configrations.SecurityServices.FirstAuthProvider;
@@ -14,6 +17,10 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.authentication.AuthenticationFailureHandler;
+import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
+import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
+import org.springframework.security.web.authentication.session.SessionAuthenticationStrategy;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
@@ -30,17 +37,17 @@ public class securityConf extends WebSecurityConfigurerAdapter {
     @Autowired
     private FirstAuthProvider firstAuthProvider;
 
+
+
     @Override
     protected void configure(HttpSecurity http) throws Exception {
 
         //Creating the authentication filter to override Spring AuthFilter
         CustomAuthFilter authFilter = new CustomAuthFilter(authenticationManagerBean());
-
-
         //disabling cross site refrence forgery defence to allow POST Requests
         http.csrf().disable();
 
-
+        http.sessionManagement().maximumSessions(1).maxSessionsPreventsLogin(true);
         //CORS Configs to allow request comming from the react client app
         http.cors().configurationSource(corsConfigurationSource());
 
@@ -50,9 +57,18 @@ public class securityConf extends WebSecurityConfigurerAdapter {
                 .antMatchers("/etudiant","/etudiant/**").hasRole(Role.ETUDIANT)           //Only Etudiant can access the  RESTControllers mapped with /etudiant
                 .antMatchers("/enseignant","/enseignant/**").hasRole(Role.ENSEIGNANT)       //Only Enseignant can access the  RESTControllers mapped with /enseignant
                 .antMatchers("/examRoom").hasAnyRole(Role.ETUDIANT,Role.ENSEIGNANT)  //Only Enseignant and Etudiant can access the  Exam WebSocket
-                .antMatchers("/authorization/**").authenticated()     //Only Not activated logins can access RESTControllers mapped with /activate
+                .antMatchers("/authorization/**").authenticated()        //Only Not activated logins can access RESTControllers mapped with /activate
                 .anyRequest().authenticated()                                      //For Every other request user needs to be authenticated
-                .and().addFilter(authFilter);                                      //Adding the custom Authentication Filter
+                    .and()
+                    .formLogin()
+                    .loginProcessingUrl("/login")
+                    .failureHandler(authenticationFailureHandler())
+                    .successHandler(authenticationSuccessHandler())
+                .and()
+                    .logout()
+                    .logoutUrl("/logout")
+                    .logoutSuccessHandler(logoutSuccessHandler());
+                //.and().addFilter(authFilter);                                      //Adding the custom Authentication Filter
         //****************************************************************
 
     }
@@ -62,6 +78,7 @@ public class securityConf extends WebSecurityConfigurerAdapter {
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth.authenticationProvider(firstAuthProvider);
     }
+
 
     @Bean
     public PasswordEncoder PasswordEncoder(){
@@ -93,6 +110,21 @@ public class securityConf extends WebSecurityConfigurerAdapter {
         ((UrlBasedCorsConfigurationSource)source).registerCorsConfiguration("/**",config);
         //****************************************************************
         return source;
+    }
+
+
+    //Authentication success and failure handler
+    @Bean
+    public AuthenticationSuccessHandler authenticationSuccessHandler(){
+        return new CustomAuthenticationSuccessHandler();
+    }
+    @Bean
+    public AuthenticationFailureHandler authenticationFailureHandler(){
+        return new CustomAuthenticationFailureHandler();
+    }
+    @Bean
+    public LogoutSuccessHandler logoutSuccessHandler(){
+        return new CustomLogOutSuccessHandler();
     }
 
 }

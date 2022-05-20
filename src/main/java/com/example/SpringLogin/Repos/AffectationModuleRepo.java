@@ -16,6 +16,7 @@ public interface AffectationModuleRepo
         extends JpaRepository<AffectationModule, AffectationModuleKey> {
 
     public Optional<AffectationModule> findByEnseignantAndModule(Enseignant enseignant, Module module);
+    public Optional<AffectationModule> findByEnseignantUserIdAndModuleId(Long enseignantId,Long moduleId);
 
     public List<AffectationModule> findAllByEnseignant(Enseignant enseignant);
 

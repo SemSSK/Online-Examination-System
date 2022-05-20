@@ -65,4 +65,25 @@ public class CustomUserDetails implements UserDetails {
     public Utilisateur getUtilisateur(){
         return user;
     }
+
+    @Override
+    public int hashCode() {
+        return user.getEmail().hashCode();
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if(obj == null){
+            System.out.println("obj null");
+            return false;
+        }
+        else if(!(obj instanceof CustomUserDetails)){
+            System.out.println("obj not instanceof CustomUserDetails");
+            return false;
+        }
+        else{
+            CustomUserDetails customUserDetails = (CustomUserDetails) obj;
+            return customUserDetails.getUsername().hashCode() == hashCode();
+        }
+    }
 }
