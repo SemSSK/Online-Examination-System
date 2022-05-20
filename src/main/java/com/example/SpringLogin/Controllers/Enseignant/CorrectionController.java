@@ -20,10 +20,20 @@ public class CorrectionController {
     private CorrectionService correctionService;
 
 
-    @GetMapping("")
-    public ResponseEntity<?> getCopies(@RequestBody Examen examen){
+    @GetMapping("/module={moduleId}")
+    public ResponseEntity<?> getCopies(@PathVariable(name = "moduleId") Long id){
         try{
-            return new ResponseEntity<>(correctionService.getCopies(examen), HttpStatus.OK);
+            return new ResponseEntity<>(correctionService.getCopies(id), HttpStatus.OK);
+        }
+        catch(Exception e){
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.FORBIDDEN);
+        }
+    }
+
+    @GetMapping("/{copieId}")
+    public ResponseEntity<?> getCopy(@PathVariable(name = "copieId") Long id){
+        try{
+            return new ResponseEntity<>(correctionService.getCopy(id), HttpStatus.OK);
         }
         catch(Exception e){
             return new ResponseEntity<>(e.getMessage(), HttpStatus.FORBIDDEN);
@@ -31,11 +41,11 @@ public class CorrectionController {
     }
 
 
-    @PatchMapping("")
-    public ResponseEntity<?> correctReponse(@RequestBody Reponse reponse){
+    @PutMapping("")
+    public ResponseEntity<?> correctCopie(@RequestBody Copie copie){
         try{
-            correctionService.CorrectCopie(reponse);
-            return new ResponseEntity<>("Reponse Corrigé",HttpStatus.OK);
+            correctionService.CorrectCopy(copie);
+            return new ResponseEntity<>("Copie corrected", HttpStatus.OK);
         }
         catch(Exception e){
             return new ResponseEntity<>(e.getMessage(),HttpStatus.FORBIDDEN);

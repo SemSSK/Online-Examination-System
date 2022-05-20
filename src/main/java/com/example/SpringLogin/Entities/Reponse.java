@@ -42,4 +42,8 @@ public class Reponse implements Serializable {
         return this.reponseId.equals(reponse.reponseId);
     }
 
+    public boolean reponsesPointsAreValid(float points){
+        return this.points >= 0 && this.points <= points;
+    }
+
 }

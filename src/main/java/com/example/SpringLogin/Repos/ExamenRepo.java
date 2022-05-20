@@ -10,5 +10,5 @@ import java.util.Optional;
 @Repository
 public interface ExamenRepo extends JpaRepository<Examen,Long> {
     public Optional<Examen> findByModule(Module module);
-
+    public Optional<Examen> findByModuleId(Long id);
 }
