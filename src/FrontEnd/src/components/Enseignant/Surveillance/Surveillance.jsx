@@ -37,6 +37,14 @@ const Surveillance = () => {
     }
 
     useEffect(()=>{
+        if(socket !== undefined){
+            return(()=>{
+                socket.close();
+            })
+        }
+    },[socket])
+
+    useEffect(()=>{
         const ws = new WebSocket("ws://localhost:8080/examRoom");
         console.log(ws);
         if (ws !== null) {

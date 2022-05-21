@@ -53,10 +53,15 @@ public class ExamRoomWebsocket extends TextWebSocketHandler {
     @Override
     public void afterConnectionEstablished(WebSocketSession session) throws Exception {
         Utilisateur utilisateur = contextHandlerClass.getUserFromWebSocketSession(session);
-        webSocketService.saveConnectedUser(session,utilisateur);
-        webSocketService.printData();
-        utilisateurToSession.put(utilisateur,session);
-        System.out.println("connection with examroom path");
+        if(webSocketService.userExists(utilisateur)){
+            session.close();
+        }
+        else {
+            webSocketService.saveConnectedUser(session, utilisateur);
+            webSocketService.printData();
+            utilisateurToSession.put(utilisateur, session);
+            System.out.println("connection with examroom path");
+        }
     }
 
     @Override
@@ -72,7 +77,7 @@ public class ExamRoomWebsocket extends TextWebSocketHandler {
 
             case CODE : {
                 String code = (String) customMessage.getPayload();
-                webSocketService.removeUserTrace(user);
+                webSocketService.removeUserTrace(user,session);
                 if(user.getUserRole().equals(Role.ETUDIANT)){
                     webSocketService.OnEtudiantJoin((Etudiant) user,code);
                 }
@@ -153,8 +158,8 @@ public class ExamRoomWebsocket extends TextWebSocketHandler {
     @Override
     public void afterConnectionClosed(WebSocketSession session, CloseStatus status) throws Exception {
         Utilisateur utilisateur = contextHandlerClass.getUserFromWebSocketSession(session);
-        webSocketService.removeUserTrace(utilisateur);
-        webSocketService.CloseUserConnection(utilisateur);
+        webSocketService.removeUserTrace(utilisateur,session);
+        webSocketService.CloseUserConnection(utilisateur,session);
         webSocketService.printData();
         System.out.println(status.getReason());
     }

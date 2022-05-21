@@ -140,6 +140,7 @@ public class CorrectionService {
         }
 
         modifyReponsePoints(reponses);
+        realCopy.setObservation(copie.getObservation());
     }
 
 

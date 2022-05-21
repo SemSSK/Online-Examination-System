@@ -12,5 +12,6 @@ public interface PrésencesRepo extends JpaRepository<Présences, EtudiantSessio
 
     public Optional<Présences> findByEtudiantAndSessionExamen(Etudiant etudiant, SessionExamen sessionExamen);
     public Optional<Présences> findByEtudiantAndSessionExamenPlannings(Etudiant etudiant, PlanningExamen planningExamen);
+    public List<Présences> findAllBySessionExamenPlanningsPlanId(Long planId);
     public List<Présences> findAllBySessionExamen(SessionExamen sessionExamen);
 }

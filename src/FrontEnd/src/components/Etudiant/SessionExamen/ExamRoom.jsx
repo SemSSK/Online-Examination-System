@@ -11,6 +11,15 @@ const ExamRoom = ({socket, ...props}) => {
     const [copy, setCopy] = useState({});
     const navigate = useNavigate();
 
+    useEffect(()=>{
+        if(props.presence !== null){
+            if(props.presence.sessionExamen.state === "STARTED" && !isLoading){
+                getCopy(); 
+            }
+        }
+    },[props.presence])
+
+
     const canAskForCopy = () => {
         return !(props.presence.sessionExamen.state === "STARTED" && props.presence.state === "PRESENT");
     };
@@ -77,12 +86,9 @@ const ExamRoom = ({socket, ...props}) => {
                                         <Grid item xs={7}>
                                         </Grid>
                                         <Grid item xs={1}>
-                                            {!isLoading && <Button variant="contained" disabled={canAskForCopy()} onClick={e => { getCopy(); }}>
-                                                    Demander copie
-                                                </Button>}
                                             {isLoading && <Button variant="contained" disabled={canPostCopy()} onClick={e => { postCopy(); }}>
                                                     Rendre copie
-                                                </Button>}
+                                            </Button>}
                                         </Grid>
                                     </Grid>
                                 </Toolbar>

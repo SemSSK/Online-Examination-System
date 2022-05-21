@@ -13,7 +13,13 @@ const PassExam = () => {
     const [presence, setPresence] = useState(null);
     const navigate = useNavigate();
     
-    
+    useEffect(()=>{
+        if(socket !== undefined){
+            return(()=>{
+                socket.close();
+            })
+        }
+    },[socket])
 
     // useEffect(()=>{
     //     console.log("reload socket");

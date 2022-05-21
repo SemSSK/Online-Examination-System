@@ -8,6 +8,7 @@ import QuestionMarkIcon from '@mui/icons-material/QuestionMark';
 import QuizIcon from '@mui/icons-material/Quiz';
 import DateRangeIcon from '@mui/icons-material/DateRange';
 import PlayArrowIcon from '@mui/icons-material/PlayArrow';
+import RateReviewIcon from '@mui/icons-material/RateReview';
 import LogOut from "../Authentication/LogOut";
 import { Box } from "@mui/system";
 import Module from "./Module/Module";
@@ -15,6 +16,8 @@ import axios from "axios";
 import Profile from "../Profile";
 import Examen from "./Examen/Examen";
 import Planning from "./Planning/Planning"
+import Correction from "./Correction/Correction";
+import CorrectionForm from "./Correction/CorrectionForm";
 
 const useStyle = makeStyles((theme) => {
     return {
@@ -47,19 +50,25 @@ const Enseignant = () => {
             text: 'Question Manager',
             icon: <QuestionMarkIcon />,
             path: "/enseignant/questions",
-            alwaysShow: true
+            alwaysShow: currentModule !== null
         },
         {
             text: 'Exam Manager',
             icon: <QuizIcon />,
             path: "/enseignant/exam",
-            alwaysShow: false
+            alwaysShow: false 
         },
         {
             text: 'Lancer un Examen',
             icon: <PlayArrowIcon />,
             path: '/surveillant',
             alwaysShow: true
+        },
+        {
+            text: 'Corriger copies',
+            icon: <RateReviewIcon/>,
+            path: '/enseignant/correction',
+            alwaysShow: currentModule !== null
         }
     ];
     
@@ -92,7 +101,7 @@ const Enseignant = () => {
                         <Toolbar>
                             <Grid container alignItems={"center"} justifyContent={"end"}>
                                 <Grid item xs={1}>
-                                    <Module affectationList={affectationModule} currentModule={currentModule} setCurrentModule={setCurrentModule}></Module>
+                                    {currentModule && <Module affectationList={affectationModule} currentModule={currentModule} setCurrentModule={setCurrentModule}></Module>}
                                 </Grid>
                                 <Grid item xs={2} display={"flex"} justifyContent={"end"}>
                                     <Profile></Profile>
@@ -125,6 +134,8 @@ const Enseignant = () => {
                                 <Route path="/questions" element={<QuestionConsultation currentAffectation={currentModule}></QuestionConsultation>}></Route>
                                 <Route path="/questions/add" element={<QuestionCreator currentAffectation={currentModule}></QuestionCreator>}></Route>
                                 {(currentModule.type === "COURSE") && <Route path="/exam" element={<Examen currentAffectation={currentModule}></Examen>}></Route>}
+                                <Route path="/correction" element={<Correction currentModule={currentModule.module}></Correction>}></Route>
+                                <Route path='/correction/:copieId' element={<CorrectionForm></CorrectionForm>}></Route>
                             </Routes>
                         </Grid>
                     </Grid>

@@ -43,42 +43,54 @@ public class WebSocketService {
         WebSocketUser webSocketUser = new WebSocketUser(session,utilisateur);
         sessionsUserMap.put(utilisateur, webSocketUser);
     }
+    public boolean userExists(Utilisateur utilisateur){
+        return sessionsUserMap.containsKey(utilisateur);
+    }
+    public WebSocketSession getWebsocketSession(Utilisateur utilisateur){
+        if(userExists(utilisateur)){
+            return null;
+        }
+        return sessionsUserMap.get(utilisateur).getWebSocketSession();
+    }
 
-    public void removeUserTrace(Utilisateur utilisateur) throws IOException {
-        if (utilisateur.getUserRole().equals(Role.ETUDIANT)) {
-            removeEtudiantTrace((Etudiant) utilisateur);
-        } else {
-            removeSurveillantTrace((Enseignant) utilisateur);
+    public void removeUserTrace(Utilisateur utilisateur,WebSocketSession session) throws IOException {
+        if(sessionsUserMap.containsKey(utilisateur)) {
+            WebSocketUser webSocketUser = sessionsUserMap.get(utilisateur);
+            if(webSocketUser.getWebSocketSession().getId().equals(session.getId())) {
+                if (utilisateur.getUserRole().equals(Role.ETUDIANT)) {
+                    removeEtudiantTrace((Etudiant) utilisateur);
+                } else {
+                    removeSurveillantTrace((Enseignant) utilisateur);
+                }
+            }
         }
     }
 
     private void removeEtudiantTrace(Etudiant etudiant) throws IOException {
-        if (sessionsUserMap.containsKey(etudiant)) {
-            SessionExamen sessionExamen = sessionsUserMap.get(etudiant).getSessionExamen();
-            if (sessionExamen != null) {
-                SessionExamen currentSession = sessionExamenRepo.findById(sessionExamen.getSessionId()).get();
-                sessionsUserMap.get(etudiant).setSessionExamen(null);
-                sendPrésencesToEnseignant(currentSession);
-            }
+        SessionExamen sessionExamen = sessionsUserMap.get(etudiant).getSessionExamen();
+        if (sessionExamen != null) {
+            SessionExamen currentSession = sessionExamenRepo.findById(sessionExamen.getSessionId()).get();
+            sessionsUserMap.get(etudiant).setSessionExamen(null);
+            sendPrésencesToEnseignant(currentSession);
         }
     }
 
     @Transactional(readOnly = false)
      void removeSurveillantTrace(Enseignant enseignant) throws IOException {
-        if(sessionsUserMap.containsKey(enseignant)){
-            SessionExamen currentSession = sessionsUserMap.get(enseignant).getSessionExamen();
-            if(currentSession != null) {
-                SessionExamen sessionExamen = sessionExamenRepo.findById(currentSession.getSessionId()).get();
-                sessionExamen.setState("ENDED");
-            }
-            sessionsUserMap.get(enseignant).setSessionExamen(null);
+        SessionExamen currentSession = sessionsUserMap.get(enseignant).getSessionExamen();
+        if(currentSession != null) {
+            SessionExamen sessionExamen = sessionExamenRepo.findById(currentSession.getSessionId()).get();
+            sessionExamen.setState("ENDED");
         }
+        sessionsUserMap.get(enseignant).setSessionExamen(null);
     }
 
-    public void CloseUserConnection(Utilisateur utilisateur) throws IOException {
-        removeUserTrace(utilisateur);
-        System.out.println("closing connection of:" + utilisateur.getEmail());
-        sessionsUserMap.remove(utilisateur);
+    public void CloseUserConnection(Utilisateur utilisateur,WebSocketSession session) throws IOException {
+        WebSocketUser webSocketUser = sessionsUserMap.get(utilisateur);
+        if(webSocketUser.getWebSocketSession().getId().equals(session.getId())) {
+            System.out.println("closing connection of:" + utilisateur.getEmail());
+            sessionsUserMap.remove(utilisateur);
+        }
     }
 
     @Transactional(readOnly = false)
