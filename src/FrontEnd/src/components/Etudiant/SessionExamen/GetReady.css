@@ -1,0 +1,247 @@
+@import url('https://fonts.googleapis.com/css2?family=Raleway:wght@300&display=swap');
+
+.getReady{
+    height: 90vh;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+}
+
+.getReady > .localCamera{
+    flex: 1;
+    max-width: 700px;
+    height: 50vh;
+    padding-inline: 15px;
+    border-radius: 8px;
+    
+}
+
+
+
+.getReady .RUReady{
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin-top: 9rem;
+}
+
+
+h1 {
+    position: relative;
+    padding: 0;
+    margin: 0;
+    font-family: "Raleway", sans-serif;
+    font-weight: 300;
+    font-size: 40px;
+    color: #080808;
+    -webkit-transition: all 0.4s ease 0s;
+    -o-transition: all 0.4s ease 0s;
+    transition: all 0.4s ease 0s;
+}
+
+.readyTitle {
+  width: 100%;
+}
+.readyTitle h1 {
+    text-align: center;
+    font-size:30px; 
+    font-weight:300; 
+    color:#222; 
+    letter-spacing:1px;
+    text-transform: uppercase;
+    display: grid;
+    grid-template-columns: 1fr max-content 1fr;
+    grid-template-rows: 27px 0;
+    grid-gap: 20px;
+    align-items: center;
+}
+
+.readyTitle h1:after,
+.readyTitle h1:before {
+    content: " ";
+    display: block;
+    border-bottom: 1px solid #c50000;
+    border-top: 1px solid #c50000;
+    height: 5px;
+    background-color:#f8f8f8;
+}
+
+.readyPrgph p{
+  margin-top: 40px;
+  text-transform: none;
+  font-size:1.75rem;
+  font-weight: normal;
+  font-style: italic;
+  font-family: "Playfair Display","Bookman",serif;
+  color:#999;
+  letter-spacing:-0.005em;
+  word-spacing:1px;
+}
+
+.getReadyButton{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  margin-top: 4rem;
+}
+
+.button-85 {
+  padding: 0.6em 2em;
+  border: none;
+  outline: none;
+  color: #fff ;
+  background: #c50000;
+  cursor: pointer;
+  position: relative;
+  z-index: 0;
+  border-radius: 10px;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+  width: 85%;
+  font-size: 1.3rem;
+  font-family: "Raleway", sans-serif;
+  font-weight: 700; 
+  letter-spacing:2px;
+  text-transform: uppercase;
+}
+
+.button-85:before {
+  content: "";
+  background: linear-gradient(
+    45deg,
+    #ff0000,
+    #ff7300,
+    #fff,
+    #ff0000
+  );
+  position: absolute;
+  top: -2px;
+  left: -2px;
+  background-size: 400%;
+  z-index: -1;
+  filter: blur(5px);
+  -webkit-filter: blur(5px);
+  width: calc(100% + 4px);
+  height: calc(100% + 4px);
+  animation: glowing-button-85 20s linear infinite;
+  transition: opacity 0.3s ease-in-out;
+  border-radius: 10px;
+}
+
+@keyframes glowing-button-85 {
+  0% {
+    background-position: 0 0;
+  }
+  50% {
+    background-position: 400% 0;
+  }
+  100% {
+    background-position: 0 0;
+  }
+}
+
+.button-85:after {
+  z-index: -1;
+  content: "";
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background: #c50000;
+  left: 0;
+  top: 0;
+  border-radius: 10px;
+}
+
+/* @import url('https://fonts.googleapis.com/css?family=Poppins:400,500,600,700,800,900');
+
+:root{
+  font-size: 20px;
+}
+body{
+	font-family: 'Poppins', sans-serif;
+	font-weight: 500;
+	font-size: 15px;
+	line-height: 1.7;
+	color: #102770;
+	background-color: #fff;
+	overflow-x: hidden;
+    
+}
+
+.section{
+    position: relative;
+    width: 100%;
+    z-index: 1;
+    display: block;
+  }
+
+  [type="checkbox"]:checked,
+[type="checkbox"]:not(:checked){
+  position: absolute;
+  left: -9999px;
+}
+.pricing:checked + label,
+.pricing:not(:checked) + label{
+  position: relative;
+  display: block;
+  text-align: center;
+  width: 260px;
+  height: 44px;
+  border-radius: 4px;
+  padding: 0;
+  margin: 0 auto;
+  cursor: pointer;
+  font-family: 'Poppins', sans-serif;
+  font-weight: 600;
+  text-transform: uppercase;
+  font-size: 14px;
+  letter-spacing: 1px;
+  line-height: 44px;
+  padding: 0 25px;
+  padding-right: 27px;
+  overflow: hidden;
+  color: #fff;
+  text-align: left;
+}
+.pricing:checked + label:before,
+.pricing:not(:checked) + label:before{
+  position: absolute;
+  content: '';
+  z-index: -2;
+  background-color: #102770;
+  width: 100%;
+  height: 100%;
+  display: block;
+  top: 0;
+  left: 0;
+}
+.pricing:checked + label:after,
+.pricing:not(:checked) + label:after{
+  position: absolute;
+  content: '';
+  z-index: -1;
+  background-color: #fff;
+  width: 128px;
+  height: 40px;
+  display: block;
+  top: 2px;
+  left: 2px;
+  border-radius: 2px;
+  transition: left 300ms linear;
+}
+.pricing:checked + label:after {
+  left: 130px;
+}
+.block-diff {
+  display: block;
+  /* mix-blend-mode: difference; */
+/* }
+.float-right{
+    float: right;
+}  */

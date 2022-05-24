@@ -1,0 +1,70 @@
+
+.planningFormContainer{
+    width: 100% !important;
+}
+
+.affectationForm{
+    position: fixed;
+    width: 90%;
+    top: 92px;
+    opacity: 0;
+    right: -50%;
+    z-index: 999;
+    animation: moveRight .5s forwards;
+    /*animation-delay: .5s;*/
+    box-shadow: 0px 10px 10px rgb(255,255,255);
+    transition: width .3s ease-in-out;
+}
+
+.mainExpanded .affectationForm{
+    width: 80%;
+}
+
+.affectationButtonContainer{
+    width: 100%;
+}
+
+.affectationButtonContainer a:not([href]):not([tabindex]) {
+    color: #fff !important;
+}
+
+.affectationButtonContainer a:not([href]):not([tabindex]):hover {
+    color: #005c75 !important;
+}
+
+.pageHeader{
+    display: flex;
+    justify-content: flex-start;
+}
+
+.pageHeader .pageHeaderTitle{
+    width: 90%;
+}
+
+.formContainer{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    padding-top: 10px;
+}
+
+.formDateLabel{
+    font-size: 22px;
+    font-weight: 500;
+    text-align: center;
+    line-height: 60px;
+    color: #4d555a;
+}
+
+@keyframes moveRight {
+    0%{
+        right: -50%;
+    }
+
+    100%{
+        opacity: 1;
+        right: 15px;
+    }
+}
