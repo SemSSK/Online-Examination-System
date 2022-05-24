@@ -1,8 +1,13 @@
 import React, { useState, useEffect } from 'react'
-import { Link } from 'react-router-dom'; 
+import {Link, useNavigate} from 'react-router-dom';
 import Enseignantservice from '../service/Enseignantservice';
+import tableStyle from "../AffectationModule/tableStyle.module.css";
+import DeleteIcon from "@mui/icons-material/Delete";
+import IconButton from "@mui/material/IconButton";
+import EditIcon from '@mui/icons-material/Edit';
 
 export const Listenseignant = () => {
+    const navigate = useNavigate();
     const [ enseignant , setEnseignant] =useState([]);
     const getAllEnseignants = () =>{
         Enseignantservice.getAllEnseignants().then((Response)=>{
@@ -26,23 +31,26 @@ export const Listenseignant = () => {
         })
 
     }
-    
-    const mystyle = {
-        float: "left ",
-        margin: "0",
-       
-      };
+
+    const goTo = (url) => {
+        navigate(url);
+    };
+
   return (
      
     <div>
-              <h2 className="text-center" >Enseignant list</h2>
-              <Link to="/admin/add_enseignant" className="btn btn-primary mb-2" style={{float: "left "  }}>Add Enseignant</Link>
-             
-              <div className="rox">
-                  <table className="table table-striped table-bordered">
+
+
+        <div className={tableStyle.container}>
+            <div className={tableStyle.content_box + ' '+tableStyle.special}>
+                <div className={tableStyle.pageHeader__version2}>
+                    <h1>Teachers list :</h1>
+                    <a href="/admin/add_enseignant" className={tableStyle.btn + " "+ tableStyle.cta_btn}>+ Add New Teacher</a>
+                </div>
+                  <table >
                       <thead>
                           <tr>
-                          <th> first name</th>
+                              <th> first name</th>
                               <th> first name</th>
                               <th> last name</th>
                               <th> email</th>
@@ -64,9 +72,17 @@ export const Listenseignant = () => {
                                     <td>{enseignant.userRole}</td>
                                     <td>{enseignant.grade}</td>
                                     <td>
-                                        
-                                        <Link  className='btn btn-info' to= {"/admin/edit-enseignant/"+enseignant.userId }  >Update</Link>
-                                        <button className='btn btn-danger'  onClick={()=>deleteEnseignant(enseignant.userId)}>Delete</button>
+                                        <IconButton
+                                            onClick={()=>goTo(`/admin/edit-enseignant/${enseignant.userId}`)}
+                                        >
+                                            <EditIcon />
+                                        </IconButton>
+                                        <IconButton
+                                            onClick={()=>deleteEnseignant(enseignant.userId)}
+                                        >
+                                            <DeleteIcon />
+                                        </IconButton>
+
                                     </td>
 
                                 </tr>
@@ -76,8 +92,9 @@ export const Listenseignant = () => {
 
                   </table>
 
-              </div>
+            </div>
+        </div>
 
-          </div>
+    </div>
   )
 }

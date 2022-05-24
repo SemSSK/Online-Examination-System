@@ -19,14 +19,6 @@ const convertAppoToPlan = (appointment) => {
     };
 };
 
-const convertAppointmentsToPlanning = (appointments) => {
-    const size = appointments.length;
-    const plannings = new Array(size);
-    for (let i = 0; i < size; i++) {
-        plannings[i] = convertAppoToPlan(appointments[i]);
-    }
-    return plannings;
-};
 
 
 const convertPlanToAppo = (plan) => {
@@ -34,13 +26,14 @@ const convertPlanToAppo = (plan) => {
     const endDate = new Date(startDate.getTime() + convertTimeToMilis(plan.duration));
     const title = plan.module.nomModule;
     return {
-        id:plan.planId,
+        id: plan.planId,
         startDate: startDate,
         endDate: endDate,
         title: title,
-        module:plan.module,
-        etudiants:plan.etudiants,
-        sessionExamens:plan.sessionExamens
+        module: plan.module,
+        etudiants: plan.etudiants,
+        sessionExamens: plan.sessionExamens,
+        examType: 1
     };
 };
 
@@ -53,4 +46,4 @@ const convertPlanningToAppointments = (plannings) => {
     return appointments;
 };
 
-export {convertAppoToPlan,convertAppointmentsToPlanning,convertPlanToAppo,convertPlanningToAppointments};
+export {convertAppoToPlan,convertPlanToAppo,convertPlanningToAppointments};

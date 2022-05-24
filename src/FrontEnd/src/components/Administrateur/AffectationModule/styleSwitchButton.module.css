@@ -6,7 +6,7 @@
 
 .switch_button {
   height: 50px;
-  background: rgba(180, 31, 58, 0.56);
+  background: rgba(0, 92, 117, 0.56);
   border-radius: 30px;
   overflow: hidden;
   width: 200px;
@@ -60,7 +60,7 @@
 }
 .switch_button_checkbox + .switch_button_label:before {
   content: "";
-  background: #b41f3a;
+  background: #005c75;
   height: 100%;
   width: 100%;
   position: absolute;

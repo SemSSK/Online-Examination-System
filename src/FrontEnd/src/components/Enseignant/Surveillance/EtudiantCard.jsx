@@ -7,9 +7,13 @@ const EtudiantCard = ({socket, ...props}) => {
     const [studentCamera, setStudentCamera] = useState(null);
     const etudiant = props.presence.etudiant;
     const videoRef = useRef();
+    // const recordRef = useRef();
     window.onbeforeunload = function (e) {
         stop();
     };
+    // useEffect(()=>{
+        
+    // },[studentCamera])
 
     useEffect( () => {
         console.log(props);
@@ -120,20 +124,15 @@ const EtudiantCard = ({socket, ...props}) => {
 
     function createPeerConnection() {
        
-
+        navigator.mediaDevices.getUserMedia({ video: true })
         // peer connection configuration (STUN & TURN srever configuration)
-        const peerConnectionConfig = null;
-        // {
-        //     'iceServers': [
-        //          {'urls': 'stun:stun.gmx.net:3478'},
-        //          {'urls': 'stun:stun.stunprotocol.org:3478'},
-        //          {'urls': 'stun:stun.l.google.com:19302'},
-        //         //  {
-        //         //      url: 'turn:turn.anyfirewall.com:443?transport=tcp',
-        //         //      credential: 'webrtc',
-        //         //       username: 'webrtc'
-        //         //  },
-        //     ]
+        const peerConnectionConfig = { 
+            'iceServers': [
+                {'urls': 'stun:stun.l.google.com:19302'}, 
+               {'urls': 'stun:stun.gmx.net:3478'},
+               {'urls': 'stun:stun.stunprotocol.org:3478'}
+           ]
+       };
         // };
              
       
@@ -207,12 +206,13 @@ const EtudiantCard = ({socket, ...props}) => {
             }
         };
 
-        // peers[props.presence.etudiant].pc.onnegotiationneeded = handleNegotiationNeededEvent;
+        peers[props.presence.etudiant].pc.onnegotiationneeded = handleNegotiationNeededEvent;
 
         peers[props.presence.etudiant].pc.onicecandidate = handleICECandidateEvent;
 
 
         console.log("peer connection created");
+       
         
         
     }
@@ -265,7 +265,7 @@ const EtudiantCard = ({socket, ...props}) => {
             peers[props.presence.etudiant].pc.setRemoteDescription(message.sdp)
                 .then(function () {
                     return peers[props.presence.etudiant].pc.createAnswer(
-                        {offerToReceiveAudio: 1, offerToReceiveVideo: 1}
+                        {offerToReceiveAudio: true, offerToReceiveVideo: true}
                     );
                 })
                 .then(function (answer) {
@@ -441,33 +441,33 @@ const EtudiantCard = ({socket, ...props}) => {
 
 
     return (
-     <Card>
-             <CardContent>
-                 <Typography>
-                     nom: {etudiant.name}
-                 </Typography>
-                 <Typography>
-                     prenom: {etudiant.lastName}
-                 </Typography>
-             </CardContent>
-             <CardContent>
-                 <Typography>
-                     Présence: {props.presence.state}
-                 </Typography>
-             </CardContent>
-             <CardContent>
+    // <Card>
+    //         <CardContent>
+    //             <Typography>
+    //                 nom: {etudiant.name}
+    //             </Typography>
+    //             <Typography>
+    //                 prenom: {etudiant.lastName}
+    //             </Typography>
+    //         </CardContent>
+    //         <CardContent>
+    //             <Typography>
+    //                 Présence: {props.presence.state}
+    //             </Typography>
+    //         </CardContent>
+    //         <CardContent>
                 
-             <Box width={"300px"} height={"300px"}>
-                    <video style={{width:"300px",height:"300px"}} ref={videoRef}  muted>
+             <Box width={"300px"} height={"300px"} position={"absolute"}>
+                    <video style={{width:"300px",height:"300px"  , zIndex:"999"}} ref={videoRef}  muted>
 
                     </video> 
              </Box> 
-             </CardContent>
-             <CardContent>
-                 {displayPresenceActions()}
-                 {displayBlockingActions()}
-             </CardContent>
-         </Card>
+            // </CardContent>
+        //     <CardContent>
+                // {displayPresenceActions()}
+                // {displayBlockingActions()}
+        //     </CardContent>
+        // </Card>
         
     
         );

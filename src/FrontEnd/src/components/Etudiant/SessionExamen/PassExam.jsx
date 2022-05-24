@@ -4,22 +4,19 @@ import ExamRoom from "./ExamRoom";
 import JoinExamRoom from "./JoinExamRoom";
 import SimplePeer from "simple-peer";
 import { useNavigate } from "react-router-dom";
+import GetReady from "./GetReady"
+import newStyle from '../../appStyling/newStyle.module.css'
 
 const PassExam = () => {
     const [code, setCode] = useState('');
     const [inSession, setInSession] = useState(false);
     const [socket, setSocket] = useState();
-   
+    const [stream, setStream] = useState(null);
+    const [readyToJoin, setReadyToJoin] = useState(false);
     const [presence, setPresence] = useState(null);
     const navigate = useNavigate();
     
-    useEffect(()=>{
-        if(socket !== undefined){
-            return(()=>{
-                socket.close();
-            })
-        }
-    },[socket])
+    
 
     // useEffect(()=>{
     //     console.log("reload socket");
@@ -73,19 +70,41 @@ const PassExam = () => {
                 
                 console.log(data);
             };
-            ws.addEventListener("close",(e)=>{
-                console.log("close Event ",e.code," ",e.reason)
+            ws.onclose = e => {
+                console.log("close Event")
+                
                 navigate("/etudiant");
-            })
+            };
             setSocket(ws);
         }
     },[]);
 
     
-    return (<Box width={"100%"} height={"100%"} justifyContent={"center"}>
-            {!inSession && <JoinExamRoom code={code} setCode={setCode} setInSession={setInSession} setPresence={setPresence} socket={socket} >
-            </JoinExamRoom>}
-            {inSession && <ExamRoom socket={socket} code={code} presence={presence} ></ExamRoom>}
+    return (
+        <Box width={"100%"} height={"100%"} justifyContent={"center"}>
+        {
+         !inSession ?
+
+            <JoinExamRoom code={code} setCode={setCode} setInSession={setInSession} setPresence={setPresence} socket={socket} >
+            </JoinExamRoom>
+        :
+
+            presence ?
+                !(presence.state === "PRESENT") ?
+                    <GetReady
+                        readyToJoin={readyToJoin}
+                        setReadyToJoin={setReadyToJoin}
+                        stream={stream}
+                        setStream={setStream}
+                        surveillant={presence.sessionExamen.surveillant}
+                        etudiant={presence.etudiant}
+                        sessionExamen={presence.sessionExamen}
+                        socket={socket}
+                    />
+                : <ExamRoom stream={stream} socket={socket} code={code} presence={presence} ></ExamRoom>
+            : <div className={newStyle.loadingContainer}><div className={newStyle.loader}> <span>Loading...</span> </div></div>
+        }
+
         </Box>);
 };
 export default PassExam;

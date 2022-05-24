@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 import LogoutIcon from '@mui/icons-material/Logout';
 const LogOut = () => {
     const navigate = useNavigate();
-    const url = "http://localhost:8080/logout";
+    const url = "http://localhost:8080/authorization/logout";
     const logout = () => {
         axios.post(url, null, { withCredentials: true }).then(response => {
             if (response.status === 200) {

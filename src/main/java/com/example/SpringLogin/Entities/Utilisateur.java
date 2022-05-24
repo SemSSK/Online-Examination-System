@@ -6,6 +6,7 @@ import lombok.*;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.Date;
 
 @Entity
 @Getter
@@ -31,6 +32,14 @@ public class Utilisateur implements Serializable {
     private String userRole;
     @Column(unique = true)
     private String urlProfile;
+    @Column(name = "account_non_locked")
+    private boolean accountNonLocked;
+
+    @Column(name = "failed_attempt")
+    private int failedAttempt;
+
+    @Column(name = "lock_time")
+    private Date lockTime;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(nullable = true,name = "admin_id")

@@ -1,8 +1,13 @@
 import React, { useState, useEffect } from 'react'
-import { Link } from 'react-router-dom'; 
+import {Link, useNavigate} from 'react-router-dom';
 import Moduleservice from '../service/Moduleservice';
+import tableStyle from "../AffectationModule/tableStyle.module.css";
+import IconButton from "@mui/material/IconButton";
+import EditIcon from "@mui/icons-material/Edit";
+import DeleteIcon from "@mui/icons-material/Delete";
 
 export const Listmodule = () => {
+    const navigate = useNavigate();
     const [ module , setModule] =useState([]);
     const getAllModules = () =>{
         Moduleservice.getAllModules().then((Response)=>{
@@ -26,23 +31,24 @@ export const Listmodule = () => {
         })
     }
 
-
-    const mystyle = {
-        float: "left ",
-        margin: "0",
-       
-      };
+    const goTo = (url) => {
+        navigate(url);
+    };
   
       
    
   return (
      
     <div>
-              <h2 className="text-center" >Module list</h2>
-              <Link to="/admin/add_module" className="btn btn-primary mb-2" style={{float: "left "  }}>Add Module</Link>
-             
-              <div className="rox">
-                  <table className="table table-striped table-bordered">
+        <div className={tableStyle.container}>
+            <div className={tableStyle.content_box + ' '+tableStyle.special}>
+                <div className={tableStyle.pageHeader__version2}>
+                    <h1>Teachers list :</h1>
+                    <a href="/admin/add_module" className={tableStyle.btn + " "+ tableStyle.cta_btn}>+ Add New Module</a>
+                </div>
+
+
+                  <table>
                       <thead>
                           <tr>
                               <th> id Module</th>
@@ -69,9 +75,17 @@ export const Listmodule = () => {
                                     
                                     
                                     <td>
+                                        <IconButton
+                                            onClick={()=>goTo(`/admin/edit_module/${module.id}`)}
+                                        >
+                                            <EditIcon />
+                                        </IconButton>
+                                        <IconButton
+                                            onClick={()=>deleteModule(module.id)}
+                                        >
+                                            <DeleteIcon />
+                                        </IconButton>
                                         
-                                        <Link  className='btn btn-info' to= {"/admin/edit_module/"+module.id }  >Update</Link>
-                                        <button className='btn btn-danger' style={mystyle} onClick={()=>deleteModule(module.id)} >Delete</button>
                                     </td>
 
                                 </tr>
@@ -83,8 +97,9 @@ export const Listmodule = () => {
 
                   </table>
 
-              </div>
+            </div>
+        </div>
 
-          </div>
+    </div>
   )
 }

@@ -52,6 +52,7 @@ public class ExamRoomWebsocket extends TextWebSocketHandler {
 
     @Override
     public void afterConnectionEstablished(WebSocketSession session) throws Exception {
+        System.out.println("connection established it's risky");
         Utilisateur utilisateur = contextHandlerClass.getUserFromWebSocketSession(session);
         if(webSocketService.userExists(utilisateur)){
             session.close();

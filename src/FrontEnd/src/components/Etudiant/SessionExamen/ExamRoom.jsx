@@ -6,19 +6,10 @@ import { useNavigate } from "react-router-dom";
 import Copie from "./Copie";
 import VideoSending from "./VideoSending"
 
-const ExamRoom = ({socket, ...props}) => {
+const ExamRoom = ({socket,stream, ...props}) => {
     const [isLoading, setIsLoading] = useState(false);
     const [copy, setCopy] = useState({});
     const navigate = useNavigate();
-
-    useEffect(()=>{
-        if(props.presence !== null){
-            if(props.presence.sessionExamen.state === "STARTED" && !isLoading){
-                getCopy(); 
-            }
-        }
-    },[props.presence])
-
 
     const canAskForCopy = () => {
         return !(props.presence.sessionExamen.state === "STARTED" && props.presence.state === "PRESENT");
@@ -41,7 +32,7 @@ const ExamRoom = ({socket, ...props}) => {
             for (let i = 0; i < numberOfQuestions; i++) {
                 copy.reponses[i] = {
                     content: '',
-                    question: examen.examenQuestions[i]
+                    question: examen.examenQuestions[i].question
                 };
             }
             setCopy(copy);
@@ -55,7 +46,7 @@ const ExamRoom = ({socket, ...props}) => {
             } })
             .then(response => {
             console.log(response.data);
-            socket.close();
+            props.socket.close();
             navigate("/etudiant");
         })
             .catch(error => {
@@ -86,9 +77,12 @@ const ExamRoom = ({socket, ...props}) => {
                                         <Grid item xs={7}>
                                         </Grid>
                                         <Grid item xs={1}>
+                                            {!isLoading && <Button variant="contained" disabled={canAskForCopy()} onClick={e => { getCopy(); }}>
+                                                    Demander copie
+                                                </Button>}
                                             {isLoading && <Button variant="contained" disabled={canPostCopy()} onClick={e => { postCopy(); }}>
                                                     Rendre copie
-                                            </Button>}
+                                                </Button>}
                                         </Grid>
                                     </Grid>
                                 </Toolbar>
@@ -103,11 +97,12 @@ const ExamRoom = ({socket, ...props}) => {
                                         etudiant={props.presence.etudiant}
                                         sessionExamen={props.presence.sessionExamen}
                                         socket={socket}
+                                        stream={stream}
                                     >
                                     </VideoSending>
                                 </Box>
                             </Grid>
-                            <Grid item xs={8} display={"flex"} justifyContent={"center"} >
+                            <Grid item xs={4} display={"flex"} justifyContent={"center"}>
                                 {isLoading && <Copie code={props.code} copy={copy} setCopy={setCopy}></Copie>}
                             </Grid>
                         </Grid>

@@ -7,7 +7,7 @@ import EtudiantCard from "./EtudiantCard";
 const EtudiantList = ({etudiantList,affectedEtudiant,onEtudiantListChange}) => {
     const [display,setDisplay] = useState(false);
 
-    const isAffected = (etudiant)=>{
+    const isAffected = (etudiant) => {
         const size = affectedEtudiant.length;
         for(let i = 0 ; i < size ; i++){
             if(etudiant.userId === affectedEtudiant[i].userId){

@@ -1,8 +1,8 @@
 
-export const  getUserMedia = async ( {video, audio}) => {
+export const  getUserMedia = async ( {video, audio, width, height}) => {
     try {
         if(video) {
-            video =  {width: {exact: 400}, height: {exact: 400}, facingMode: "user"}
+            video =  {width: {exact: width}, height: {exact: height}, facingMode: "user"}
         }
         return  await navigator.mediaDevices.getUserMedia({video , audio});
 
@@ -19,8 +19,8 @@ export const getDisplayMedia = async (video) => {
             video: false
         };
         if(video) {
-             console.log("true of course")
-             constraint = {
+            console.log("true of course")
+            constraint = {
                 audio: false,
                 video : {width: {exact: 400}, height: {exact: 400}, facingMode: "user"}
             }

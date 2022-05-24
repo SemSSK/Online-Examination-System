@@ -7,84 +7,135 @@ import LogOut from "../Authentication/LogOut";
 import { Box } from "@mui/system";
 import Schedual from "./Planning/Schedual"
 import Profile from "../Profile";
-import { PlayArrow } from "@mui/icons-material";
+import newStyle from "../appStyling/newStyle.module.css";
+import Avatar from "@mui/material/Avatar";
+import IconButton from "@mui/material/IconButton";
+import {styled} from "@mui/material/styles";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import logo from "../appStyling/StartCodingClubLogo.png";
+import axios from "axios";
+import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 
 
-const useStyle = makeStyles((theme) => {
-    return {
-        drawer: {
-            width: "15%"
-        },
-        appBar: {
-            width: "85%"
-        }
-    };
-});
+
+const ExpandMore = styled((props) => {
+    const { expand, ...other } = props;
+    return <IconButton  size="medium"  color="inherit"  {...other} />;
+})(({ theme, expand }) => ({
+    transform: !expand ? 'rotate(-90deg)' : 'rotate(90deg)',
+    marginLeft: 'auto',
+    transition: theme.transitions.create('transform', {
+        duration: theme.transitions.duration.shortest,
+    }),
+}));
 
 
 const Etudiant = () => {
     const navigate = useNavigate();
-    const classes = useStyle();
+    const [expanded,setExpanded] = useState(false);
+    const [expandedClass,setExpandedClass] = useState('');
+    useEffect(()=>{
+        if(expanded)
+            setExpandedClass(newStyle.expanded)
+        else
+            setExpandedClass('')
+
+    },[expanded])
 
     const menuItems = [
         {
-            text: 'Schedual',
-            icon: <DateRangeIcon/>,
+            text: 'Schedule',
+            icon: <DateRangeIcon style={{ fontSize: 45, color: '#e6e6ea' }}/>,
             path: "/etudiant/schedual",
             alwaysShow: true
         },
         {
-            text: 'Join exam',
-            icon: <PlayArrow/>,
-            path: "/examroom",
+            text: 'Start Exam',
+            icon: <PlayArrowIcon style={{ fontSize: 45, color: '#e6e6ea' }}/>,
+            path: '/examroom',
             alwaysShow: true
         }
     ];
 
+    const logout = () => {
+        axios.post("http://localhost:8080/authorization/logout", null, { withCredentials: true }).then(response => {
+            if (response.status === 200) {
+                navigate("/login");
+            }
+            else {
+                throw response.data;
+            }
+        })
+            .catch(e => {
+                console.log(e);
+            });
+    };
     
     const goTo = (item) => {
         navigate(item.path);
     };
 
     return (
-                <>
-                    <Box sx={{ flexGrow: 1 }} position={"fixed"} width={"100%"} top={0}>
-                        <AppBar position="static">
-                            <Toolbar>
-                                <Grid container alignItems={"center"} justifyContent={"end"}>
-                                    <Grid item xs={2} display={"flex"} justifyContent={"end"}>
-                                        <Profile></Profile>
-                                    </Grid>
-                                    <Grid item xs={1} display={"flex"} justifyContent={"end"}>
-                                        <LogOut></LogOut>
-                                    </Grid>
-                                </Grid>
-                            </Toolbar>
-                        </AppBar>
-                    </Box>
-                    <Drawer variant="permanent" anchor="left" classes={{ paper: classes.drawer }}>
-                                    <Typography variant="h3" color="primary">
-                                        Options
-                                    </Typography>
-                                    <List>
-                                        {menuItems.map(item => {
-                                            return (<ListItem key={item.text} button onClick={(e) => { goTo(item); }}>
-                                                                            <ListItemIcon>{item.icon}</ListItemIcon>
-                                                                            <ListItemText primary={item.text}></ListItemText>
-                                                                        </ListItem>);
-                                            })}
-                                    </List>
-                    </Drawer>
-                    <Box width={"80%"} marginLeft={"15%"} marginTop={"5%"}>
-                        <Grid container justifyContent={"center"} alignContent={"start"}>
-                            <Grid item xs={12}>
-                                <Routes>
-                                    <Route path="/schedual" element={<Schedual></Schedual>}></Route>
-                                </Routes>
-                            </Grid>
-                        </Grid>
-                    </Box>
-        </>
+        <section className={newStyle.sidebarContainer}>
+            <nav className={newStyle.main_menu +' '+ expandedClass}>
+                <div className={newStyle.iconExpanding}>
+                    <ExpandMore
+                        expand={expanded}
+                        onClick={()=>setExpanded(!expanded)}
+                    >
+                        <ExpandMoreIcon fontSize='medium'/>
+                    </ExpandMore>
+                </div>
+                <div className={newStyle.menuList}>
+                                {
+                                    menuItems.map((item, index) => {
+                                        return (
+                                            <div key={index} className={newStyle.menuItem} onClick={() => { goTo(item); }}>
+                                                <Avatar className={newStyle.itemAvatar} sx={{backgroundColor: '#61718a', width:'65px', height:'65px' }}>
+                                                    <IconButton>
+                                                        {item.icon}
+                                                    </IconButton>
+                                                </Avatar>
+
+                                                <div className={newStyle.itemTitle}>
+                                                    <h3>{item.text}</h3>
+                                                </div>
+                                            </div>
+                                        );
+                                    })
+                                }
+                </div>
+                <div className={newStyle.systemLogo}>
+                    <div className={newStyle.logo }>
+                        <img src={logo} alt="logo image" />
+                    </div>
+                    <div className={newStyle.systemTitle}>
+                        <h1><span>E</span>-EXAM</h1>
+                    </div>
+                </div>
+
+            </nav>
+            <main className={newStyle.container__main}>
+                <header id={newStyle.customNavigationBar}>
+                    <div className={newStyle.navContainer}>
+                        <div className={newStyle.nav_bar}>
+                            <ul className={newStyle.nav_list}>
+                                <Profile />
+                                <li className={newStyle.logoutButton}>
+                                    <a className={newStyle.button_17} onClick={()=>logout()}>
+                                        Logout
+                                    </a>
+                                </li>
+                            </ul>
+
+                        </div>
+                    </div>
+                </header>
+                <div>
+                    <Schedual></Schedual>
+                </div>
+            </main>
+        </section>
     );
 }
  

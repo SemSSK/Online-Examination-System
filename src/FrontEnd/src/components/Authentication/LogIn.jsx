@@ -40,33 +40,39 @@ const LogIn = () => {
         });
     };
     
-    return (<Grid container alignItems={"center"} width={"100vw"} height={"100vh"}>
-                <Grid item xs={4}></Grid>
-                <Grid item xs={3}>
-                    <Card variant="outlined" color="primary">
-                        <CardHeader title="Authentification">
-                        </CardHeader>
-                        {error.activated &&
-            <CardContent>  
-                                <ErrorMessage msg={error.message}></ErrorMessage>
-                            </CardContent>}
-                        <CardContent>
-                            <TextField label="email" variant="outlined" required fullWidth onChange={e => {
-            setEmail(e.currentTarget.value);
-        }} margin="normal" InputProps={{
-            startAdornment: (<InputAdornment position="start">
-                                            <EmailOutlinedIcon />  
-                                        </InputAdornment>)
-        }}/>
-                        </CardContent>
-                        <CardContent>
-                            <TextField type="password" label="password" variant="outlined" required fullWidth onChange={e => {
-            setPassword(e.currentTarget.value);
-        }} InputProps={{
-            startAdornment: (<InputAdornment position="start">
-                                            <KeyOutlinedIcon />  
-                                        </InputAdornment>)
-        }}/>
+    return (
+        <Grid container alignItems={"center"} width={"100vw"} height={"100vh"}>
+            <Grid item xs={3}>
+                <Card variant="outlined" color="primary">
+                    <CardHeader title="Authentification">
+                    </CardHeader>
+                    {error.activated &&
+                    <CardContent>
+                            <ErrorMessage msg={error.message}></ErrorMessage>
+                    </CardContent>}
+                    <CardContent>
+                            <TextField
+                                label="email"
+                                variant="outlined"
+                                required fullWidth
+                                onChange={e => {setEmail(e.currentTarget.value);
+                                    }} margin="normal" InputProps={{
+                                        startAdornment: (<InputAdornment position="start">
+                                                                        <EmailOutlinedIcon />
+                                                                    </InputAdornment>)
+                                    }}
+                            />
+                    </CardContent>
+                    <CardContent>
+                        <TextField type="password" label="password" variant="outlined" required fullWidth
+                                   onChange={e => {
+                                        setPassword(e.currentTarget.value);
+                                    }} InputProps={{
+                                        startAdornment: (<InputAdornment position="start">
+                                                                        <KeyOutlinedIcon />
+                                                                    </InputAdornment>)
+                                    }}
+                        />
                         </CardContent>
                         <CardContent>
                             <Grid container>
@@ -78,7 +84,7 @@ const LogIn = () => {
                         </CardContent>
                     </Card>
                 </Grid>
-                <Grid item xs={4}></Grid>
-            </Grid>);
+            </Grid>
+    );
 };
 export default LogIn;

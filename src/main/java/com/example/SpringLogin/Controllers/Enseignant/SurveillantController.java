@@ -28,7 +28,7 @@ public class SurveillantController {
 
 
 
-    @PutMapping("/{codesurveillant}/présence")
+    @PutMapping("/{codesurveillant}/presence")
     private ResponseEntity<?> MarkEtudiantPresent(@PathVariable(name = "codesurveillant")String codeSurveillant,
                                                   @RequestBody Etudiant etudiant){
         try{

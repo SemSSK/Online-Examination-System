@@ -11,7 +11,7 @@
 
   --title-font4: "Signika Negative", sans-serif;
 
-  --secondary-font-color: #b41f3a;
+  --secondary-font-color: #0277bd;
 
   --body-font-color-dark: #4d555a;
 }
@@ -24,11 +24,61 @@
 .pageHeader {
   display: flex;
   flex-direction: row;
-  justify-content: space-between;
-  /* margin-bottom: 4rem; */
+  justify-content: flex-start;
+  align-items: center;
+ margin-bottom: 10px;
   grid-column: 2/3;
   grid-row: 1/2;
+  width: 100%;
+  gap: 20px;
+  padding-block: 10px;
+  border-bottom: 1px solid #e6e6ea;
 }
+
+
+.pageHeader__version2{
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  margin-bottom: 40px;
+}
+
+.btns{
+  box-sizing: border-box;
+  border:3px solid var(--secondary-font-color);
+  border-radius: .4rem;
+  display: flex;
+  flex-direction:row;
+  justify-content: center;
+}
+
+.btn{
+  cursor: pointer;
+  display: inline-block;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  opacity: 1;
+  border: 3px solid var(--secondary-font-color);
+
+}
+
+.cta_btn{
+  font-size: 19px;
+  background-color: #fff;
+  padding: 9px 18px;
+  color: var(--body-font-color);
+  border-radius: 4px;
+  transition: background-color .5s;
+}
+
+.cta_btn:hover,
+.cta_btn:focus{
+  color:#fff;
+  background-color: var(--secondary-font-color);
+  text-decoration: none;
+}
+
+
 
 .col-div-8 {
   display: flex;
@@ -59,9 +109,25 @@
   background-color: white;
   height: 90vh;
 }
-.pageHeader h1 {
+.content_box.special{
+  justify-content: flex-start;
+  height: unset;
+}
+
+.special td:last-child{
+
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+}
+
+
+
+.pageHeader h1 ,
+.pageHeader__version2 h1{
   margin: 0;
   font-size: 2rem;
+  text-transform: uppercase;
   font-family: var(--title-font4);
   color: #555555;
   cursor: default;
@@ -94,6 +160,7 @@
   justify-content: center;
 }
 
+
 .content_box td {
   color: var(--body-font-color-dark);
   font-family: var(--body-font);
@@ -103,7 +170,7 @@
 }
 
 .content_box th {
-  background-color: var(--secondary-font-color);
+  background-color: #0097a7;
   color: white;
   font-family: var(--body-font);
   font-size: 1.5rem;
@@ -115,7 +182,7 @@
 .content_box th {
   text-align: left;
   flex: 1;
-  padding: 10px 15px;
+  padding: 5px 15px;
 }
 
 .content_box tr td:last-child,
@@ -132,7 +199,8 @@
   width: 80%;
   height: 35px;
   margin: 0 auto !important;
-  padding-left: 1px;
+  /*padding-left: 1px;*/
+  padding: 10px;
   text-decoration: none;
   text-align: center;
   line-height: 35px;

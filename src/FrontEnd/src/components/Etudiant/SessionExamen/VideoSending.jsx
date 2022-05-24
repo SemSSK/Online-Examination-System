@@ -4,7 +4,7 @@ import {getUserMedia} from "../../../Utilities/getMediaDevices";
 
 
 export const peers = {};
-const VideoSending = ({surveillant,socket,etudiant,sessionExamen}) => {
+const VideoSending = ({surveillant,socket,etudiant,sessionExamen,stream}) => {
     
     const videoRef = useRef();
     const recordRef = useRef();
@@ -19,19 +19,20 @@ const VideoSending = ({surveillant,socket,etudiant,sessionExamen}) => {
         });
     }
 
-    const startWebCamStream =  () => {
-
-        const constraints = {video: true, audio: false};
-        getUserMedia(constraints)
-        .then( (mediaStream) => {
-            getLocalMediaStream(mediaStream)
-
-        }).then(()=> setVideoStarted(true))
-    }
+    // const startWebCamStream =  () => {
+    //
+    //     const constraints = {video: true, audio: false};
+    //     getUserMedia(constraints)
+    //     .then( (mediaStream) => {
+    //         getLocalMediaStream(mediaStream)
+    //
+    //     }).then(()=> setVideoStarted(true))
+    // }
 
     async function getLocalMediaStream(mediaStream){
         console.log("got webCam Stream");
         if(!mediaStream) {
+            console.log("nullllllll")
             setVideoState(null);
             return;
         }
@@ -59,7 +60,12 @@ const VideoSending = ({surveillant,socket,etudiant,sessionExamen}) => {
     window.onbeforeunload = function (e) {
         stop();
     };
-   
+
+    useEffect(()=>{
+
+        getLocalMediaStream(stream)
+            .then(()=> setVideoStarted(true))
+    },[])
 
     useEffect(()=>{
         if(!peers[surveillant]){
@@ -71,9 +77,9 @@ const VideoSending = ({surveillant,socket,etudiant,sessionExamen}) => {
         }
     },[socket,videoStarted]) 
 
-    useEffect(()=>{
-        startWebCamStream();
-    },[])
+    // useEffect(()=>{
+    //     startWebCamStream();
+    // },[])
 
     useEffect(()=>{
         console.log("timeToAddTrack ",timeToAddTrack);
@@ -178,8 +184,6 @@ const VideoSending = ({surveillant,socket,etudiant,sessionExamen}) => {
                 break;
             }
 
-        
-
             default: {
                 return;
             }
@@ -200,12 +204,16 @@ const VideoSending = ({surveillant,socket,etudiant,sessionExamen}) => {
             stop();
 
         // peer connection configuration (STUN & TURN srever configuration)
-         const peerConnectionConfig  = null;
+        const peerConnectionConfig = { 
+             'iceServers': [ 
+                {'urls': 'stun:stun.l.google.com:19302'},
+                {'urls': 'stun:stun.gmx.net:3478'},
+                {'urls': 'stun:stun.stunprotocol.org:3478'}
+            ]
+        };
         // {
         //     'iceServers': [
-        //          {'urls': 'stun:stun.gmx.net:3478'},
-        //          {'urls': 'stun:stun.stunprotocol.org:3478'},
-        //          {'urls': 'stun:stun.l.google.com:19302'},
+        //        
         //         //  {
         //         //      url: 'turn:turn.anyfirewall.com:443?transport=tcp',
         //         //      credential: 'webrtc',
@@ -287,7 +295,7 @@ const VideoSending = ({surveillant,socket,etudiant,sessionExamen}) => {
          peers[surveillant].pc.onnegotiationneeded = handleNegotiationNeededEvent;
 
         peers[surveillant].pc.onicecandidate = handleICECandidateEvent;
-
+        console.log(" peer connection created")
 
     }
 
@@ -304,11 +312,11 @@ const VideoSending = ({surveillant,socket,etudiant,sessionExamen}) => {
     }
 
     function handleNegotiationNeededEvent() {
-
+        console.log("negotiation needed let's create an offer")
         if(peers[surveillant].pc.signalingState !== 'stable' ) return ;
 
         peers[surveillant].pc.createOffer(
-            { offerToReceiveAudio: 1, offerToReceiveVideo: 1 }
+            { offerToReceiveAudio: true, offerToReceiveVideo: true }
         )
         .then((offer) => {
             return peers[surveillant].pc.setLocalDescription(offer);
@@ -339,7 +347,7 @@ const VideoSending = ({surveillant,socket,etudiant,sessionExamen}) => {
             peers[surveillant].pc.setRemoteDescription(message.sdp)
                 .then(function () {
                     return peers[surveillant].pc.createAnswer(
-                        {offerToReceiveAudio: 1, offerToReceiveVideo: 1}
+                        {offerToReceiveAudio: true, offerToReceiveVideo: true}
                     );
                 })
                 .then(function (answer) {

@@ -20,7 +20,7 @@ public class AffectationModule  implements Serializable {
     @EmbeddedId
     private AffectationModuleKey affectationModuleId;
 
-    @Column(name = "valueType")
+    @Column(name = "type")
     @Enumerated(EnumType.STRING)
     private teachingType type;
 

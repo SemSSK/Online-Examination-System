@@ -1,6 +1,10 @@
 import { Grid, Typography } from "@mui/material";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
+import newStyle from "./appStyling/newStyle.module.css";
+import avatar from "./appStyling/avatar.png";
+import IconButton from "@mui/material/IconButton";
+import ArrowDropDownCircleIcon from "@mui/icons-material/ArrowDropDownCircle";
 const Profile = () => {
     const [utilisateur,setUtilisateur] = useState();
     const [isLoaded,setIsLoaded] = useState(false)
@@ -16,17 +20,24 @@ const Profile = () => {
         })
     },[])
 
-    return (<Grid container justifyContent={"end"}>
+    return (
+        <li className={newStyle.nav_item}>
             { isLoaded && <>
-                <Grid item xs={'auto'}>
-                    <Typography>Nom: {utilisateur.name}</Typography>
-                </Grid>
-                <Grid item xs={1}></Grid>
-                <Grid item xs={"auto"}>
-                    <Typography>Prenom: {utilisateur.lastName}</Typography>
-                </Grid>
-                <Grid item xs={1}></Grid>
+                <div className={newStyle.logo}>
+                    <img src={avatar} alt="profile logo"/>
+                </div>
+                <div className={newStyle.profileUsername}>
+                <a href="#" className={newStyle.nav_link}>
+                    {utilisateur.lastName +' '+ utilisateur.name}
+                </a>
+                </div>
+                <div className={newStyle.userProfile}>
+                <IconButton size='medium' color="inherit">
+                <ArrowDropDownCircleIcon fontSize='medium'/>
+                </IconButton>
+                </div>
             </>}
-        </Grid>);
+        </li>
+        );
 };
 export default Profile;

@@ -26,9 +26,12 @@ const ExpandMore = styled((props) => {
 
 export default function AffectationForum({enseignements,setEnseignements}) {
   const [expanded, setExpanded] = React.useState(false);
+    const [expandedClass, setExpandedClass] = React.useState('');
 
   const handleExpandClick = () => {
+  setExpandedClass(!expanded ? styles.buttonOpned : ' ')
     setExpanded(!expanded);
+
   };
   
   
@@ -260,7 +263,7 @@ export default function AffectationForum({enseignements,setEnseignements}) {
   return (
     <div>    
       <div className={styles.btns}>
-        <a className={styles.btn +' '+ styles.bg} onClick={handleExpandClick}>Ajouter Affectation</a>
+        <a className={styles.btn +' '+ styles.bg + ' '+ expandedClass} onClick={handleExpandClick}>Ajouter Affectation</a>
         <ExpandMore
               expand={expanded}
               onClick={handleExpandClick}
@@ -284,6 +287,7 @@ export default function AffectationForum({enseignements,setEnseignements}) {
                       search
                       onChange={setSelectedModule}
                       closeOnSelect={true}
+
                   />
               
                   <SelectSearch

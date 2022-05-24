@@ -1,8 +1,13 @@
 import React, { useState, useEffect } from 'react'
-import { Link } from 'react-router-dom'; 
+import {Link, useNavigate} from 'react-router-dom';
 import Etudiantservise from '../service/Etudiantservise';
+import tableStyle from "../AffectationModule/tableStyle.module.css";
+import IconButton from "@mui/material/IconButton";
+import EditIcon from "@mui/icons-material/Edit";
+import DeleteIcon from "@mui/icons-material/Delete";
 
 export const Listetudiant = () => {
+    const navigate = useNavigate();
     const [ etudiant , setetudiant] =useState([]);
     
     const getAllEtudiants = () =>{
@@ -27,6 +32,10 @@ export const Listetudiant = () => {
         })
 
     }
+
+    const goTo = (url) => {
+        navigate(url);
+    };
     
   
    
@@ -34,11 +43,14 @@ export const Listetudiant = () => {
       
      
     <div>
-              <h2 className="text-center" >Etudiant list</h2>
-              <Link to="/admin/add_etudiant" className="btn btn-primary mb-2" style={{float: "left "  }}>Add Etudiant</Link>
-             
-              <div className="rox">
-                  <table className="table table-striped table-bordered">
+        <div className={tableStyle.container}>
+            <div className={tableStyle.content_box + ' '+tableStyle.special}>
+                <div className={tableStyle.pageHeader__version2}>
+                    <h1>Students list :</h1>
+                    <a href="/admin/add_etudiant" className={tableStyle.btn + " "+ tableStyle.cta_btn}>+ Add New Student</a>
+                </div>
+
+                  <table>
                       <thead>
                           <tr>
                               <th> id</th>
@@ -68,9 +80,16 @@ export const Listetudiant = () => {
                                     <td>{etudiant.groupe}</td>
                                     
                                     <td>
-                                        
-                                        <Link  className='btn btn-info' to= {"/admin/edit-etudiant/"+etudiant.userId }  >Update</Link>
-                                        <button className='btn btn-danger'onClick={()=>deleteEtudiant(etudiant.userId)} >Delete</button>
+                                        <IconButton
+                                            onClick={()=>goTo(`/admin/edit-etudiant/${etudiant.userId}`)}
+                                        >
+                                            <EditIcon />
+                                        </IconButton>
+                                        <IconButton
+                                            onClick={()=>deleteEtudiant(etudiant.userId)}
+                                        >
+                                            <DeleteIcon />
+                                        </IconButton>
                                     </td>
 
                                 </tr>
@@ -81,6 +100,7 @@ export const Listetudiant = () => {
                   </table>
 
               </div>
+        </div>
 
           </div>
   )

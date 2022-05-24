@@ -4,7 +4,7 @@
     --body-font: 'Cabin', sans-serif;
     --body-font2: 'Amatic SC', sans-serif; */
   --main-font-color-dark: #252525;
-  --secondary-font-color: #b41f3a;
+  --secondary-font-color: #0277bd; /*#5C7500;*/
   --body-font-color: #515151;
 }
 
@@ -58,7 +58,7 @@
 } */
 .btns {
   box-sizing: border-box;
-  border: 3px solid var(--secondary-font-color);
+  border: 3px solid #005c75;
   border-radius: 0.4rem;
   display: flex;
   flex-direction: row;
@@ -73,14 +73,29 @@
   text-transform: uppercase;
   letter-spacing: 2px;
 }
+
+.btns a:not([href]):not([tabindex]){
+  color: #fff;
+}
+.btns:hover a:not([href]):not([tabindex]),
+.btns:focus a:not([href]):not([tabindex])
+{
+  color:#005c75;
+}
+
 .bg {
   font-size: 1.2rem;
-  background-color: var(--secondary-font-color);
+  background-color: #0277bd;
   padding: 0.9rem 1.8rem;
   color: #fff;
-  /* border-left: 1px solid var(--secondary-font-color); */
+  /* border-left: 1px solid #005c75; */
 
   transition: background-color 0.5s;
+}
+
+.btns .buttonOpned{
+  color: #005c75 !important;
+  background-color: #fff;
 }
 
 .bg:hover,
@@ -94,8 +109,8 @@
   appearance: none;
   background-image: radial-gradient(
     100% 100% at 100% 0,
-    #fc2b51 0,
-    var(--secondary-font-color) 100%
+    #00c2ce 0,
+    #005c75 100%
   );
   border: 0;
   border-radius: 6px;
@@ -128,19 +143,19 @@
 }
 
 .button_29:focus {
-  box-shadow: var(--secondary-font-color) 0 0 0 1.5px inset,
+  box-shadow: #005c75 0 0 0 1.5px inset,
     rgba(45, 35, 66, 0.4) 0 2px 4px, rgba(45, 35, 66, 0.3) 0 7px 13px -3px,
-    var(--secondary-font-color) 0 -3px 0 inset;
+    #005c75 0 -3px 0 inset;
 }
 
 .button_29:hover {
   box-shadow: rgba(45, 35, 66, 0.4) 0 4px 8px,
     rgba(45, 35, 66, 0.3) 0 7px 13px -3px,
-    var(--secondary-font-color) 0 -3px 0 inset;
+    #005c75 0 -3px 0 inset;
   transform: translateY(-2px);
 }
 
 .button_29:active {
-  box-shadow: var(--secondary-font-color) 0 3px 7px inset;
+  box-shadow: #005c75 0 3px 7px inset;
   transform: translateY(2px);
 }

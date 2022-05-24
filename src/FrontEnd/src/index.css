@@ -1,0 +1,45 @@
+.css-vr9er9-MuiModal-root-MuiDrawer-root .Overlay-halfSize {
+    width: 100% !important;
+}
+
+.css-nupfgw-MuiGrid-root.Layout-basic{
+    width: 100% !important;
+}
+
+.css-jrrpff.Layout-root{
+    margin: 10px 20px !important;
+}
+
+.css-ee20y-MuiPaper-root{
+    flex: 1;
+}
+
+.css-1nrlq1o-MuiFormControl-root{
+    flex: 1;
+}
+
+.css-1d3z3hw-MuiOutlinedInput-notchedOutline{
+    border-color: rgba(0, 92, 117,.6) !important;
+}
+.css-1rv3ei8-MuiFormControl-root-MuiTextField-root:hover .css-1d3z3hw-MuiOutlinedInput-notchedOutline
+{
+    border-color:  rgb(0, 92, 117) !important;
+}
+
+.css-jrrpff .Layout-stickyContainer .css-nupfgw-MuiGrid-root.Layout-basic .css-iz0jrc-MuiButtonBase-root-MuiButton-root.SaveButton-textButton {
+    background-color: #0277bd !important;
+}
+
+.css-1fn720y-MuiInputBase-root-MuiInput-root-MuiSelect-root:before{
+    border-bottom: 1px solid rgba(0, 92, 117,.8) !important;
+}
+
+.css-1fn720y-MuiInputBase-root-MuiInput-root-MuiSelect-root:hover:before,
+.css-1fn720y-MuiInputBase-root-MuiInput-root-MuiSelect-root:focus:before
+{
+    border-bottom: 2px solid #005c75 !important;
+}
+
+.css-1fn720y-MuiInputBase-root-MuiInput-root-MuiSelect-root:after{
+    border-bottom: 2px solid #005c75 !important;
+}

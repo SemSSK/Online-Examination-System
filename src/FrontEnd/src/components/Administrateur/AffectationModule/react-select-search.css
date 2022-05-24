@@ -112,18 +112,18 @@
 }
 
 .select-search__option.is-selected {
-    background: #b41f3a;
+    background: #005c75;
     color: #fff;
 }
 
 .select-search__option.is-highlighted,
 .select-search__option:not(.is-selected):hover {
-    background: rgba(94, 2, 19, 0.1);
+    background: rgba(0, 92, 117, 0.1);
 }
 
 .select-search__option.is-highlighted.is-selected,
 .select-search__option.is-selected:hover {
-    background: #b41f3a;
+    background: #005c75;
     color: #fff;
 }
 
@@ -182,7 +182,7 @@
 }
 
 .select-search:not(.select-search--multiple) .select-search__input:hover {
-    border-color: #b41f3a;
+    border-color: #005c75;
 }
 
 .select-search:not(.select-search--multiple) .select-search__select {
