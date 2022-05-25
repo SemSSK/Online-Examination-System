@@ -9,7 +9,9 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface UtilisateurRepo extends JpaRepository<Utilisateur,Long> {
+
     Utilisateur findByEmail(String email);
+
     @Query("UPDATE Utilisateur u SET u.failedAttempt = ?1 WHERE u.email = ?2")
     @Modifying
     void updateFailedAttempts(int failAttempts, String email);

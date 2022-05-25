@@ -34,22 +34,22 @@ const GetReady = ({stream , setStream, readyToJoin, setReadyToJoin,surveillant,s
     //     }).then(()=> setVideoStarted(true))
     // }
 
-    async function getLocalMediaStream(mediaStream){
-        console.log("got webCam Stream");
-        if(!mediaStream) {
-            console.log("nullllllll")
-            setVideoState(null);
-            return;
-        }
-        if(videoState){
-            videoState.getTracks().forEach( (track) => track.stop());
-        }
-        setVideoState(mediaStream);
-        videoRef.current.pause();
-        videoRef.current.srcObject = mediaStream;
-        videoRef.current.muted =true;
-        await videoRef.current.play();
-    }
+    // async function getLocalMediaStream(mediaStream){
+    //     console.log("got webCam Stream");
+    //     if(!mediaStream) {
+    //         console.log("nullllllll")
+    //         setVideoState(null);
+    //         return;
+    //     }
+    //     if(videoState){
+    //         videoState.getTracks().forEach( (track) => track.stop());
+    //     }
+    //     setVideoState(mediaStream);
+    //     videoRef.current.pause();
+    //     videoRef.current.srcObject = mediaStream;
+    //     videoRef.current.muted =true;
+    //     await videoRef.current.play();
+    // }
 
     const startScreenStream = ()=>{
         navigator.mediaDevices.getDisplayMedia({video:true,audio:false})
@@ -67,50 +67,51 @@ const GetReady = ({stream , setStream, readyToJoin, setReadyToJoin,surveillant,s
     useEffect(()=>{
         if(stream) {
             setVideoState(stream);
-            setVideoStarted(true)
+             setVideoStarted(true)
         }
     },[stream])
-    // useEffect(()=>{
-    //     if(stream) {
-    //         setRecordStarted(true)
-    //     }
-    // },[recordState])
+    useEffect(()=>{
+        if(recordState) {
+            setRecordStarted(true)
+        }
+    },[recordState])
 
     useEffect(()=>{
         if(!peers[surveillant]){
             peers[surveillant] = {}
         }
-        if(socket && videoStarted && readyToJoin ){
+        if(socket && videoStarted && recordStarted && readyToJoin ){
             socket.addEventListener('message',messageHandler);
             sendNegotiateMessage();
         }
-    },[socket,videoStarted,readyToJoin])
+    },[socket,videoStarted,recordStarted,readyToJoin])
 
-    // useEffect(()=>{
-    //    if(readyToJoin)
-    //         startScreenStream();
-    // },[readyToJoin])
+    useEffect(()=>{
+       if(readyToJoin)
+            startScreenStream();
+    },[readyToJoin])
 
     useEffect(()=>{
         console.log("timeToAddTrack ",timeToAddTrack);
         console.log("videoState ",videoState)
-        if(timeToAddTrack && videoState && readyToJoin)
-            // createPeerConnection();
+        if(timeToAddTrack && videoState && recordState && readyToJoin)
             getMedia();
-    },[videoState,timeToAddTrack,readyToJoin])
+    },[videoState,recordState,timeToAddTrack,readyToJoin])
 
     function getMedia(){
         console.log("peers[surveillant]?.pc ",peers[surveillant]?.pc);
         console.log("videoState ",videoState);
         console.log("!peers[surveillant].sender ",!peers[surveillant].sender);
         console.log("timeToAddTrack ",timeToAddTrack)
-        if( peers[surveillant]?.pc && videoState && timeToAddTrack){
+        if( peers[surveillant]?.pc && videoState && recordState && timeToAddTrack){
             // console.log("adding track");
-            // videoState.getTracks().forEach( (track) =>
-            //     peers[surveillant].sender =
-            //         peers[surveillant].pc.addTrack(track, videoState) );
+            videoState.getTracks().forEach( (track) =>
+                    peers[surveillant].pc.addTrack(track, videoState) );
 
-            peers[surveillant].pc.addTrack(videoState.getTracks()[0],videoState);
+            recordState.getTracks().forEach( (track) =>
+                    peers[surveillant].pc.addTrack(track, recordState) );
+
+            // peers[surveillant].pc.addTrack(videoState.getTracks()[0],videoState);
             // peers[surveillant].pc.addTrack(recordState.getTracks()[0], recordState);
 
         }

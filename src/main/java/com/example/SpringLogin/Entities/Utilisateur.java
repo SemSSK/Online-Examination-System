@@ -32,6 +32,7 @@ public class Utilisateur implements Serializable {
     private String userRole;
     @Column(unique = true)
     private String urlProfile;
+
     @Column(name = "account_non_locked")
     private boolean accountNonLocked;
 

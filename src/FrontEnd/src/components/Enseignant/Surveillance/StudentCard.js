@@ -25,8 +25,6 @@ const StudentCard = ({updateState,socket,peers,setPeers, ...props}) => {
     const studentSection = etudiant.section;
     const studentGroup = etudiant.groupe;
 
-
-
     useEffect( () => {
         console.log(props);
         if(!peers[props.presence.etudiant]){
@@ -380,23 +378,23 @@ const StudentCard = ({updateState,socket,peers,setPeers, ...props}) => {
                 })
             }
         }
-        // else{
-        //     setPeers(prevPeers => {
-        //         let newPeers = {...prevPeers}
-        //         newPeers[etudiant].recordStream = event.streams[0]
-        //         return newPeers
-        //     })
-        //     if(videoRef2.current) {
-        //         console.log("camera...");
-        //         videoRef2.current.srcObject = event.streams[0];
-        //         console.log("stream: ",videoRef2.current.srcObject)
-        //         videoRef2.current.addEventListener('loadedmetadata',  function () {
-        //             videoRef2.current.play()
-        //                 .catch(e => console.log('Failed to play video ', e));
-        //
-        //         })
-        //     }
-        // }
+        else{
+            setPeers(prevPeers => {
+                let newPeers = {...prevPeers}
+                newPeers[etudiant].recordStream = event.streams[0]
+                return newPeers
+            })
+            if(videoRef2.current) {
+                console.log("camera...");
+                videoRef2.current.srcObject = event.streams[0];
+                console.log("stream: ",videoRef2.current.srcObject)
+                videoRef2.current.addEventListener('loadedmetadata',  function () {
+                    videoRef2.current.play()
+                        .catch(e => console.log('Failed to play video ', e));
+
+                })
+            }
+        }
     }
 
     function sendNegotiateMessage()  {
@@ -537,6 +535,9 @@ const StudentCard = ({updateState,socket,peers,setPeers, ...props}) => {
                         <label className={studentList.tgl_btn}  htmlFor="cb5"></label>
                     </div>
                     <video style={{height:"100%", width:"100%"}} muted='muted' ref={videoRef}/>
+                </div>
+                <div className={presenceCheck.student__camera}>
+                    <video style={{height:"100%", width:"100%"}} muted='muted' ref={videoRef2}/>
                 </div>
 
                 <div className={presenceCheck.student__actions}>

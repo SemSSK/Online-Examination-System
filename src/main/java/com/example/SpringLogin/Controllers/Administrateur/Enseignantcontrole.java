@@ -2,9 +2,16 @@ package com.example.SpringLogin.Controllers.Administrateur;
 
 import java.util.List;
 
+import com.example.SpringLogin.Configrations.SecurityServices.ContextHandlerClass;
+import com.example.SpringLogin.Entities.Administrateur;
+import com.example.SpringLogin.Enumarators.Role;
 import com.example.SpringLogin.Repos.EnseignantRepo;
+import com.example.SpringLogin.Repos.UtilisateurRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -22,19 +29,39 @@ import com.example.SpringLogin.Entities.Enseignant;
 public class Enseignantcontrole {
 	
 	@Autowired
-	private EnseignantRepo enseignantRespository ;
+	private EnseignantRepo enseignantRespository;
+	@Autowired
+	private ContextHandlerClass contextHandlerClass;
+
+	private final UtilisateurRepo utilisateurRepo;
+
+	private final PasswordEncoder passwordEncoder;
+
+	public Enseignantcontrole(UtilisateurRepo utilisateurRepo, PasswordEncoder passwordEncoder) {
+		this.utilisateurRepo = utilisateurRepo;
+		this.passwordEncoder = passwordEncoder;
+	}
+
+	private Administrateur getAdmin(){
+		return (Administrateur) contextHandlerClass.getCurrentLoggedInUser().getUtilisateur();
+	}
 
 	@PostMapping("/save")
-	public Enseignant saveEnseignantcontrole(@RequestBody Enseignant enseignant) {
-		System.out.println(enseignant.getPassword());
-		System.out.println(enseignant.getGrade());
-		System.out.println(enseignant.getLastName());
-		System.out.println(enseignant.getName());
-		System.out.println(enseignant.getEmail());
-		System.out.println(enseignant.getUrlProfile());
-		System.out.println(enseignant.getUserRole());
-		return enseignantRespository.save(enseignant);
-		
+	public ResponseEntity<?> saveEnseignantcontrole(@RequestBody Enseignant enseignant) {
+
+		if (utilisateurRepo.findByEmail(enseignant.getEmail()) != null) {
+			return new ResponseEntity<>("There is an account with that email address",HttpStatus.FORBIDDEN);
+		}
+
+		Enseignant enseignantInstance = new Enseignant();
+		enseignantInstance.setEmail(enseignant.getEmail());
+		enseignantInstance.setName(enseignant.getName());
+		enseignantInstance.setLastName(enseignant.getLastName());
+		enseignantInstance.setGrade(enseignant.getGrade());
+		enseignantInstance.setUserRole(Role.ENSEIGNANT);
+		enseignantInstance.setAdmin(getAdmin());
+		enseignantInstance.setPassword(passwordEncoder.encode(enseignant.getPassword()));
+		return new ResponseEntity<>(enseignantRespository.save(enseignantInstance), HttpStatus.OK);
 	}
 
 	@GetMapping("/getEnseignant")
@@ -57,7 +84,7 @@ public class Enseignantcontrole {
 		updateenseignant.setEmail(enseignantdetail.getEmail());
 		updateenseignant.setLastName(enseignantdetail.getLastName());
 		updateenseignant.setName(enseignantdetail.getName());
-		updateenseignant.setPassword(enseignantdetail.getPassword());
+		updateenseignant.setPassword(passwordEncoder.encode(enseignantdetail.getPassword()));
 		updateenseignant.setUrlProfile(enseignantdetail.getUrlProfile());
 		updateenseignant.setUserRole(enseignantdetail.getUserRole());
 		updateenseignant.setGrade(enseignantdetail.getGrade());

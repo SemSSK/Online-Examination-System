@@ -22,8 +22,8 @@ public class CustomAuthenticationFailureHandler implements AuthenticationFailure
     @Override
     public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response, AuthenticationException exception) throws IOException, ServletException {
         System.out.println("Authentification failed");
-        String email = request.getParameter("email");
-        System.out.println("email : "+ email);
+        String email = request.getParameter("username");
+        System.out.println("username : "+ email);
         Utilisateur user = userService.findUserByEmail(email);
 
         if (user != null) {

@@ -3,6 +3,7 @@ package com.example.SpringLogin.Configrations;
 import com.example.SpringLogin.Configrations.SecurityServices.AuthHandlers.CustomAuthenticationFailureHandler;
 import com.example.SpringLogin.Configrations.SecurityServices.AuthHandlers.CustomAuthenticationSuccessHandler;
 import com.example.SpringLogin.Configrations.SecurityServices.AuthHandlers.CustomLogOutSuccessHandler;
+import com.example.SpringLogin.Configrations.SecurityServices.CustomUserDetailService;
 import com.example.SpringLogin.Enumarators.Role;
 import com.example.SpringLogin.Configrations.SecurityServices.CustomAuthFilter;
 import com.example.SpringLogin.Configrations.SecurityServices.FirstAuthProvider;
@@ -11,10 +12,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
@@ -34,9 +38,9 @@ public class securityConf extends WebSecurityConfigurerAdapter {
     @Autowired
     private UtilisateurRepo utilisateurRepo;
 
-    @Autowired
-    private FirstAuthProvider firstAuthProvider;
 
+    @Autowired
+    private CustomUserDetailService customUserDetailService;
 
 
     @Override
@@ -62,7 +66,6 @@ public class securityConf extends WebSecurityConfigurerAdapter {
                     .and()
                     .formLogin()
                     .loginProcessingUrl("/login")
-                    .usernameParameter("email")
                     .failureHandler(authenticationFailureHandler())
                     .successHandler(authenticationSuccessHandler())
                 .and()
@@ -77,13 +80,17 @@ public class securityConf extends WebSecurityConfigurerAdapter {
     //Replaces spring authenticationProvider and UserDetailService with custom ones to work with database
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.authenticationProvider(firstAuthProvider);
+        auth.authenticationProvider(myCustomAuthenticationProvider());
     }
 
+    public FirstAuthProvider myCustomAuthenticationProvider() {
+        return new FirstAuthProvider(customUserDetailService, PasswordEncoder());
+    }
 
+//
     @Bean
     public PasswordEncoder PasswordEncoder(){
-        return NoOpPasswordEncoder.getInstance();
+        return new BCryptPasswordEncoder(10);
     }
 
     @Bean

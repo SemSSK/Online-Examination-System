@@ -66,6 +66,7 @@ public class AffectationModuleService {
             affectationModule.setModule(module);
             affectationModule.setEnseignant(enseignant);
             affectationModule.setAffectationDate(Timestamp.from(Instant.now()));
+            affectationModule.setAdmin(getAdmin());
             //entityManager.persist(affectationModule);
             return affectationModuleRepo.saveAndFlush(affectationModule);
         }

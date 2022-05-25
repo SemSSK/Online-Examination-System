@@ -6,26 +6,23 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.session.SessionInformation;
-import org.springframework.security.core.session.SessionRegistry;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.web.authentication.session.RegisterSessionAuthenticationStrategy;
-import org.springframework.stereotype.Component;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
-import javax.security.auth.login.LoginException;
-import javax.servlet.http.HttpServletResponse;
-import java.security.Principal;
-import java.util.*;
 
-@Component
 public class FirstAuthProvider implements AuthenticationProvider {
 
-    @Autowired
-    private CustomUserDetailService customUserDetailService;
 
-    @Autowired
-    private ActivationCodeService activationCodeService;
+    private CustomUserDetailService customUserDetailService;
+    private PasswordEncoder passwordEncoder;
+
+
+
+    public FirstAuthProvider(CustomUserDetailService customUserDetailService, PasswordEncoder passwordEncoder) {
+        this.customUserDetailService = customUserDetailService;
+        this.passwordEncoder = passwordEncoder;
+    }
+
 
 
 
@@ -34,13 +31,19 @@ public class FirstAuthProvider implements AuthenticationProvider {
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
         String email = authentication.getName();
         String password = authentication.getCredentials().toString();
+        String encodedPassword = passwordEncoder.encode(password);
+        System.out.println("encoded passowrd= "+encodedPassword);
+        System.out.println("passowrd= "+password);
         if(email.isEmpty()){
             throw new BadCredentialsException("invalid login details");
         }
         CustomUserDetails user;
         try{
-            user = (CustomUserDetails)customUserDetailService.loadUserByUsername(email);
-            if(!user.getUtilisateur().getPassword().equals(password)){
+
+            user = (CustomUserDetails) customUserDetailService.loadUserByUsername(email);
+            System.out.println("DB encode password "+user.getUtilisateur().getPassword());
+
+            if(!passwordEncoder.matches(user.getUtilisateur().getPassword(),password)){
                 throw new BadCredentialsException("invalid login details");
             }
 

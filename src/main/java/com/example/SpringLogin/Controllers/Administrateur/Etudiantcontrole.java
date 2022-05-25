@@ -2,9 +2,15 @@ package com.example.SpringLogin.Controllers.Administrateur;
 
 import java.util.List;
 
+import com.example.SpringLogin.Configrations.SecurityServices.ContextHandlerClass;
+import com.example.SpringLogin.Entities.Administrateur;
+import com.example.SpringLogin.Enumarators.Role;
 import com.example.SpringLogin.Repos.EtudiantRepo;
+import com.example.SpringLogin.Repos.UtilisateurRepo;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -22,10 +28,38 @@ public class Etudiantcontrole {
 
 	@Autowired
 	EtudiantRepo etudiantRespository;
-	
+
+	@Autowired
+	private ContextHandlerClass contextHandlerClass;
+
+	private final UtilisateurRepo utilisateurRepo;
+
+	private final PasswordEncoder passwordEncoder;
+
+	public Etudiantcontrole(UtilisateurRepo utilisateurRepo, PasswordEncoder passwordEncoder) {
+		this.utilisateurRepo = utilisateurRepo;
+		this.passwordEncoder = passwordEncoder;
+	}
+
+
+	private Administrateur getAdmin(){
+		return (Administrateur) contextHandlerClass.getCurrentLoggedInUser().getUtilisateur();
+	}
+
 	@PostMapping("/save")
-	public Etudiant saveEtudiantcontrole(@RequestBody Etudiant etudiant) {
-		return etudiantRespository.save(etudiant);
+	public ResponseEntity<?> saveEtudiantcontrole(@RequestBody Etudiant etudiant) {
+		if (utilisateurRepo.findByEmail(etudiant.getEmail()) != null) {
+			return new ResponseEntity<>("There is an account with that email address", HttpStatus.FORBIDDEN);
+		}
+
+		Etudiant etudiantInstance = new Etudiant();
+		etudiantInstance.setEmail(etudiant.getEmail());
+		etudiantInstance.setName(etudiant.getName());
+		etudiantInstance.setLastName(etudiant.getLastName());
+		etudiantInstance.setUserRole(Role.ETUDIANT);
+		etudiantInstance.setAdmin(getAdmin());
+		etudiantInstance.setPassword(passwordEncoder.encode(etudiant.getPassword()));
+		return new ResponseEntity<>(etudiantRespository.save(etudiantInstance), HttpStatus.OK);
 		
 	}
 	
@@ -49,7 +83,7 @@ public class Etudiantcontrole {
 		updateetudiant.setEmail(etudiantdetail.getEmail());
 		updateetudiant.setLastName(etudiantdetail.getLastName());
 		updateetudiant.setName(etudiantdetail.getName());
-		updateetudiant.setPassword(etudiantdetail.getPassword());
+		updateetudiant.setPassword(passwordEncoder.encode(etudiantdetail.getPassword()));
 		updateetudiant.setUrlProfile(etudiantdetail.getUrlProfile());
 		updateetudiant.setUserRole(etudiantdetail.getUserRole());
 		updateetudiant.setNiveau(etudiantdetail.getNiveau());
