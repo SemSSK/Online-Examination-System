@@ -1,11 +1,11 @@
-const convertTimeToMilis = (time) => {
-    const [hours, minutes, seconds] = time.split(':');
-    return (Number(hours) * 60 * 60 + Number(minutes) * 60 + Number(seconds)) * 1000;
-};
+// const convertTimeToMilis = (time) => {
+//     const [hours, minutes, seconds] = time.split(':');
+//     return (Number(hours) * 60 * 60 + Number(minutes) * 60 + Number(seconds)) * 1000;
+// };
 
 const convertAppoToPlan = (appointment) => {
     const dateExame = new Date(appointment.startDate);
-    const durationInDate = new Date((new Date(appointment.endDate).getTime() - dateExame.getTime()));
+    const durationInDate = new Date(appointment.endDate).getTime() - dateExame.getTime();
     const duration = `${durationInDate.getUTCHours()}:${durationInDate.getUTCMinutes()}:${durationInDate.getUTCSeconds()}`;
     console.log(duration);
     const title = appointment.module.nomModule;
@@ -23,7 +23,7 @@ const convertAppoToPlan = (appointment) => {
 
 const convertPlanToAppo = (plan) => {
     const startDate = new Date(plan.dateOfExame);
-    const endDate = new Date(startDate.getTime() + convertTimeToMilis(plan.duration));
+    const endDate = new Date(startDate.getTime() + plan.duration );
     const title = plan.module.nomModule;
     return {
         id: plan.planId,

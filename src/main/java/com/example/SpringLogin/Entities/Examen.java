@@ -27,7 +27,7 @@ public class Examen implements Serializable {
 
 
     @OneToMany(mappedBy = "examen",fetch = FetchType.EAGER,cascade = CascadeType.ALL,orphanRemoval = true)
-    private Collection<ExamenQuestions> examenQuestions = new ArrayList<>();
+    private Collection<ExamenQuestion> examenQuestions = new ArrayList<>();
 
     @OneToMany(mappedBy = "exam",fetch = FetchType.LAZY,cascade = CascadeType.ALL)
     @JsonIgnore
@@ -43,8 +43,8 @@ public class Examen implements Serializable {
         this.examenQuestions.removeAll(this.examenQuestions);
     }
 
-    public void removeQuestion(ExamenQuestions examenQuestions){
-        this.examenQuestions.remove(examenQuestions);
+    public void removeQuestion(ExamenQuestion examenQuestion){
+        this.examenQuestions.remove(examenQuestion);
     }
 
     @Override

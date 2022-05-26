@@ -26,7 +26,7 @@
 
 
  const getStudents = (setRows) => {
-     const url = "http://localhost:8080/admin/students";
+     const url = "http://localhost:8080/admin/etudiant";
      axios.get(url, { withCredentials: true })
          .then(response => {
              if (response.status !== 200) {

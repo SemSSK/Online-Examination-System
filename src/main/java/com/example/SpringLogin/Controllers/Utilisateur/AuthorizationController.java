@@ -26,7 +26,7 @@ public class AuthorizationController {
 
 
     @PostMapping("/activate")
-    public ResponseEntity<String> activate(@RequestBody Map<String,String> activation_code){
+    public ResponseEntity<?> activate(@RequestBody Map<String,String> activation_code){
 
         CustomUserDetails user = contextHandlerClass.getCurrentLoggedInUser();
 
@@ -34,9 +34,9 @@ public class AuthorizationController {
 
         if(activationCodeService.treatCode(user.getUsername(),enteredCode)){
             contextHandlerClass.setCurrentLoggedInUserAuthorities();
-            return new ResponseEntity<String>(user.getUtilisateur().getUserRole(),HttpStatus.OK);
+            return new ResponseEntity<>(user.getUtilisateur().getUserRole(),HttpStatus.OK);
         }
-        return new ResponseEntity<String>("Invalide activation code", HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>("Invalide activation code", HttpStatus.BAD_REQUEST);
 
     }
 

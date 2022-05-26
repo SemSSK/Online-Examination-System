@@ -445,7 +445,7 @@ const StudentCard = ({updateState,socket,peers,setPeers, ...props}) => {
 
     const markPresent = () => {
 
-        const url = `http://localhost:8080/enseignant/surveillance/${props.code}/presence`;
+        const url = `http://localhost:8080/enseignant/surveillance/${props.code}/present`;
         console.log("url: ",url)
         axios.put(url, etudiant, { withCredentials: true });
     };

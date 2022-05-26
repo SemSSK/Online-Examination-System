@@ -19,7 +19,7 @@ public class EmailServiceImpl implements EmailService{
         log.info("Sending Email Start");
 
         SimpleMailMessage simpleMailMessage = new SimpleMailMessage();
-        simpleMailMessage.setFrom("doNotRespond@gmail.com");
+        simpleMailMessage.setFrom("SAB_e-EXAM_BETA@gmail.com");
         simpleMailMessage.setTo(to);
         simpleMailMessage.setSubject(subject);
         simpleMailMessage.setText(text);

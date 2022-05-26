@@ -19,18 +19,13 @@ public class CustomAuthenticationSuccessHandler implements AuthenticationSuccess
     @Autowired
     private ActivationCodeService activationCodeService;
 
-    @Autowired
-    private UserService userService;
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
         System.out.println("Authentification successful");
         Object principal = authentication.getPrincipal();
         CustomUserDetails userDetails = (CustomUserDetails)principal;
-        Utilisateur user = userDetails.getUtilisateur();
-        if (user.getFailedAttempt() > 0) {
-            userService.resetFailedAttempts(user.getEmail());
-        }
+
         activationCodeService.MakeActivationCode(userDetails.getUsername());
         //emailService.sendTextEmail(user.getUsername(),"Activation Code",code);
         response.setStatus(HttpServletResponse.SC_OK);

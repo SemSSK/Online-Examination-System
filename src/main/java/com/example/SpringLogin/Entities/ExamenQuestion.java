@@ -17,7 +17,7 @@ import java.util.Collection;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class ExamenQuestions implements Serializable {
+public class ExamenQuestion implements Serializable {
 
     @EmbeddedId
     private ExamenQuestionsKey examenQuestionsKey = new ExamenQuestionsKey();
@@ -58,12 +58,12 @@ public class ExamenQuestions implements Serializable {
             return true;
         }
 
-        if(!(obj instanceof ExamenQuestions)){
+        if(!(obj instanceof ExamenQuestion)){
             return false;
         }
 
-        ExamenQuestions examenQuestions = (ExamenQuestions) obj;
+        ExamenQuestion examenQuestion = (ExamenQuestion) obj;
 
-        return this.examenQuestionsKey.equals(examenQuestions.examenQuestionsKey);
+        return this.examenQuestionsKey.equals(examenQuestion.examenQuestionsKey);
     }
 }

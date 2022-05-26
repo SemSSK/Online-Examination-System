@@ -367,7 +367,7 @@ const EtudiantCard = ({socket, ...props}) => {
 
 
     const markPresent = () => {
-        const url = `http://localhost:8080/enseignant/surveillance/${props.code}/présence`;
+        const url = `http://localhost:8080/enseignant/surveillance/${props.code}/present`;
         axios.put(url, etudiant, { withCredentials: true });
     };
     const markAbsent = () => {

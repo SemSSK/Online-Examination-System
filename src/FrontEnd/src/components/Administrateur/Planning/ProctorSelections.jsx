@@ -26,7 +26,7 @@ import IconButton from "@mui/material/IconButton";
 
 
 const getTeachers = (setRows) => {
-    const url = "http://localhost:8080/admin/ens";
+    const url = "http://localhost:8080/admin/enseignant";
     axios.get(url, { withCredentials: true })
         .then(response => {
             if (response.status !== 200) {

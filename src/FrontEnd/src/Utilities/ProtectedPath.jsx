@@ -6,7 +6,7 @@ const ProtectedPath = (props) => {
     const [isLoading, setIsLoading] = useState(true);
     const [isAuthenticated, setIsAuthenticated] = useState();
     useEffect(() => {
-        axios.get("http://localhost:8080/authorization/loggedIn", { withCredentials: true })
+        axios.get("http://localhost:8080/loggedIn", { withCredentials: true })
             .then(res => {
             if (res.status == 200) {
                 if(res.data === props.role || props.role === undefined){

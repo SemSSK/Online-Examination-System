@@ -30,7 +30,7 @@ const getModules =(setModuleList)=>{
 }
 
 // const getEtudiants = (setEtudiantList)=>{
-//     const url = "http://localhost:8080/admin/etu";
+//     const url = "http://localhost:8080/admin/etudiant";
 //     axios.get(url,{withCredentials:true})
 //     .then(response=>{
 //         if(response.status === 200){
@@ -46,7 +46,7 @@ const getModules =(setModuleList)=>{
 // }
 
 const getEnseignant = (setEnseignantList)=>{
-    const url = "http://localhost:8080/admin/ens";
+    const url = "http://localhost:8080/admin/enseignant";
     axios.get(url,{withCredentials:true})
     .then(response=>{
         if(response.status === 200){

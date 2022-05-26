@@ -2,6 +2,7 @@ package com.example.SpringLogin.Controllers.Enseignant;
 
 import com.example.SpringLogin.Entities.Etudiant;
 import com.example.SpringLogin.Enumarators.PrésenceEtats;
+import com.example.SpringLogin.Exception.systemException;
 import com.example.SpringLogin.Services.EnseignantService.SurveillantService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -21,22 +22,28 @@ public class SurveillantController {
             surveillantService.ChangeSessionActivationState(codeSurveillant);
             return new ResponseEntity<>("Session started",HttpStatus.OK);
         }
-        catch(Exception e){
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.FORBIDDEN);
+        catch(systemException sexc){
+            return new ResponseEntity<>(sexc.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+        catch(Exception exc){
+            return new ResponseEntity<>("Sorry, an error occurred ", HttpStatus.FORBIDDEN);
         }
     }
 
 
 
-    @PutMapping("/{codesurveillant}/presence")
+    @PutMapping("/{codesurveillant}/present")
     private ResponseEntity<?> MarkEtudiantPresent(@PathVariable(name = "codesurveillant")String codeSurveillant,
                                                   @RequestBody Etudiant etudiant){
         try{
             surveillantService.ChangeEtudiantPresenceState(codeSurveillant,etudiant,PrésenceEtats.PRESENT);
             return new ResponseEntity<>("Etudiant Présent",HttpStatus.OK);
         }
-        catch(Exception e){
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.FORBIDDEN);
+        catch(systemException sexc){
+            return new ResponseEntity<>(sexc.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+        catch(Exception exc){
+            return new ResponseEntity<>("Sorry, an error occurred ", HttpStatus.FORBIDDEN);
         }
     }
 
@@ -47,8 +54,11 @@ public class SurveillantController {
             surveillantService.ChangeEtudiantPresenceState(codeSurveillant,etudiant,PrésenceEtats.ABSENT);
             return new ResponseEntity<>("Etudiant Présent",HttpStatus.OK);
         }
-        catch(Exception e){
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.FORBIDDEN);
+        catch(systemException sexc){
+            return new ResponseEntity<>(sexc.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+        catch(Exception exc){
+            return new ResponseEntity<>("Sorry, an error occurred ", HttpStatus.FORBIDDEN);
         }
     }
 
@@ -59,8 +69,11 @@ public class SurveillantController {
             surveillantService.ChangeEtudiantPresenceState(codeSurveillant,etudiant, PrésenceEtats.BLOQUER);
             return new ResponseEntity<>("Etudiant bloquer",HttpStatus.OK);
         }
-        catch(Exception e){
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.FORBIDDEN);
+        catch(systemException sexc){
+            return new ResponseEntity<>(sexc.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+        catch(Exception exc){
+            return new ResponseEntity<>("Sorry, an error occurred ", HttpStatus.FORBIDDEN);
         }
     }
 
@@ -71,8 +84,11 @@ public class SurveillantController {
             surveillantService.ChangeEtudiantPresenceState(codeSurveillant,etudiant, PrésenceEtats.ABSENT);
             return new ResponseEntity<>("Etudiant bloquer",HttpStatus.OK);
         }
-        catch(Exception e){
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.FORBIDDEN);
+        catch(systemException sexc){
+            return new ResponseEntity<>(sexc.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+        catch(Exception exc){
+            return new ResponseEntity<>("Sorry, an error occurred ", HttpStatus.FORBIDDEN);
         }
     }
 

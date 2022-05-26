@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class EnseignantModuleController {
     @Autowired
     private EnseignantModuleService enseignantModuleService;
+
     @GetMapping("")
     public ResponseEntity<?> getModules(){
         return new ResponseEntity<>(enseignantModuleService.getAffectaton(), HttpStatus.OK);

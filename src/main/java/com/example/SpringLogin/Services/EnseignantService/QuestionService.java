@@ -3,6 +3,7 @@ package com.example.SpringLogin.Services.EnseignantService;
 import com.example.SpringLogin.Entities.*;
 import com.example.SpringLogin.Configrations.SecurityServices.ContextHandlerClass;
 import com.example.SpringLogin.Entities.Module;
+import com.example.SpringLogin.Exception.systemException;
 import com.example.SpringLogin.Repos.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -20,13 +21,7 @@ public class QuestionService {
     @Autowired
     private AffectationModuleRepo affectationModuleRepo;
     @Autowired
-    private ModuleRepo moduleRepo;
-    @Autowired
     private QuestionRepo questionRepo;
-    @Autowired
-    private ExamenRepo examenRepo;
-    @Autowired
-    private ExamenQuestionsRepo examenQuestionsRepo;
     @Autowired
     private ContextHandlerClass contextHandlerClass;
 
@@ -68,51 +63,49 @@ public class QuestionService {
 
     @Transactional(readOnly = false)
     public void addQuestion(Question question) throws Exception {
-        if(canAddQuestion(question)){
-            question.setDateCreation(new Timestamp(System.currentTimeMillis()));
-            question.setEnseignant(getEnseignant());
-            questionRepo.save(question);
+        if (!canAddQuestion(question)) {
+            throw new systemException(systemException.ExceptionType.ACCESS);
         }
-        else{
-            throw new Exception("Cannot add question on a module you do not teach currently");
-        }
+        question.setDateCreation(new Timestamp(System.currentTimeMillis()));
+        question.setEnseignant(getEnseignant());
+        questionRepo.save(question);
+
     }
 
     @Transactional(readOnly = false)
     public void deleteQuestion(Long id) throws Exception {
         Optional<Question> optQuestion = questionRepo.findById(id);
         if(optQuestion.isEmpty()){
-            throw new Exception("No question to delete");
+            throw new systemException(systemException.ExceptionType.NOT_EXISTENCE);
         }
+
         Question question = optQuestion.get();
-        if(canAlterQuestion(question)){
-            question.getExamenQuestions().forEach(examenQuestions -> {
-                examenQuestions.getExamen().getExamenQuestions().remove(examenQuestions);
-            });
-            question.getExamenQuestions().clear();
-            questionRepo.deleteById(id);
+        if(!canAlterQuestion(question)){
+            throw new systemException(systemException.ExceptionType.ACCESS);
         }
-        else{
-            throw new Exception("Cannot delete a question you did not add");
-        }
+
+        question.getExamenQuestions().forEach(examenQuestions -> {
+            examenQuestions.getExamen().getExamenQuestions().remove(examenQuestions);
+        });
+        question.getExamenQuestions().clear();
+        questionRepo.deleteById(id);
+
     }
 
     @Transactional(readOnly = false)
     public void modifyQuestion(Question question) throws Exception{
         Optional<Question> optionalQuestion = questionRepo.findById(question.getQuestionId());
         if(optionalQuestion.isEmpty()){
-            throw new Exception("No question to modify");
+            throw new systemException(systemException.ExceptionType.NOT_EXISTENCE);
         }
         Question newQuestion = questionRepo.getById(question.getQuestionId());
         if(canAlterQuestion(newQuestion)){
-            newQuestion.setContent(question.getContent());
-            newQuestion.setDescription(question.getDescription());
-            newQuestion.setTypeAnswer(question.getTypeAnswer());
-            newQuestion.setDateCreation(new Timestamp(System.currentTimeMillis()));
+            throw new systemException(systemException.ExceptionType.ACCESS);
         }
-        else{
-            throw new Exception("Cannot Alter a question you did not add");
-        }
+        newQuestion.setContent(question.getContent());
+        newQuestion.setDescription(question.getDescription());
+        newQuestion.setTypeAnswer(question.getTypeAnswer());
+        newQuestion.setDateCreation(new Timestamp(System.currentTimeMillis()));
     }
 
 }

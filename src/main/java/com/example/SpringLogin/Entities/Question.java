@@ -27,13 +27,13 @@ public class Question implements Serializable {
     @Column(nullable = false)
     private Timestamp dateCreation;
     private String description;
-    private int nbrOccurences = 0;
+    private int nbrOccurrences = 0;
     private float rating;
-    private int nbrRaitings = 0;
+    private int nbrRatings = 0;
 
     @OneToMany(fetch = FetchType.LAZY,cascade = CascadeType.ALL,mappedBy = "question",orphanRemoval = true)
     @JsonIgnore
-    private Collection<ExamenQuestions> examenQuestions = new ArrayList<>();
+    private Collection<ExamenQuestion> examenQuestions = new ArrayList<>();
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "enseignant_id")
@@ -51,8 +51,8 @@ public class Question implements Serializable {
         this.examenQuestions.removeAll(examenQuestions);
     }
 
-    public void removeFromExam(ExamenQuestions examenQuestions){
-        this.examenQuestions.remove(examenQuestions);
+    public void removeFromExam(ExamenQuestion examenQuestion){
+        this.examenQuestions.remove(examenQuestion);
     }
 
     @Override

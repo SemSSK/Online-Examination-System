@@ -10,6 +10,7 @@ import Collapse from '@mui/material/Collapse';
 import IconButton from '@mui/material/IconButton';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import api from './api/backendRestApi';
+import axios from "axios";
 
 
 
@@ -72,7 +73,8 @@ export default function AffectationForum({enseignements,setEnseignements}) {
   const fetchModules = async () => {
 
     try{
-        const response =  await api.get('/admin/module')
+        const url = "http://localhost:8080/admin/module";
+        const response =  await axios.get(url,{ withCredentials:true})
         
         if(response && response.data ) {
             setModules(response.data);

@@ -1,5 +1,6 @@
 package com.example.SpringLogin.Controllers.Etudiant;
 
+import com.example.SpringLogin.Exception.systemException;
 import com.example.SpringLogin.Services.EtudiantService.EtudiantCopieService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -21,10 +22,13 @@ public class EtudiantCopieController {
     public ResponseEntity<?> reclamOnCorrection(@RequestParam(name = "copieId") Long copieId, @RequestBody String subject){
         try{
             etudiantCopieService.sendReclamation(copieId,subject);
-            return new ResponseEntity<>("Reclamation enregistrer",HttpStatus.OK);
+            return new ResponseEntity<>("Complaint saved",HttpStatus.OK);
         }
-        catch(Exception e){
-            return new ResponseEntity<>(e.getMessage(),HttpStatus.FORBIDDEN);
+        catch(systemException sexc){
+            return new ResponseEntity<>(sexc.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+        catch(Exception exc){
+            return new ResponseEntity<>("Sorry, an error occurred ", HttpStatus.FORBIDDEN);
         }
     }
 }

@@ -2,6 +2,7 @@ package com.example.SpringLogin.Controllers.Enseignant;
 
 import com.example.SpringLogin.Entities.Examen;
 import com.example.SpringLogin.Entities.Module;
+import com.example.SpringLogin.Exception.systemException;
 import com.example.SpringLogin.Services.EnseignantService.ExamenService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -20,10 +21,11 @@ public class ExamenController {
         try{
             return new ResponseEntity<>(examenService.getModuleExam(moduleId), HttpStatus.OK);
         }
-        catch (Exception e)
-        {
-            e.printStackTrace();
-            return new ResponseEntity<>(e.getMessage(),HttpStatus.NOT_FOUND);
+        catch(systemException sexc){
+            return new ResponseEntity<>(sexc.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+        catch(Exception exc){
+            return new ResponseEntity<>("Sorry, an error occurred ", HttpStatus.FORBIDDEN);
         }
     }
 
@@ -33,9 +35,11 @@ public class ExamenController {
             examenService.addExamen(examen);
             return ResponseEntity.ok("Exam added successfuly");
         }
-        catch(Exception e){
-            e.printStackTrace();
-            return new ResponseEntity<String>(e.getMessage(),HttpStatus.FORBIDDEN);
+        catch(systemException sexc){
+            return new ResponseEntity<>(sexc.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+        catch(Exception exc){
+            return new ResponseEntity<>("Sorry, an error occurred ", HttpStatus.FORBIDDEN);
         }
     }
 
@@ -45,9 +49,11 @@ public class ExamenController {
             examenService.deleteExamen(id);
             return ResponseEntity.ok("Exam deleted successfuly");
         }
-        catch(Exception e){
-            e.printStackTrace();
-            return new ResponseEntity<String>(e.getMessage(),HttpStatus.FORBIDDEN);
+        catch(systemException sexc){
+            return new ResponseEntity<>(sexc.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+        catch(Exception exc){
+            return new ResponseEntity<>("Sorry, an error occurred ", HttpStatus.FORBIDDEN);
         }
     }
 
@@ -57,9 +63,11 @@ public class ExamenController {
             examenService.modifyExamen(examen);
             return ResponseEntity.ok("Exam Modified successfuly");
         }
-        catch(Exception e){
-            e.printStackTrace();
-            return new ResponseEntity<String>(e.getMessage(),HttpStatus.FORBIDDEN);
+        catch(systemException sexc){
+            return new ResponseEntity<>(sexc.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+        catch(Exception exc){
+            return new ResponseEntity<>("Sorry, an error occurred ", HttpStatus.FORBIDDEN);
         }
     }
 

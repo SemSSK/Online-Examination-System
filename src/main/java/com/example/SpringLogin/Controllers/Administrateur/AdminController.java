@@ -65,9 +65,11 @@ public class AdminController {
 
         try {
             return new ResponseEntity<>(adminService.getAdminByID(userId),HttpStatus.OK);
-        }catch(systemException sexc){
+        }
+        catch(systemException sexc){
             return new ResponseEntity<>(sexc.getMessage(),HttpStatus.BAD_REQUEST);
-        }catch(Exception ex){
+        }
+        catch(Exception ex){
             return new ResponseEntity<>("Sorry, an error occurred ",HttpStatus.FORBIDDEN);
         }
 
@@ -76,9 +78,11 @@ public class AdminController {
     public ResponseEntity<?> updateAdmin(@RequestBody Administrateur admin) {
         try {
             return new ResponseEntity<>(adminService.editAdmin(admin),HttpStatus.OK);
-        }catch(systemException sexc){
+        }
+        catch(systemException sexc){
             return new ResponseEntity<>(sexc.getMessage(),HttpStatus.BAD_REQUEST);
-        }catch(Exception ex){
+        }
+        catch(Exception ex){
             return new ResponseEntity<>("Sorry, an error occurred ",HttpStatus.FORBIDDEN);
         }
     }
@@ -87,13 +91,13 @@ public class AdminController {
     public ResponseEntity<?> deleteAdmin(@PathVariable Long userId) {
         try {
             return new ResponseEntity<>(adminService.deleteAdmin(userId),HttpStatus.OK);
-        }catch(systemException sexc){
+        }
+        catch(systemException sexc){
             return new ResponseEntity<>(sexc.getMessage(),HttpStatus.BAD_REQUEST);
-        }catch(Exception ex){
+        }
+        catch(Exception ex){
             return new ResponseEntity<>("Sorry, an error occurred ",HttpStatus.FORBIDDEN);
         }
     }
-
-
 
 }

@@ -1,10 +1,10 @@
 
 import axios from 'axios';
-const Etudiant_API_BASE_URL1="http://localhost:8080/admin/students";
-const Etudiant_API_BASE_URL2="http://localhost:8080/admin/students/save";
-const Etudiant_API_BASE_URL3="http://localhost:8080/admin/students/getEtudiantbyidcontrole";
-const Etudiant_API_BASE_URL4="http://localhost:8080/admin/students/updateEtudiantcontrole";
-const Etudiant_API_BASE_URL5="http://localhost:8080/admin/students/deleteEtudiant";
+const Etudiant_API_BASE_URL1="http://localhost:8080/admin/etudiant";
+const Etudiant_API_BASE_URL2="http://localhost:8080/admin/etudiant/save";
+const Etudiant_API_BASE_URL3="http://localhost:8080/admin/etudiant/getEtudiant";
+const Etudiant_API_BASE_URL4="http://localhost:8080/admin/etudiant/editEtudiant";
+const Etudiant_API_BASE_URL5="http://localhost:8080/admin/etudiant/deleteEtudiant";
 
 
 class Etudiantservise {

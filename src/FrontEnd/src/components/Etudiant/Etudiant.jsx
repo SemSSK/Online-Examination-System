@@ -58,7 +58,7 @@ const Etudiant = () => {
     ];
 
     const logout = () => {
-        axios.post("http://localhost:8080/authorization/logout", null, { withCredentials: true }).then(response => {
+        axios.post("http://localhost:8080/logout", null, { withCredentials: true }).then(response => {
             if (response.status === 200) {
                 navigate("/login");
             }

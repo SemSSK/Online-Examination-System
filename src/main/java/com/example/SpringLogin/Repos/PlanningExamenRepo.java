@@ -5,6 +5,7 @@ import com.example.SpringLogin.Entities.Module;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.sql.Timestamp;
 import java.util.List;
 import java.util.Optional;
 
@@ -12,6 +13,7 @@ import java.util.Optional;
 public interface PlanningExamenRepo extends JpaRepository<PlanningExamen,Long> {
 
     public List<PlanningExamen> findAllByModule(Module module);
+    PlanningExamen findByModuleAndDateOfExame(Module module, Timestamp dateOfExame);
     public List<PlanningExamen> findAllByAdmin(Administrateur administrateur);
     public Optional<PlanningExamen> findByCodeEtudiant(String codeEtudiant);
     public Optional<PlanningExamen> findByCodeSurveillant(String codeSurveillant);

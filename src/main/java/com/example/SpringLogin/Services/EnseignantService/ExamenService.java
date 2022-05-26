@@ -4,13 +4,13 @@ import com.example.SpringLogin.Entities.*;
 import com.example.SpringLogin.Entities.Module;
 import com.example.SpringLogin.Configrations.SecurityServices.ContextHandlerClass;
 import com.example.SpringLogin.Enumarators.teachingType;
+import com.example.SpringLogin.Exception.systemException;
 import com.example.SpringLogin.Repos.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.Timestamp;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Optional;
 
@@ -27,7 +27,7 @@ public class ExamenService {
     @Autowired
     private ExamenRepo examenRepo;
     @Autowired
-    private ExamenQuestionsRepo examenQuestionsRepo;
+    private ExamenQuestionRepo examenQuestionRepo;
     @Autowired
     private QuestionRepo questionRepo;
 
@@ -50,25 +50,24 @@ public class ExamenService {
     public Examen getModuleExam(Long moduleId) throws Exception{
         Optional<Module> moduleOpt =  moduleRepo.findById(moduleId);
         if(moduleOpt.isEmpty()){
-            throw new Exception("Not a module");
+            throw new systemException(systemException.ExceptionType.NOT_EXISTENCE);
         }
         Module module = moduleOpt.get();
-        if(canAccessExamsofModule(module)){
-            Optional<Examen> examen = examenRepo.findByModule(module);
-            if(examen.isEmpty())
-            {
-                throw new Exception("No Exam created yet");
-            }
-            return examen.get();
+        if(!canAccessExamsofModule(module)){
+            throw new systemException(systemException.ExceptionType.ACCESS);
         }
-        else{
-            throw new Exception("Cannot access exam of a module you are not responsible of");
+        Optional<Examen> examen = examenRepo.findByModule(module);
+        if(examen.isEmpty())
+        {
+            throw new systemException(systemException.ExceptionType.NOT_EXISTENCE);
         }
+
+        return examen.get();
     }
 
-    private boolean validQuestions(Collection<ExamenQuestions> examenQuestionsList, Module module){
-        for (ExamenQuestions examenQuestions : examenQuestionsList) {
-            Optional<Question> dbQuestion = questionRepo.findById(examenQuestions.getQuestion().getQuestionId());
+    private boolean validQuestions(Collection<ExamenQuestion> examenQuestionList, Module module) {
+        for (ExamenQuestion examenQuestion : examenQuestionList) {
+            Optional<Question> dbQuestion = questionRepo.findById(examenQuestion.getQuestion().getQuestionId());
 
             if(dbQuestion.isEmpty()){
                 return false;
@@ -84,27 +83,32 @@ public class ExamenService {
     @Transactional(readOnly = false)
     public void addExamen(Examen examen) throws Exception {
 
-        if(!validQuestions(examen.getExamenQuestions(),examen.getModule())){
-            throw new Exception("Invalid questions");
+        Optional<Module> moduleOpt =  moduleRepo.findById(examen.getModule().getId());
+        if(moduleOpt.isEmpty()){
+            throw new systemException(systemException.ExceptionType.NOT_EXISTENCE);
         }
 
-        if(canAccessExamsofModule(examen.getModule())){
-            Optional<Examen> currentExam = examenRepo.findByModule(examen.getModule());
-            if(!currentExam.isEmpty()) {
-                examen.setExamId(currentExam.get().getExamId());
-                modifyExamen(examen);
-            }
-            else {
-                examen.setDateCreation(new Timestamp(System.currentTimeMillis()));
-                examen.getExamenQuestions().forEach(examenQuestions -> {
-                    examenQuestions.setExamen(examen);
-                    examenQuestions.setQuestion(questionRepo.findById(examenQuestions.getQuestion().getQuestionId()).get());
-                });
-                examenRepo.save(examen);
-            }
+        if(!canAccessExamsofModule(moduleOpt.get())){
+            throw new systemException(systemException.ExceptionType.ACCESS);
         }
-        else{
-            throw new Exception("Cannot access exam of a module you are not responsible of");
+
+        if(!validQuestions(examen.getExamenQuestions(),moduleOpt.get())){
+            throw new systemException("Invalid questions");
+        }
+
+
+        Optional<Examen> currentExam = examenRepo.findByModule(moduleOpt.get());
+        if(!currentExam.isEmpty()) {
+            examen.setExamId(currentExam.get().getExamId());
+            modifyExamen(examen);
+        }
+        else {
+            examen.setDateCreation(new Timestamp(System.currentTimeMillis()));
+            examen.getExamenQuestions().forEach(examenQuestions -> {
+                examenQuestions.setExamen(examen);
+                examenQuestions.setQuestion(questionRepo.findById(examenQuestions.getQuestion().getQuestionId()).get());
+            });
+            examenRepo.save(examen);
         }
 
     }
@@ -113,15 +117,15 @@ public class ExamenService {
     public void deleteExamen(Long examId) throws Exception {
         Optional<Examen> examen = examenRepo.findById(examId);
         if(examen.isEmpty()){
-            throw new Exception("No exam to delete");
+            throw new systemException(systemException.ExceptionType.NOT_EXISTENCE);
         }
-        if(canAccessExamsofModule(examen.get().getModule())){
-            examen.get().removeAllQuestion();
-            examenRepo.deleteById(examen.get().getExamId());
+        if(!canAccessExamsofModule(examen.get().getModule())){
+            throw new systemException(systemException.ExceptionType.ACCESS);
         }
-        else{
-            throw new Exception("Cannot access exam of a module you are not responsible of");
-        }
+
+        examen.get().removeAllQuestion();
+        examenRepo.deleteById(examen.get().getExamId());
+
     }
 
     @Transactional(readOnly = false)
@@ -129,35 +133,36 @@ public class ExamenService {
 
         Optional<Examen> realExamen = examenRepo.findById(examen.getExamId());
 
+        if(realExamen.isEmpty()){
+            throw new systemException(systemException.ExceptionType.NOT_EXISTENCE);
+        }
+
+        if(!canAccessExamsofModule(examen.getModule())){
+            throw new systemException(systemException.ExceptionType.ACCESS);
+        }
+
         if(!validQuestions(examen.getExamenQuestions(),examen.getModule())){
             throw new Exception("Invalid question modules");
         }
 
-        if(realExamen.isEmpty()){
-            throw new Exception("No exam to modify");
-        }
 
-        if(canAccessExamsofModule(examen.getModule())){
-            //Modifying data
-            realExamen.get().setDateCreation(new Timestamp(System.currentTimeMillis()));
-            realExamen.get().setPublicInfo(examen.getPublicInfo());
-            realExamen.get().removeAllQuestion();
-            examen.getExamenQuestions().forEach(examenQuestions -> {
-                examenQuestions.setExamen(realExamen.get());
-                Optional<ExamenQuestions> examenQuestionsDB = examenQuestionsRepo.findByExamenAndQuestion(examenQuestions.getExamen(),examenQuestions.getQuestion());
-                if(examenQuestionsDB.isEmpty()) {
-                    examenQuestions.setQuestion(questionRepo.findById(examenQuestions.getQuestion().getQuestionId()).get());
-                }
-                else{
-                    examenQuestions = examenQuestionsDB.get();
-                }
-            });
-            realExamen.get().getExamenQuestions().addAll(examen.getExamenQuestions());
+        //Modifying data
+        realExamen.get().setDateCreation(new Timestamp(System.currentTimeMillis()));
+        realExamen.get().setPublicInfo(examen.getPublicInfo());
+        realExamen.get().removeAllQuestion();
+        examen.getExamenQuestions().forEach( examenQuestion -> {
+            examenQuestion.setExamen(realExamen.get());
+            Optional<ExamenQuestion> examenQuestionDB = examenQuestionRepo.findByExamenAndQuestion(examenQuestion.getExamen(),examenQuestion.getQuestion());
+            if(examenQuestionDB.isEmpty()) {
+                examenQuestion.setQuestion(questionRepo.findById(examenQuestion.getQuestion().getQuestionId()).get());
+            }
+            else{
+                examenQuestion = examenQuestionDB.get();
+            }
+        });
 
-        }
-        else{
-            throw new Exception("Cannot access exam of a module you are not responsible of");
-        }
+        realExamen.get().getExamenQuestions().addAll(examen.getExamenQuestions());
+
     }
 
 

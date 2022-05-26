@@ -26,7 +26,7 @@ public class PlanningExamen implements Serializable {
     @Column(nullable = false)
     private Timestamp dateOfExame;
     @Column(nullable = false)
-    private Time duration;
+    private Long duration;
     @Column(nullable = false,unique = true)
     private String codeSurveillant;
     @Column(nullable = false,unique = true)

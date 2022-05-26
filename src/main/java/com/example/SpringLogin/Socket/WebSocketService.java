@@ -325,7 +325,7 @@ public class WebSocketService {
 
     private boolean isExamTime(PlanningExamen planningExamen){
         Long examTime = planningExamen.getDateOfExame().getTime();
-        Long durationOfExam = planningExamen.getDuration().getTime();
+        Long durationOfExam = planningExamen.getDuration();
         Long currentTime = System.currentTimeMillis();
         Long advanceTime = 30L * 60L * 1000L;
         return (currentTime + advanceTime > examTime) && (currentTime < examTime + durationOfExam);

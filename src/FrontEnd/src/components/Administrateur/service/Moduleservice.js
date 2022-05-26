@@ -1,9 +1,9 @@
 import axios from 'axios';
-const Module_API_BASE_URL1="http://localhost:8080/admin/api/gesmodule/getModulecontrole";
-const Module_API_BASE_URL2="http://localhost:8080/admin/api/gesmodule/save";
-const Module_API_BASE_URL3="http://localhost:8080/admin/api/gesmodule/getModulebyidcontrole";
-const Module_API_BASE_URL4="http://localhost:8080/admin/api/gesmodule/updateModulecontrole";
-const Module_API_BASE_URL5="http://localhost:8080/admin/api/gesmodule/deleteModule"
+const Module_API_BASE_URL1="http://localhost:8080/admin/module";
+const Module_API_BASE_URL2="http://localhost:8080/admin/module/save";
+const Module_API_BASE_URL3="http://localhost:8080/admin/module/getModule";
+const Module_API_BASE_URL4="http://localhost:8080/admin/module/editModule";
+const Module_API_BASE_URL5="http://localhost:8080/admin/module/deleteModule"
 class Moduleservice {
 
     getAllModules(){

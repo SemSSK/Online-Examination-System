@@ -59,9 +59,11 @@ public class AdminEtudiantController {
 
 		try {
 			return new ResponseEntity<>(adminEtudiantService.getEtudiantByID(userId),HttpStatus.OK);
-		}catch(systemException sexc){
+		}
+		catch(systemException sexc){
 			return new ResponseEntity<>(sexc.getMessage(),HttpStatus.BAD_REQUEST);
-		}catch(Exception ex){
+		}
+		catch(Exception ex){
 			return new ResponseEntity<>("Sorry, an error occurred ",HttpStatus.FORBIDDEN);
 		}
 
