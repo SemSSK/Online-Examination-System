@@ -16,7 +16,7 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/admin/affectationModule")
-public class affectationModuleController {
+public class AdminAffectationModuleController {
 
     @Autowired
     private AffectationModuleService affectationModuleService;
@@ -29,7 +29,6 @@ public class affectationModuleController {
 
     @GetMapping("")
     public ResponseEntity<?> getAllAffectations(){
-        System.out.println("i received request");
         return new ResponseEntity<>(affectationModuleService.getAllAffectations(), HttpStatus.OK);
     }
 

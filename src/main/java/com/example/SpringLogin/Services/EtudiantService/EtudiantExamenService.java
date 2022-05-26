@@ -130,6 +130,7 @@ public class EtudiantExamenService {
         copie.setObservation("Non corrigé");
         copie.setReclamation(null);
         copie.getReponses().forEach(reponse -> {
+            reponse.setPoints(0);
             reponse.setCopie(copie);
         });
         copie.setExam(currentExamen.get());

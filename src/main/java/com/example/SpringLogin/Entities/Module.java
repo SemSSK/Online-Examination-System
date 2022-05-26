@@ -19,6 +19,10 @@ public class Module implements Serializable {
     private Long id;
     @Column(nullable = false)
     private String nomModule;
+
+    @Column(nullable = false, unique = true)
+    private String moduleAbrv;
+
     @Column(nullable = false)
     private int coefficient;
     @Column(nullable = false)

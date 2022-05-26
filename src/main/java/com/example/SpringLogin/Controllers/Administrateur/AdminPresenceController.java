@@ -3,6 +3,7 @@ package com.example.SpringLogin.Controllers.Administrateur;
 import com.example.SpringLogin.Configrations.SecurityServices.ContextHandlerClass;
 import com.example.SpringLogin.Entities.Administrateur;
 import com.example.SpringLogin.Entities.Présences;
+import com.example.SpringLogin.Exception.systemException;
 import com.example.SpringLogin.Repos.PrésencesRepo;
 import com.example.SpringLogin.Services.AdminService.AdminPresenceService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,8 +23,16 @@ public class AdminPresenceController {
     private AdminPresenceService adminPresenceService;
 
     @GetMapping("/{planId}")
-    public ResponseEntity<?> getPrésences(@RequestParam(name = "planId")Long planId){
-        return new ResponseEntity<>(adminPresenceService.getPrésences(planId), HttpStatus.OK);
+    public ResponseEntity<?> getPresences(@RequestParam(name = "planId")Long planId){
+        try {
+            return new ResponseEntity<>(adminPresenceService.getPresences(planId), HttpStatus.OK);
+        }
+        catch(systemException sexc){
+            return new ResponseEntity<>(sexc.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+        catch(Exception exc){
+            return new ResponseEntity<>("Sorry, an error occurred ", HttpStatus.FORBIDDEN);
+        }
     }
 
 
@@ -32,8 +41,11 @@ public class AdminPresenceController {
         try{
             return new ResponseEntity<>(adminPresenceService.findEtudiantWithoutPrésences(planId),HttpStatus.OK);
         }
-        catch(Exception e){
-            return new ResponseEntity<>(e.getMessage(),HttpStatus.FORBIDDEN);
+        catch(systemException sexc){
+            return new ResponseEntity<>(sexc.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+        catch(Exception exc){
+            return new ResponseEntity<>("Sorry, an error occurred ", HttpStatus.FORBIDDEN);
         }
     }
 }

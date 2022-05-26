@@ -25,11 +25,10 @@ public class enseignantController {
 
     @Autowired
     private ContextHandlerClass contextHandlerClass;
-    @Autowired
-    private AffectationModuleRepo affectationModuleRepo;
+
 
     @GetMapping("")
-    private ResponseEntity<Enseignant> getProfil(){
+    private ResponseEntity<Enseignant> getProfile(){
         return new ResponseEntity<>((Enseignant)contextHandlerClass.getCurrentLoggedInUser().getUtilisateur(), HttpStatus.OK);
     }
 

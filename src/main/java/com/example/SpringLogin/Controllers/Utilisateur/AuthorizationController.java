@@ -45,12 +45,6 @@ public class AuthorizationController {
         return new ResponseEntity<>(contextHandlerClass.getCurrentLoggedInUser().getUtilisateur(),HttpStatus.OK);
     }
 
-    @PostMapping("/logout")
-    public ResponseEntity<String> logout(){
-        SecurityContextHolder.clearContext();
-        return ResponseEntity.ok("Logout successfully");
-    }
-
     @GetMapping("/loggedIn")
     public ResponseEntity<?> checkIfLoggedIn(){
         return ResponseEntity.ok().body(contextHandlerClass.getCurrentLoggedInUser().getUtilisateur().getUserRole());

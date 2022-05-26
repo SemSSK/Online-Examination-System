@@ -2,6 +2,7 @@ package com.example.SpringLogin.Controllers.Administrateur;
 
 
 import com.example.SpringLogin.Entities.PlanningExamen;
+import com.example.SpringLogin.Exception.systemException;
 import com.example.SpringLogin.Services.AdminService.AdminPlanningService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -25,8 +26,11 @@ public class AdminPlanningController {
         try{
             return new ResponseEntity<>(adminPlanningService.getSessionInPlanning(planId),HttpStatus.OK);
         }
+        catch(systemException sexc){
+            return new ResponseEntity<>(sexc.getMessage(),HttpStatus.BAD_REQUEST);
+        }
         catch(Exception e){
-            return new ResponseEntity<>(e.getMessage(),HttpStatus.OK);
+            return new ResponseEntity<>("Sorry, an error occurred ",HttpStatus.FORBIDDEN);
         }
     }
 
@@ -35,19 +39,26 @@ public class AdminPlanningController {
     public ResponseEntity<?> addPlannings(@RequestBody PlanningExamen planningExamen){
         try{
             return new ResponseEntity<>(adminPlanningService.addPlanning(planningExamen),HttpStatus.OK);
+
+        }
+        catch(systemException sexc){
+            return new ResponseEntity<>(sexc.getMessage(),HttpStatus.BAD_REQUEST);
         }
         catch(Exception e){
-            return new ResponseEntity<>(e.getMessage(),HttpStatus.FORBIDDEN);
+            return new ResponseEntity<>("Sorry, an error occurred ",HttpStatus.FORBIDDEN);
         }
     }
 
     @PutMapping("")
-    public ResponseEntity<?> modifyPlannings(@RequestBody PlanningExamen planningExamen){
+    public ResponseEntity<?> editPlanning(@RequestBody PlanningExamen planningExamen){
         try{
-            return new ResponseEntity<>(adminPlanningService.modPlanning(planningExamen),HttpStatus.OK);
+            return new ResponseEntity<>(adminPlanningService.editPlanning(planningExamen),HttpStatus.OK);
+        }
+        catch(systemException sexc){
+            return new ResponseEntity<>(sexc.getMessage(),HttpStatus.BAD_REQUEST);
         }
         catch(Exception e){
-            return new ResponseEntity<>(e.getMessage(),HttpStatus.FORBIDDEN);
+            return new ResponseEntity<>("Sorry, an error occurred ",HttpStatus.FORBIDDEN);
         }
     }
 
@@ -56,8 +67,11 @@ public class AdminPlanningController {
         try{
             return new ResponseEntity<>(adminPlanningService.deletePlanning(planId),HttpStatus.OK);
         }
+        catch(systemException sexc){
+            return new ResponseEntity<>(sexc.getMessage(),HttpStatus.BAD_REQUEST);
+        }
         catch(Exception e){
-            return new ResponseEntity<>(e.getMessage(),HttpStatus.FORBIDDEN);
+            return new ResponseEntity<>("Sorry, an error occurred ",HttpStatus.FORBIDDEN);
         }
     }
 

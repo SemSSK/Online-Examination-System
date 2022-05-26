@@ -9,5 +9,7 @@ import java.util.List;
 
 @Repository
 public interface ModuleRepo extends JpaRepository<Module,Long> {
-    public List<Module> findAllByAffectationModulesEnseignant(Enseignant enseignant);
+
+    Module findByModuleAbrv(String moduleAbrv);
+    List<Module> findAllByAffectationModulesEnseignant(Enseignant enseignant);
 }
