@@ -29,7 +29,7 @@ public class WebSocketService {
     @Autowired
     private SessionExamenRepo sessionExamenRepo;
     @Autowired
-    private PresencesRepo presencesRepo;
+    private PresencesRepo présencesRepo;
     @Autowired
     private EtudiantRepo etudiantRepo;
     /*--------------------------------------------*/
@@ -53,6 +53,7 @@ public class WebSocketService {
         return sessionsUserMap.get(utilisateur).getWebSocketSession();
     }
 
+    @Transactional(readOnly = false)
     public void removeUserTrace(Utilisateur utilisateur,WebSocketSession session) throws IOException {
         if(sessionsUserMap.containsKey(utilisateur)) {
             WebSocketUser webSocketUser = sessionsUserMap.get(utilisateur);
@@ -66,6 +67,7 @@ public class WebSocketService {
         }
     }
 
+    @Transactional(readOnly = false)
     private void removeEtudiantTrace(Etudiant etudiant) throws IOException {
         SessionExamen sessionExamen = sessionsUserMap.get(etudiant).getSessionExamen();
         if (sessionExamen != null) {
@@ -76,11 +78,22 @@ public class WebSocketService {
     }
 
     @Transactional(readOnly = false)
-     void removeSurveillantTrace(Enseignant enseignant) throws IOException {
+    void removeSurveillantTrace(Enseignant enseignant) throws IOException {
         SessionExamen currentSession = sessionsUserMap.get(enseignant).getSessionExamen();
         if(currentSession != null) {
             SessionExamen sessionExamen = sessionExamenRepo.findById(currentSession.getSessionId()).get();
-            sessionExamen.setState("ENDED");
+            sessionExamen.setState(SessionExamenStates.ENDED);
+            if(!currentSession.getState().equals(SessionExamenStates.ENDED)) {
+                List<Presences> présencesArrayList = sessionExamen.getPrésences().stream().collect(Collectors.toList());
+                sessionExamen.getPrésences().clear();
+                for (Presences présences : présencesArrayList) {
+                    redistributeEtudiant(présences);
+                }
+                PlanningExamen planningExamen = sessionExamen.getPlannings();
+                for(SessionExamen s : planningExamen.getSessionExamens()){
+                    sendPrésencesToEnseignant(s);
+                }
+            }
         }
         sessionsUserMap.get(enseignant).setSessionExamen(null);
     }
@@ -112,7 +125,6 @@ public class WebSocketService {
                     addPrésences(idealSession, etudiant);
                     etudiantSession.setSessionExamen(idealSession);
                     Presences newPrésence = getCurrentPrésence(etudiant,planningExamen);
-                    Enseignant surveillant = idealSession.getSurveillant();
                     sendPrésencesToEnseignant(newPrésence.getSessionExamen());
                     sendPrésencesToEtudiant(newPrésence);
                 }
@@ -172,62 +184,64 @@ public class WebSocketService {
         System.out.println("#############################################################");
     }
 
-    public void UpdatePrésence(Presences presences) throws IOException {
-        if(presences.getState().equals(PrésenceEtats.BLOQUER)) {
+    public void UpdatePrésence(Presences présences) throws IOException {
+        if(présences.getState().equals(PrésenceEtats.BLOQUER)) {
             CustomMessage customMessage = new CustomMessage(ExamRoomWebsocket.BLOCKED, "Le surveillant vous a bloquer pour triche");
-            sendData(presences.getEtudiant(), customMessage);
+            sendData(présences.getEtudiant(), customMessage);
         }
-        else if (presences.getSessionExamen().getState().equals(SessionExamenStates.STARTED) && presences.getState().equals(PrésenceEtats.ABSENT)){
+        else if (présences.getSessionExamen().getState().equals(SessionExamenStates.STARTED) && présences.getState().equals(PrésenceEtats.ABSENT)){
             CustomMessage customMessage = new CustomMessage(ExamRoomWebsocket.BLOCKED, "Le surveillant vous a juger absent dans cette session");
-            sendData(presences.getEtudiant(), customMessage);
+            sendData(présences.getEtudiant(), customMessage);
         }
-        else if (presences.getSessionExamen().getState().equals(SessionExamenStates.ENDED)){
+        else if (présences.getSessionExamen().getState().equals(SessionExamenStates.ENDED)){
             CustomMessage customMessage = new CustomMessage(ExamRoomWebsocket.BLOCKED, "Le surveillant vous a bloquer pour triche");
-            sendData(presences.getEtudiant(), customMessage);
+            sendData(présences.getEtudiant(), customMessage);
         }
-        sendPrésencesToEtudiant(presences);
+        sendPrésencesToEtudiant(présences);
     }
 
     //Sending methods
     public void sendPrésencesToEnseignant(SessionExamen sessionExamen) throws IOException {
 
-        Enseignant enseignant = sessionExamen.getSurveillant();
+        SessionExamen realSession = sessionExamenRepo.findById(sessionExamen.getSessionId()).get();
+        Enseignant enseignant = realSession.getSurveillant();
 
-        List<Presences> currentPrésences = sessionExamen.getPrésences().stream().filter(présences -> {
+        List<Presences> currentPrésences = realSession.getPrésences().stream().filter(présences -> {
             Etudiant etudiant = présences.getEtudiant();
             WebSocketUser etudiantSession = sessionsUserMap.get(etudiant);
             if(etudiantSession != null){
-                return (etudiantSession.getSessionExamen() == null ? false : etudiantSession.getSessionExamen().equals(sessionExamen));
+                return (etudiantSession.getSessionExamen() == null ? false : etudiantSession.getSessionExamen().equals(realSession));
             }
             return false;
         }).collect(Collectors.toList());
 
         CustomMessage présences = new CustomMessage(ExamRoomWebsocket.DATA,currentPrésences);
         sendData(enseignant,présences);
-        CustomMessage session = new CustomMessage(ExamRoomWebsocket.SESSIONINFO,sessionExamen);
+        CustomMessage session = new CustomMessage(ExamRoomWebsocket.SESSIONINFO,realSession);
         sendData(enseignant,session);
 
     }
 
-    private boolean etudiantIsInSession(Presences presences){
-        Etudiant etudiant = presences.getEtudiant();
+    private boolean etudiantIsInSession(Presences présences){
+        Etudiant etudiant = présences.getEtudiant();
         WebSocketUser etudiantSession = sessionsUserMap.get(etudiant);
         if(etudiantSession == null) {
             return false;
         }
         SessionExamen currentSessionExamen = etudiantSession.getSessionExamen();
-        return (currentSessionExamen == null ? false : currentSessionExamen.equals(presences.getSessionExamen()));
+        return (currentSessionExamen == null ? false : currentSessionExamen.equals(présences.getSessionExamen()));
     }
 
-    public void sendPrésencesToEtudiant(Presences presences) throws IOException {
-        Etudiant etudiant = presences.getEtudiant();
+    public void sendPrésencesToEtudiant(Presences présences) throws IOException {
+        Presences realPrésences = présencesRepo.findById(présences.getPrésenceId()).get();
+        Etudiant etudiant = realPrésences.getEtudiant();
         WebSocketUser etudiantSession = sessionsUserMap.get(etudiant);
-        if(etudiantIsInSession(presences)){
-            if(presences.getState().equals(PrésenceEtats.BLOQUER) || presences.getSessionExamen().getState().equals(SessionExamenStates.ENDED)){
+        if(etudiantIsInSession(realPrésences)){
+            if(realPrésences.getState().equals(PrésenceEtats.BLOQUER) || realPrésences.getSessionExamen().getState().equals(SessionExamenStates.ENDED)){
                 etudiantSession.getWebSocketSession().close();
             }
             else {
-                CustomMessage message = new CustomMessage(ExamRoomWebsocket.DATA, presences);
+                CustomMessage message = new CustomMessage(ExamRoomWebsocket.DATA, realPrésences);
                 sendData(etudiant, message);
             }
         }
@@ -240,8 +254,14 @@ public class WebSocketService {
             if(session != null){
                 ObjectMapper objectMapper = new ObjectMapper();
                 String messageAsJSON = objectMapper.writeValueAsString(customMessage);
-                session.sendMessage(new TextMessage(messageAsJSON));
+                sendIfNotClosed(session,new TextMessage(messageAsJSON));
             }
+        }
+    }
+
+    private void sendIfNotClosed(WebSocketSession session, TextMessage message) throws IOException {
+        if(session.isOpen()){
+            session.sendMessage(message);
         }
     }
 
@@ -279,24 +299,24 @@ public class WebSocketService {
     }
 
     @Transactional(readOnly = true)
-     List<Presences> getPrésencesInSession(SessionExamen sessionExamen) {
-        return presencesRepo.findAllBySessionExamen(sessionExamen);
+    List<Presences> getPrésencesInSession(SessionExamen sessionExamen) {
+        return présencesRepo.findAllBySessionExamen(sessionExamen);
     }
 
     @Transactional(readOnly = false)
-    Presences addPrésences(SessionExamen sessionExamen, Etudiant etudiant){
+    Presences addPrésences(SessionExamen sessionExamen,Etudiant etudiant){
         Etudiant dbEtudiant = etudiantRepo.findById(etudiant.getUserId()).get();
         SessionExamen dbSession = sessionExamenRepo.findById(sessionExamen.getSessionId()).get();
-        Presences presences = new Presences();
-        presences.setEtudiant(dbEtudiant);
-        presences.setSessionExamen(dbSession);
-        presences.setState(PrésenceEtats.ABSENT);
-        return presencesRepo.save(presences);
+        Presences présences = new Presences();
+        présences.setEtudiant(dbEtudiant);
+        présences.setSessionExamen(dbSession);
+        présences.setState(PrésenceEtats.ABSENT);
+        return présencesRepo.save(présences);
     }
 
     @Transactional(readOnly = true)
-    Presences getCurrentPrésence(Etudiant etudiant, PlanningExamen planningExamen){
-        Optional<Presences> currentPrésence = presencesRepo.findByEtudiantAndSessionExamenPlannings(etudiant,planningExamen);
+    Presences getCurrentPrésence(Etudiant etudiant,PlanningExamen planningExamen){
+        Optional<Presences> currentPrésence = présencesRepo.findByEtudiantAndSessionExamenPlannings(etudiant,planningExamen);
         if(currentPrésence.isEmpty()){
             return null;
         }
@@ -305,9 +325,10 @@ public class WebSocketService {
 
     private ArrayList<SessionExamen> getSessionDispo(PlanningExamen planningExamen){
         ArrayList<SessionExamen> result = (ArrayList<SessionExamen>) sessionExamenRepo.findByPlannings(planningExamen);
-        result = (ArrayList<SessionExamen>) result.stream().filter(sessionExamen -> {
-            return (sessionExamen.getState().equals(SessionExamenStates.OPENED));
-        }).collect(Collectors.toList());
+        result = (ArrayList<SessionExamen>) result.stream().filter(sessionExamen -> (
+                sessionExamen.getState().equals(SessionExamenStates.OPENED)) &&
+                sessionExists(sessionExamen.getSurveillant(),sessionExamen)).collect(Collectors.toList()
+        );
         return result;
     }
 
@@ -316,10 +337,14 @@ public class WebSocketService {
         int min_size = Integer.MAX_VALUE;
         for(SessionExamen sessionExamen : sessions){
             int nEtudiantsAffected = getPrésencesInSession(sessionExamen).size();
+            System.out.println("Session of :" + sessionExamen.getSurveillant().getEmail()
+                    +   " nbr etudiant : " + nEtudiantsAffected);
             if(nEtudiantsAffected < min_size){
                 idealSession = sessionExamen;
+                min_size = nEtudiantsAffected;
             }
         }
+        System.out.println("Session chosen :"+idealSession.getSurveillant().getEmail());
         return idealSession;
     }
 
@@ -329,6 +354,26 @@ public class WebSocketService {
         Long currentTime = System.currentTimeMillis();
         Long advanceTime = 30L * 60L * 1000L;
         return (currentTime + advanceTime > examTime) && (currentTime < examTime + durationOfExam);
+    }
 
+    @Transactional(readOnly = false)
+    private void redistributeEtudiant(Presences présences) throws IOException {
+        System.out.println("Redistributing etudiants");
+        PlanningExamen planningExamen = présences.getSessionExamen().getPlannings();
+        Etudiant etudiant = présences.getEtudiant();
+        WebSocketUser etudiantSession = sessionsUserMap.get(etudiant);
+        if(etudiantSession != null) {
+            ArrayList<SessionExamen> sessionsDispo = getSessionDispo(planningExamen);
+            SessionExamen idealSession = getIdealSession(sessionsDispo);
+            if(idealSession != null){
+                Presences newPrésences = addPrésences(idealSession, etudiant);
+                newPrésences.setState(présences.getState());
+                présencesRepo.deleteById(présences.getPrésenceId());
+                etudiantSession.setSessionExamen(idealSession);
+                Presences updatedPrésence = getCurrentPrésence(etudiant,planningExamen);
+                sendPrésencesToEtudiant(updatedPrésence);
+                System.out.println("Modifying présence");
+            }
+        }
     }
 }

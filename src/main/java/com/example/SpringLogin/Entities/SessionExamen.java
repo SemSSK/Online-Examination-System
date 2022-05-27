@@ -6,6 +6,7 @@ import lombok.*;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Collection;
 
@@ -42,6 +43,8 @@ public class SessionExamen implements Serializable {
     @JoinColumn(name = "surveillant_id")
     private Enseignant surveillant;
 
+    private Timestamp startedTime;
+    private Timestamp endedTime;
 
     @Override
     public boolean equals(Object obj) {
@@ -68,6 +71,8 @@ public class SessionExamen implements Serializable {
         String nextState = SessionExamenStates.CREATED;
         if(state.equals(SessionExamenStates.CREATED)){
             nextState = SessionExamenStates.OPENED;
+            this.setStartedTime(new Timestamp(System.currentTimeMillis()));
+            this.setEndedTime(new Timestamp(System.currentTimeMillis() + plannings.getDuration()));
         }
         else if(state.equals(SessionExamenStates.OPENED)){
             nextState = SessionExamenStates.STARTED;

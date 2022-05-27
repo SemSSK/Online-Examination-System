@@ -1,5 +1,6 @@
 package com.example.SpringLogin.Entities;
 
+import com.example.SpringLogin.Configrations.SecurityServices.JsoupHtmlSanitizer;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
@@ -43,6 +44,14 @@ public class Question implements Serializable {
     @JoinColumn(name = "module_id")
     private Module module;
 
+    public void setContent(String content){
+        System.out.println("calling question setter");
+        this.content = JsoupHtmlSanitizer.getSanitizedJSON(content);
+    }
+    public void setTypeAnswer(String typeAnswer){
+        System.out.println("calling typeAnswerSetter setter");
+        this.typeAnswer = JsoupHtmlSanitizer.getSanitizedJSON(content);
+    }
 
     public void removeFromAllExams(){
         this.examenQuestions.forEach(examenQuestions -> {

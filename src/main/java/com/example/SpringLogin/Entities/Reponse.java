@@ -1,5 +1,6 @@
 package com.example.SpringLogin.Entities;
 
+import com.example.SpringLogin.Configrations.SecurityServices.JsoupHtmlSanitizer;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
@@ -25,6 +26,10 @@ public class Reponse implements Serializable {
 
     @ManyToOne(fetch = FetchType.EAGER)
     private ExamenQuestion question;
+
+    public void setContent(String content){
+        this.content = JsoupHtmlSanitizer.getSanitizedJSON(content);
+    }
 
     @Override
     public boolean equals(Object obj) {
