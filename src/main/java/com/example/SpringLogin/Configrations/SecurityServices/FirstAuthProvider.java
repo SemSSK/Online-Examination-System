@@ -31,8 +31,8 @@ public class FirstAuthProvider implements AuthenticationProvider {
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
         String email = authentication.getName();
         String password = authentication.getCredentials().toString();
-        String encodedPassword = passwordEncoder.encode(password);
-        System.out.println("encoded passowrd= "+encodedPassword);
+//        String encodedPassword = passwordEncoder.encode(password);
+//        System.out.println("encoded passowrd= "+encodedPassword);
         System.out.println("passowrd= "+password);
         if(email.isEmpty()){
             throw new BadCredentialsException("invalid login details");
@@ -43,11 +43,13 @@ public class FirstAuthProvider implements AuthenticationProvider {
             user = (CustomUserDetails) customUserDetailService.loadUserByUsername(email);
             System.out.println("DB encode password "+user.getUtilisateur().getPassword());
 
-            if(!passwordEncoder.matches(user.getUtilisateur().getPassword(),password)){
+            if(!passwordEncoder.matches(password,user.getUtilisateur().getPassword())){
+
                 throw new BadCredentialsException("invalid login details");
             }
 
             return new UsernamePasswordAuthenticationToken(user,authentication.getCredentials(),user.getAuthorities());
+
         }catch(UsernameNotFoundException e) {
             throw new BadCredentialsException("invalid login details");
         }

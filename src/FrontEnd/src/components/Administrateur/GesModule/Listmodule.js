@@ -11,8 +11,9 @@ export const Listmodule = () => {
     const [ module , setModule] =useState([]);
     const getAllModules = () =>{
         Moduleservice.getAllModules().then((Response)=>{
-            setModule(Response.data)
             console.log(Response.data)
+            setModule(Response.data)
+
         }).catch(Error=>{
             console.log(Error)
         })
@@ -61,19 +62,19 @@ export const Listmodule = () => {
                       </thead>
                       <tbody>
                           {
-                              module.map(
-                                module=> 
+                              module?.map(
+                                module=>
                                 <tr key={module.id}>
-                                    
+
                                     <td>{module.id}</td>
                                     <td>{module.nomModule}</td>
                                     <td>{module.coefficient}</td>
                                     <td>{module.niveau}</td>
                                     {module.hasTDTP ?<td>oui</td>:<td>non</td>}
-                                        
-                                    
-                                    
-                                    
+
+
+
+
                                     <td>
                                         <IconButton
                                             onClick={()=>goTo(`/admin/edit_module/${module.id}`)}
@@ -85,13 +86,13 @@ export const Listmodule = () => {
                                         >
                                             <DeleteIcon />
                                         </IconButton>
-                                        
+
                                     </td>
 
                                 </tr>
                               )
-                              
-                              
+
+
                           }
                       </tbody>
 

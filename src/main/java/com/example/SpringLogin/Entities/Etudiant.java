@@ -31,7 +31,7 @@ public class Etudiant extends Utilisateur {
 
     @OneToMany(mappedBy = "etudiant",fetch = FetchType.LAZY,cascade = CascadeType.ALL)
     @JsonIgnore
-    private Collection<Présences> présences = new ArrayList<>();
+    private Collection<Presences> présences = new ArrayList<>();
 
     @ManyToMany(mappedBy = "etudiants",fetch = FetchType.LAZY)
     @JsonIgnore

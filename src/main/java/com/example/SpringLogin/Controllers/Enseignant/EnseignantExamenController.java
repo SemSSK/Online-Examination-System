@@ -1,7 +1,6 @@
 package com.example.SpringLogin.Controllers.Enseignant;
 
 import com.example.SpringLogin.Entities.Examen;
-import com.example.SpringLogin.Entities.Module;
 import com.example.SpringLogin.Exception.systemException;
 import com.example.SpringLogin.Services.EnseignantService.ExamenService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/enseignant/examen")
-public class ExamenController {
+public class EnseignantExamenController {
 
     @Autowired
     private ExamenService examenService;

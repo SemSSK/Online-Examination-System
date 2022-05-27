@@ -14,7 +14,7 @@ public class JustificationAbsence implements Serializable {
 
     @Id
     @OneToOne(fetch = FetchType.EAGER)
-    private Présences présences;
+    private Presences presences;
 
     @Column(nullable = false)
     private String url;
@@ -33,6 +33,6 @@ public class JustificationAbsence implements Serializable {
 
         JustificationAbsence justificationAbsence = (JustificationAbsence) obj;
 
-        return this.présences.equals(justificationAbsence.présences);
+        return this.presences.equals(justificationAbsence.presences);
     }
 }

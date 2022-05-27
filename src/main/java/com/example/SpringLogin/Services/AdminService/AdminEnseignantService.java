@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 @Transactional
@@ -50,13 +51,15 @@ public class AdminEnseignantService {
              throw new systemException(systemException.ExceptionType.EXISTENCE);
 		}
 
-		Enseignant enseignantInstance = new Enseignant();
+        Enseignant enseignantInstance = new Enseignant();
 		enseignantInstance.setEmail(enseignant.getEmail());
 		enseignantInstance.setName(enseignant.getName());
 		enseignantInstance.setLastName(enseignant.getLastName());
 		enseignantInstance.setGrade(enseignant.getGrade());
 		enseignantInstance.setUserRole(Role.ENSEIGNANT);
 		enseignantInstance.setAdmin(getAdmin());
+      //  String dynamicPassword = UUID.randomUUID().toString();
+        enseignant.setPassword("12345");
 		enseignantInstance.setPassword(passwordEncoder.encode(enseignant.getPassword()));
         return enseignantRepo.save(enseignantInstance);
     }

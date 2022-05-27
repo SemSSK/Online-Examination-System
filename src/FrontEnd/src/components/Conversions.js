@@ -5,8 +5,7 @@
 
 const convertAppoToPlan = (appointment) => {
     const dateExame = new Date(appointment.startDate);
-    const durationInDate = new Date(appointment.endDate).getTime() - dateExame.getTime();
-    const duration = `${durationInDate.getUTCHours()}:${durationInDate.getUTCMinutes()}:${durationInDate.getUTCSeconds()}`;
+    const duration = new Date(appointment.endDate).getTime() - dateExame.getTime();
     console.log(duration);
     const title = appointment.module.nomModule;
     return {

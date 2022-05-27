@@ -12,7 +12,7 @@ import java.io.Serializable;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class Présences implements Serializable{
+public class Presences implements Serializable{
 
     @EmbeddedId
     private EtudiantSessionKey PrésenceId = new EtudiantSessionKey();
@@ -30,7 +30,7 @@ public class Présences implements Serializable{
     @MapsId("sessionId")
     private SessionExamen sessionExamen;
 
-    @OneToOne(mappedBy = "présences",fetch = FetchType.LAZY)
+    @OneToOne(mappedBy = "presences",fetch = FetchType.LAZY)
     @JsonIgnore
     private JustificationAbsence justificationAbsence;
 
@@ -41,13 +41,13 @@ public class Présences implements Serializable{
             return true;
         }
 
-        if(!(obj instanceof Présences)){
+        if(!(obj instanceof Presences)){
             return false;
         }
 
-        Présences présences = (Présences)obj;
+        Presences presences = (Presences)obj;
 
-        return this.PrésenceId.equals(présences.PrésenceId);
+        return this.PrésenceId.equals(presences.PrésenceId);
     }
 
     @Override

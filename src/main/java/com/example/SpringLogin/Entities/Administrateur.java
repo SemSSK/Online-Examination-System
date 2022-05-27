@@ -12,7 +12,7 @@ import java.util.Collection;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class Administrateur extends Utilisateur{
+public class Administrateur extends Utilisateur {
 
     @Column(nullable = false)
     private int privilege;

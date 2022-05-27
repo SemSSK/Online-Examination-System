@@ -21,7 +21,7 @@ public class EtudiantExamenService {
     @Autowired
     private ContextHandlerClass contextHandlerClass;
     @Autowired
-    private PrésencesRepo présencesRepo;
+    private PresencesRepo presencesRepo;
     @Autowired
     private ExamenRepo examenRepo;
     @Autowired
@@ -53,7 +53,7 @@ public class EtudiantExamenService {
     }
 
     private boolean isPresent(SessionExamen sessionExamen){
-        Optional<Présences> currentPrésence = présencesRepo.findByEtudiantAndSessionExamen(getEtudiant(),sessionExamen);
+        Optional<Presences> currentPrésence = presencesRepo.findByEtudiantAndSessionExamen(getEtudiant(),sessionExamen);
         if(currentPrésence.isEmpty()){
             return false;
         }
@@ -71,7 +71,7 @@ public class EtudiantExamenService {
         }
         SessionExamen result = null;
         for(SessionExamen sessionExamen : sessionExamenList){
-            Optional<Présences> présences = présencesRepo.findByEtudiantAndSessionExamen(getEtudiant(),sessionExamen);
+            Optional<Presences> présences = presencesRepo.findByEtudiantAndSessionExamen(getEtudiant(),sessionExamen);
             if(!présences.isEmpty()){
                 result = sessionExamen;
             }

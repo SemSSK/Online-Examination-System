@@ -43,8 +43,14 @@ const addPlanning = (planning,appointments,setAppointments)=>{
             throw(response.data)
         }
     })
-    .catch((error)=>{
-        console.log(error);
+    .catch ((err)=>{
+        if(err.response){
+            console.log(err.response.data);
+            console.log(err.response.status);
+            console.log(err.response.headers);
+        }else{
+            console.log(`Error: ${err.message}`);
+        }
     })
 }
 

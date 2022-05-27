@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/enseignant/surveillance")
-public class SurveillantController {
+public class EnseignantSurveillantController {
 
     @Autowired
     private SurveillantService surveillantService;

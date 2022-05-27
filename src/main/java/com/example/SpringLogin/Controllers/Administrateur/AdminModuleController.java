@@ -45,13 +45,13 @@ public class AdminModuleController {
 
 	@GetMapping("")
 	public ResponseEntity<?> getAllModules() {
-		List <Module> listModule = adminModuleService.getAllModules();
-		if(!listModule.isEmpty()) {
-			return new ResponseEntity<>(listModule, HttpStatus.OK);
-		}else{
-			return new ResponseEntity<>("no module found", HttpStatus.OK);
-		}
-
+//		List <Module> listModule = adminModuleService.getAllModules();
+//		if(!listModule.isEmpty()) {
+//			return new ResponseEntity<>(listModule, HttpStatus.OK);
+//		}else{
+//			return new ResponseEntity<>("no module found", HttpStatus.OK);
+//		}
+		return new ResponseEntity<>(adminModuleService.getAllModules(), HttpStatus.OK);
 	}
 
 	@GetMapping("/getModule/{moduleId}")

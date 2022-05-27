@@ -31,7 +31,7 @@ public class AdminPlanningService {
     }
 
     private Administrateur getAdmin(){
-        return (Administrateur)contextHandlerClass.getCurrentLoggedInUser().getUtilisateur();
+        return (Administrateur) contextHandlerClass.getCurrentLoggedInUser().getUtilisateur();
     }
 
     public List<PlanningExamen> getPlannings(){
@@ -129,7 +129,7 @@ public class AdminPlanningService {
         }
 
         // validating the duration
-        if(planningExamen.getDuration() < (5 * 60 * 60 * 1000L) && planningExamen.getDuration() > 0 ){
+        if(!(planningExamen.getDuration() < (5 * 60 * 60 * 1000L) && planningExamen.getDuration() > 0 )){
             throw new systemException("Cannot plan exam with this duration");
         }
 

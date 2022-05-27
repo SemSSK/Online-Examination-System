@@ -99,7 +99,7 @@ export default function AffectationForum({enseignements,setEnseignements}) {
   
   const fetchTeachers = async () => {
     try {
-        const response = await api.get('/admin/ens')
+        const response = await api.get('/admin/enseignant')
         if(response && response.data){
             setTecahers(response.data);
         }
@@ -127,12 +127,21 @@ export default function AffectationForum({enseignements,setEnseignements}) {
           "type": type
       }
       try{
-        const response = await api.post('/admin/affectationModule',affectationObject)
+        const response = await axios.post('http://localhost:8080/admin/affectationModule',JSON.stringify(affectationObject),{withCredentials:true,
+            headers: {
+                'Content-Type': 'application/json'
+            }})
         setEnseignements((enseignements)=> ([...enseignements, response.data]))
         setSelectedModule(null);
         setSelectedTeacher(null);
       } catch (err){
-        console.log(`Error: ${err.message}`);
+          if(err.response){
+              console.log(err.response.data);
+              console.log(err.response.status);
+              console.log(err.response.headers);
+          }else{
+              console.log(`Error: ${err.message}`);
+          }
       }
   }
 

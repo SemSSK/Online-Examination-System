@@ -45,13 +45,13 @@ public class AdminEnseignantController {
 
 	@GetMapping("")
 	public ResponseEntity<?> getAllEnseignants() {
-		List <Enseignant> listEnseignant = adminEnseignantService.getAllEnseignants();
-		if(!listEnseignant.isEmpty()) {
-			return new ResponseEntity<>(listEnseignant, HttpStatus.OK);
-		}else{
-			return new ResponseEntity<>("no enseignant found", HttpStatus.OK);
-		}
-
+//		List <Enseignant> listEnseignant = adminEnseignantService.getAllEnseignants();
+//		if(!listEnseignant.isEmpty()) {
+//			return new ResponseEntity<>(listEnseignant, HttpStatus.OK);
+//		}else{
+//			return new ResponseEntity<>("no enseignant found", HttpStatus.OK);
+//		}
+		return new ResponseEntity<>(adminEnseignantService.getAllEnseignants(), HttpStatus.OK);
 	}
 
 	@GetMapping("/getEnseignant/{userId}")

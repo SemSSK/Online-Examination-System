@@ -59,6 +59,8 @@ public class AdminEtudiantService {
         etudiantInstance.setSection(etudiant.getSection());
         etudiantInstance.setUserRole(Role.ETUDIANT);
         etudiantInstance.setAdmin(getAdmin());
+        //  String dynamicPassword = UUID.randomUUID().toString();
+        etudiant.setPassword("12345");
         etudiantInstance.setPassword(passwordEncoder.encode(etudiant.getPassword()));
         return etudiantRepo.save(etudiantInstance);
     }

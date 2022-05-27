@@ -42,12 +42,14 @@ public class AdminModuleService {
     public Module addModule(Module module) throws Exception {
 
         if (moduleRepo.findByModuleAbrv(module.getModuleAbrv()) != null) {
+            System.out.println("exist");
             throw new systemException(systemException.ExceptionType.EXISTENCE);
         }
 
         Module moduleInstance = new Module();
         moduleInstance.setAdmin(getAdmin());
         moduleInstance.setNomModule(module.getNomModule());
+        moduleInstance.setModuleAbrv(module.getModuleAbrv());
         moduleInstance.setNiveau(module.getNiveau());
         moduleInstance.setHasTDTP(module.isHasTDTP());
         moduleInstance.setCoefficient(module.getCoefficient());
@@ -67,10 +69,14 @@ public class AdminModuleService {
         if( !hasRightPrivilege( existedModule.getAdmin() ) ){
             throw new systemException(systemException.ExceptionType.PRIVILEGE);
         }
+
         // last updating entity
-
         existedModule.setAdmin(getAdmin());
-
+        existedModule.setNomModule(module.getNomModule());
+        existedModule.setModuleAbrv(module.getModuleAbrv());
+        existedModule.setNiveau(module.getNiveau());
+        existedModule.setHasTDTP(module.isHasTDTP());
+        existedModule.setCoefficient(module.getCoefficient());
         return existedModule;
     }
 

@@ -36,12 +36,7 @@ import java.util.Arrays;
 public class securityConf extends WebSecurityConfigurerAdapter {
 
     @Autowired
-    private UtilisateurRepo utilisateurRepo;
-
-
-    @Autowired
     private CustomUserDetailService customUserDetailService;
-
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
@@ -56,23 +51,23 @@ public class securityConf extends WebSecurityConfigurerAdapter {
         http.cors().configurationSource(corsConfigurationSource());
 
         //Configuring allowed and forbidden paths depending on roles and authentications
-//        http.authorizeRequests()
-//                .antMatchers("/admin","/admin/**").hasRole(Role.ADMIN)                 //Only admin can access the  RESTControllers mapped with /admin
-//                .antMatchers("/etudiant","/etudiant/**").hasRole(Role.ETUDIANT)           //Only Etudiant can access the  RESTControllers mapped with /etudiant
-//                .antMatchers("/enseignant","/enseignant/**").hasRole(Role.ENSEIGNANT)       //Only Enseignant can access the  RESTControllers mapped with /enseignant
-//                .antMatchers("/examRoom").hasAnyRole(Role.ETUDIANT,Role.ENSEIGNANT)  //Only Enseignant and Etudiant can access the  Exam WebSocket
-//                .antMatchers("/authorization/**").authenticated()        //Only Not activated logins can access RESTControllers mapped with /activate
-//                .anyRequest().authenticated()                                      //For Every other request user needs to be authenticated
-//                    .and()
-//                    .formLogin()
-//                    .loginProcessingUrl("/login")
-//                    .failureHandler(authenticationFailureHandler())
-//                    .successHandler(authenticationSuccessHandler())
-//                .and()
-//                    .logout()
-//                    .logoutUrl("/logout")
-//                    .logoutSuccessHandler(logoutSuccessHandler());
-                //.and().addFilter(authFilter);                                      //Adding the custom Authentication Filter
+        http.authorizeRequests()
+                .antMatchers("/admin","/admin/**").hasRole(Role.ADMIN)                 //Only admin can access the  RESTControllers mapped with /admin
+                .antMatchers("/etudiant","/etudiant/**").hasRole(Role.ETUDIANT)           //Only Etudiant can access the  RESTControllers mapped with /etudiant
+                .antMatchers("/enseignant","/enseignant/**").hasRole(Role.ENSEIGNANT)       //Only Enseignant can access the  RESTControllers mapped with /enseignant
+                .antMatchers("/examRoom").hasAnyRole(Role.ETUDIANT,Role.ENSEIGNANT)  //Only Enseignant and Etudiant can access the  Exam WebSocket
+                .antMatchers("/authorization/**").authenticated()        //Only Not activated logins can access RESTControllers mapped with /activate
+                .anyRequest().authenticated()                                      //For Every other request user needs to be authenticated
+                    .and()
+                    .formLogin()
+                    .loginProcessingUrl("/login")
+                    .failureHandler(authenticationFailureHandler())
+                    .successHandler(authenticationSuccessHandler())
+                .and()
+                    .logout()
+                    .logoutUrl("/logout")
+                    .logoutSuccessHandler(logoutSuccessHandler());
+//                .and().addFilter(authFilter);                                      //Adding the custom Authentication Filter
         //****************************************************************
 
     }
@@ -87,10 +82,9 @@ public class securityConf extends WebSecurityConfigurerAdapter {
         return new FirstAuthProvider(customUserDetailService, PasswordEncoder());
     }
 
-//
     @Bean
     public PasswordEncoder PasswordEncoder(){
-        return new BCryptPasswordEncoder(10);
+        return new BCryptPasswordEncoder();
     }
 
     @Bean
@@ -120,16 +114,17 @@ public class securityConf extends WebSecurityConfigurerAdapter {
         return source;
     }
 
-
     //Authentication success and failure handler
     @Bean
     public AuthenticationSuccessHandler authenticationSuccessHandler(){
         return new CustomAuthenticationSuccessHandler();
     }
+
     @Bean
     public AuthenticationFailureHandler authenticationFailureHandler(){
         return new CustomAuthenticationFailureHandler();
     }
+
     @Bean
     public LogoutSuccessHandler logoutSuccessHandler(){
         return new CustomLogOutSuccessHandler();

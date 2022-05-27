@@ -18,8 +18,11 @@ class Etudiantservise {
         console.log(userId)
         return axios.get(Etudiant_API_BASE_URL3 +'/'+ userId,{withCredentials:true})
     }
-    updateEtudiant(userId,Etudiant){
-        return axios.put(Etudiant_API_BASE_URL4+'/'+ userId,Etudiant,{withCredentials:true})
+    updateEtudiant(Etudiant){
+        return axios.put(Etudiant_API_BASE_URL4,Etudiant,{withCredentials:true,
+            headers: {
+                'Content-Type': 'application/json'
+            }})
     }
     deleteEtudiant(userId){
         return axios.delete(Etudiant_API_BASE_URL5+'/'+ userId,{withCredentials:true})

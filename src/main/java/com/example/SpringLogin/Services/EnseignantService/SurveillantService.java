@@ -5,7 +5,7 @@ import com.example.SpringLogin.Entities.*;
 import com.example.SpringLogin.Enumarators.SessionExamenStates;
 import com.example.SpringLogin.Exception.systemException;
 import com.example.SpringLogin.Repos.PlanningExamenRepo;
-import com.example.SpringLogin.Repos.PrésencesRepo;
+import com.example.SpringLogin.Repos.PresencesRepo;
 import com.example.SpringLogin.Repos.SessionExamenRepo;
 import com.example.SpringLogin.Socket.WebSocketService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +23,7 @@ public class SurveillantService {
     @Autowired
     private SessionExamenRepo sessionExamenRepo;
     @Autowired
-    private PrésencesRepo présencesRepo;
+    private PresencesRepo presencesRepo;
     @Autowired
     private PlanningExamenRepo planningExamenRepo;
     @Autowired
@@ -62,8 +62,8 @@ public class SurveillantService {
         return sessionExamen.get();
     }
 
-    private Présences getPrésenceOfEtudiant(SessionExamen sessionExamen,Etudiant etudiant) throws Exception{
-        Optional<Présences> currentPresence = présencesRepo.findByEtudiantAndSessionExamen(etudiant,sessionExamen);
+    private Presences getPrésenceOfEtudiant(SessionExamen sessionExamen, Etudiant etudiant) throws Exception{
+        Optional<Presences> currentPresence = presencesRepo.findByEtudiantAndSessionExamen(etudiant,sessionExamen);
         if(currentPresence.isEmpty()){
             throw new systemException("Aucun etudiant trouver");
         }
@@ -80,7 +80,7 @@ public class SurveillantService {
         }
         currentSession.setToNextState();
 
-        for(Présences p : currentSession.getPrésences()) {
+        for(Presences p : currentSession.getPrésences()) {
             webSocketService.UpdatePrésence(p);
         }
         webSocketService.sendPrésencesToEnseignant(currentSession);
@@ -94,10 +94,10 @@ public class SurveillantService {
         if(!webSocketService.sessionExists(getSurveillant(),currentSession)){
             throw new systemException("Not connected to session");
         }
-        Présences présencesOfEtudiant = getPrésenceOfEtudiant(currentSession,etudiant);
-        présencesOfEtudiant.setState(Etat);
-        webSocketService.UpdatePrésence(présencesOfEtudiant);
-        webSocketService.sendPrésencesToEnseignant(présencesOfEtudiant.getSessionExamen());
+        Presences presencesOfEtudiant = getPrésenceOfEtudiant(currentSession,etudiant);
+        presencesOfEtudiant.setState(Etat);
+        webSocketService.UpdatePrésence(presencesOfEtudiant);
+        webSocketService.sendPrésencesToEnseignant(presencesOfEtudiant.getSessionExamen());
     }
 
 

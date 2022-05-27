@@ -10,12 +10,12 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/enseignant/correction")
-public class CorrectionController {
+public class EnseignantCorrectionController {
 
 
     private final CorrectionService correctionService;
 
-    public CorrectionController(CorrectionService correctionService) {
+    public EnseignantCorrectionController(CorrectionService correctionService) {
         this.correctionService = correctionService;
     }
 

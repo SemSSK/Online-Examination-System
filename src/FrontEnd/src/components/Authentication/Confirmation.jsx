@@ -40,8 +40,9 @@ const Confirmation = () => {
         });
     };
 
-    return (<Grid container alignItems={"center"} width={"100vw"} height={"100vh"}>
-            <Grid item xs={4}></Grid>
+    return (
+        <Grid container alignItems={"center"} width={"100vw"} height={"100vh"}>
+            
             <Grid item xs={3}>
                 <Card variant="outlined">
                     <CardHeader title="Confirmer Authentification"></CardHeader>
@@ -71,8 +72,9 @@ const Confirmation = () => {
                     </CardContent>
                 </Card>
             </Grid>
-            <Grid item xs={4}></Grid>
+
             
-        </Grid>);
+        </Grid>
+    );
 };
 export default Confirmation;

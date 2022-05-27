@@ -5,6 +5,7 @@ import Moduleservice from '../service/Moduleservice';
 const AddModule = () => {
 
     const [ nomModule , setNomModule ] =useState('');
+    const [ moduleAbrv , setModuleAbrv  ] =useState('');
     const [ coefficient , setCoefficient] =useState('');
     const [niveau  ,setNiveau ] =useState('');
     const [hasTDTP  ,setHasTDTP ] =useState('');
@@ -15,21 +16,23 @@ const AddModule = () => {
 
     const saveorUodateModule =(e) =>{
         e.preventDefault();
-        const Module ={nomModule,coefficient,niveau,hasTDTP}
+        let Module ;
          console.log(Module)
         if(id){
-            Moduleservice.updateModule(id,Module).then((Response)=>{
+            Module ={id,nomModule,moduleAbrv,coefficient,niveau,hasTDTP};
+            Moduleservice.updateModule(JSON.stringify(Module)).then((Response)=>{
                 navigte("/admin/listmodule")
             }).catch(Error=>{
                 console.log(Error)
                 })
             
         }else{
-            Moduleservice.createModule(Module).then((Response)=>{
+            Module = {nomModule,moduleAbrv,coefficient,niveau,hasTDTP};
+            Moduleservice.createModule(JSON.stringify(Module)).then((Response)=>{
               console.log(Response.data);
               navigte("/admin/listmodule")
-              }).catch(Error=>{
-              console.log(Error)
+              }).catch(error=>{
+              console.log(error.message)
               })
 
         }
@@ -44,6 +47,7 @@ const AddModule = () => {
             setCoefficient(Response.data.coefficient)
             setNiveau(Response.data.niveau)
             setHasTDTP(Response.data.hasTDTP)
+            setModuleAbrv(Response.data.moduleAbrv)
           
         }).catch(Error=>{
             console.log(Error)
@@ -84,17 +88,22 @@ const AddModule = () => {
                                 
                             </div>
                             <div className="form-group row">
+                                <label className=" col-form-label"> Module Abbreviation :</label>
+
+                                <input type="text"  placeholder="Abbreviation" name="moduleAbrv" className="form-control" value={moduleAbrv} onChange={(e)=>setModuleAbrv(e.target.value)} ></input>
+                            </div>
+                            <div className="form-group row">
                                 <label className=" col-form-label"> Coefficient :</label>
                                 
                                 <input type="number" min="1" placeholder="Coefficient" name="coefficient" className="form-control" value={coefficient} onChange={(e)=>setCoefficient(e.target.value)} ></input>
-                                </div>
+                            </div>
                            
                             <div className="form-group row">
                                 <label className="col-form-label"> Niveau :</label>
                                 <select  type="text" placeholder="Niveau" name="niveau" className="form-control" onChange={(e)=>setNiveau(e.target.value)}  >
                                         <option value="premier annèe licence" onChange={(e)=>setNiveau(e.target.value)}>premier annèe licence</option>
                                         <option value="deuxime annèe licence" >deuxime annèe licence</option>
-                                        <option value="troisime annèe licence gl" >troisime annèe licence gl </option>
+                                        <option value="L3_GL" >L3_GL </option>
                                         <option value="troisime annèe licence ti" >troisime annèe licence ti</option>
                                         <option value="troisime annèe licence sci" >troisime annèe licence sci</option>
                                         <option value="troisime annèe licence si" >troisime annèe licence si</option>

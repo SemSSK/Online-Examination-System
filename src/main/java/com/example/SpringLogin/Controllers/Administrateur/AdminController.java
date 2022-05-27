@@ -44,7 +44,7 @@ public class AdminController {
         }
     }
 
-    @GetMapping("")
+    @GetMapping("/profile")
     private ResponseEntity<Administrateur> getProfile(){
         return new ResponseEntity<>(adminService.getAdmin(), HttpStatus.OK);
     }

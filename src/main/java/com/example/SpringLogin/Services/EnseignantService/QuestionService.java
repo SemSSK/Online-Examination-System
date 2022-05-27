@@ -99,7 +99,7 @@ public class QuestionService {
             throw new systemException(systemException.ExceptionType.NOT_EXISTENCE);
         }
         Question newQuestion = questionRepo.getById(question.getQuestionId());
-        if(canAlterQuestion(newQuestion)){
+        if(!canAlterQuestion(newQuestion)){
             throw new systemException(systemException.ExceptionType.ACCESS);
         }
         newQuestion.setContent(question.getContent());

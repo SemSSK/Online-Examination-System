@@ -22,7 +22,7 @@ public class Question implements Serializable {
     private String content;
     @Column(nullable = false)
     private String typeAnswer;
-    private int points;
+    private float points;
     private String tags;
     @Column(nullable = false)
     private Timestamp dateCreation;

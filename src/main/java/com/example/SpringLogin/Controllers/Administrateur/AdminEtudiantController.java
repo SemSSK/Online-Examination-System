@@ -45,13 +45,13 @@ public class AdminEtudiantController {
 
 	@GetMapping("")
 	public ResponseEntity<?> getAllEtudiants() {
-		List <Etudiant> listEtudiant = adminEtudiantService.getAllEtudiants();
-		if(!listEtudiant.isEmpty()) {
-			return new ResponseEntity<>(listEtudiant, HttpStatus.OK);
-		}else{
-			return new ResponseEntity<>("no etudiant found", HttpStatus.OK);
-		}
-
+//		List <Etudiant> listEtudiant = adminEtudiantService.getAllEtudiants();
+//		if(!listEtudiant.isEmpty()) {
+//			return new ResponseEntity<>(listEtudiant, HttpStatus.OK);
+//		}else{
+//			return new ResponseEntity<>("no etudiant found", HttpStatus.OK);
+//		}
+		return new ResponseEntity<>(adminEtudiantService.getAllEtudiants(), HttpStatus.OK);
 	}
 
 	@GetMapping("/getEtudiant/{userId}")

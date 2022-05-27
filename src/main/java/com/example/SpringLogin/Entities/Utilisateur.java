@@ -1,5 +1,6 @@
 package com.example.SpringLogin.Entities;
 
+import com.example.SpringLogin.DataEncryption.StringCryptoConverter;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
@@ -21,26 +22,30 @@ public class Utilisateur implements Serializable {
     private Long userId;
 
     @Column(nullable = false,unique = true)
+    @Convert(converter = StringCryptoConverter.class)
     private String email;
+
     @Column(nullable = false)
+    @JsonIgnore
     private String password;
+
     @Column(nullable = false)
+    @Convert(converter = StringCryptoConverter.class)
     private String name;
+
     @Column(nullable = false)
+    @Convert(converter = StringCryptoConverter.class)
     private String lastName;
+
     @Column(nullable = false)
+    @Convert(converter = StringCryptoConverter.class)
     private String userRole;
+
     @Column(unique = true)
+    @Convert(converter = StringCryptoConverter.class)
     private String urlProfile;
 
-    @Column(name = "account_non_locked")
-    private boolean accountNonLocked = true;
 
-    @Column(name = "failed_attempt")
-    private int failedAttempt = 0;
-
-    @Column(name = "lock_time")
-    private Date lockTime;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(nullable = true,name = "admin_id")

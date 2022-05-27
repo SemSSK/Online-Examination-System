@@ -11,14 +11,20 @@ class EnseignantServive {
     }
 
     createEnseignant(Enseignant){
-        return axios.post(ENSEIGNANT_API_BASE_URL2,Enseignant,{withCredentials:true})
+        return axios.post(ENSEIGNANT_API_BASE_URL2,Enseignant,{withCredentials:true,
+            headers: {
+                'Content-Type': 'application/json'
+            }})
     }
     getEnseignantbyid(userId){
         console.log(userId)
         return axios.get(ENSEIGNANT_API_BASE_URL3 +'/'+ userId,{withCredentials:true})
     }
-    updateEnseignant(userId,Enseignant){
-        return axios.put(ENSEIGNANT_API_BASE_URL4+'/'+ userId,Enseignant,{withCredentials:true})
+    updateEnseignant(Enseignant){
+        return axios.put(ENSEIGNANT_API_BASE_URL4,Enseignant,{withCredentials:true,
+            headers: {
+                'Content-Type': 'application/json'
+            }})
     }
     deleteEnseignant(userId){
         return axios.delete(ENSEIGNANT_API_BASE_URL5+'/'+ userId,{withCredentials:true})

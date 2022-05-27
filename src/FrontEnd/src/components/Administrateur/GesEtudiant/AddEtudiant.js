@@ -22,16 +22,18 @@ const AddEtudiant = () => {
 
     const saveorUodateEtudiant =(e) =>{
         e.preventDefault();
-        const Etudiant ={name,lastName,email,password,userRole,urlProfile,niveau,section,groupe}
+        let Etudiant;
          console.log(Etudiant)
         if(userId){
-            Etudiantservise.updateEtudiant(userId,Etudiant).then((Response)=>{
+            Etudiant  ={userId,name,lastName,email,password,userRole,urlProfile,niveau,section,groupe};
+            Etudiantservise.updateEtudiant(Etudiant).then((Response)=>{
                 navigte("/admin/listetudiant")
             }).catch(Error=>{
                 console.log(Error)
                 })
             
         }else{
+            Etudiant  ={name,lastName,email,password,userRole,urlProfile,niveau,section,groupe};
             Etudiantservise.createEtudiant(Etudiant).then((Response)=>{
               console.log(Response.data);
               navigte("/admin/listetudiant")
@@ -128,7 +130,7 @@ const AddEtudiant = () => {
                                 <select  type="text" placeholder="Niveau" name="niveau" className="form-control" onChange={(e)=>setNiveau(e.target.value)}  >
                                         <option value="premier annèe licence" onChange={(e)=>setNiveau(e.target.value)}>premier annèe licence</option>
                                         <option value="deuxime annèe licence" >deuxime annèe licence</option>
-                                        <option value="troisime annèe licence gl" >troisime annèe licence gl </option>
+                                        <option value="L3_GL" >L3_GL </option>
                                         <option value="troisime annèe licence ti" >troisime annèe licence ti</option>
                                         <option value="troisime annèe licence sci" >troisime annèe licence sci</option>
                                         <option value="troisime annèe licence si" >troisime annèe licence si</option>

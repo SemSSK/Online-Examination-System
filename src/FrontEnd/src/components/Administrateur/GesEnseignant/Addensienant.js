@@ -14,22 +14,24 @@ const Addensienant = () => {
     
     const navigte = useNavigate();
     const {userId}=useParams();
-    console.log(useParams())
+
     
 
     const saveorUodateEnseignant =(e) =>{
         e.preventDefault();
-        const Enseignant ={name,lastName,email,password,userRole,urlProfile,grade}
-         console.log(Enseignant)
+        let Enseignant;
+
         if(userId){
-            Enseignantservice.updateEnseignant(userId,Enseignant).then((Response)=>{
+            Enseignant = {userId,name,lastName,email,password,userRole,urlProfile,grade};
+            Enseignantservice.updateEnseignant(JSON.stringify(Enseignant)).then((Response)=>{
                 navigte("/admin/listenseignant")
             }).catch(Error=>{
                 console.log(Error)
                 })
             
         }else{
-              Enseignantservice.createEnseignant(Enseignant).then((Response)=>{
+             Enseignant = {name,lastName,email,password,userRole,urlProfile,grade};
+              Enseignantservice.createEnseignant(JSON.stringify(Enseignant)).then((Response)=>{
               console.log(Response.data);
               navigte("/admin/listenseignant")
               }).catch(Error=>{

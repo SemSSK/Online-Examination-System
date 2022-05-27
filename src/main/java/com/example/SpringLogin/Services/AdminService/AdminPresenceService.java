@@ -5,14 +5,15 @@ import com.example.SpringLogin.Configrations.SecurityServices.ContextHandlerClas
 import com.example.SpringLogin.Entities.Administrateur;
 import com.example.SpringLogin.Entities.Etudiant;
 import com.example.SpringLogin.Entities.PlanningExamen;
-import com.example.SpringLogin.Entities.Présences;
+import com.example.SpringLogin.Entities.Presences;
 import com.example.SpringLogin.Exception.systemException;
 import com.example.SpringLogin.Repos.EtudiantRepo;
 import com.example.SpringLogin.Repos.PlanningExamenRepo;
-import com.example.SpringLogin.Repos.PrésencesRepo;
+import com.example.SpringLogin.Repos.PresencesRepo;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -20,7 +21,7 @@ import java.util.Optional;
 @Transactional(readOnly = true)
 public class AdminPresenceService {
 
-    private final PrésencesRepo présencesRepo;
+    private final PresencesRepo presencesRepo;
 
 
     private final EtudiantRepo etudiantRepo;
@@ -31,8 +32,8 @@ public class AdminPresenceService {
 
     private final ContextHandlerClass contextHandlerClass;
 
-    public AdminPresenceService(PrésencesRepo présencesRepo, EtudiantRepo etudiantRepo, PlanningExamenRepo planningExamenRepo, ContextHandlerClass contextHandlerClass){
-        this.présencesRepo = présencesRepo;
+    public AdminPresenceService(PresencesRepo presencesRepo, EtudiantRepo etudiantRepo, PlanningExamenRepo planningExamenRepo, ContextHandlerClass contextHandlerClass){
+        this.presencesRepo = presencesRepo;
         this.etudiantRepo = etudiantRepo;
         this.planningExamenRepo = planningExamenRepo;
         this.contextHandlerClass = contextHandlerClass;
@@ -43,11 +44,11 @@ public class AdminPresenceService {
         return (Administrateur)contextHandlerClass.getCurrentLoggedInUser().getUtilisateur();
     }
 
-    public List<Présences> getPresences(Long planId) throws Exception{
+    public List<Presences> getPresences(Long planId) throws Exception{
         if(!planningExamenRepo.existsById(planId)){
             throw new systemException(systemException.ExceptionType.NOT_EXISTENCE);
         }
-        return présencesRepo.findAllBySessionExamenPlanningsPlanId(planId);
+        return presencesRepo.findAllBySessionExamenPlanningsPlanId(planId);
     }
 
     public List<Etudiant> findEtudiantWithoutPrésences(Long planId) throws Exception {
@@ -56,7 +57,9 @@ public class AdminPresenceService {
             throw new systemException(systemException.ExceptionType.NOT_EXISTENCE);
         }
         PlanningExamen planningExamen = planningExamenOptional.get();
-        List<Présences> présences = présencesRepo.findAllBySessionExamenPlanningsPlanId(planId);
-        return etudiantRepo.findAllByPlanningExamensContainingAndPrésencesNotIn(planningExamen,présences);
+        List<Presences> etudiantsPresent = presencesRepo.findAllBySessionExamenPlanningsPlanId(planId);
+        List<Long> etudiantsPresentIds = new ArrayList<>();
+        etudiantsPresent.forEach(présences -> etudiantsPresentIds.add(présences.getEtudiant().getUserId()));
+        return etudiantRepo.findAllByPlanningExamensContainingAndUserIdNotIn(planningExamen,etudiantsPresentIds);
     }
 }

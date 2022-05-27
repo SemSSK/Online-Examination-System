@@ -1,6 +1,5 @@
 package com.example.SpringLogin.Controllers.Enseignant;
 
-import com.example.SpringLogin.Entities.AffectationModule;
 import com.example.SpringLogin.Entities.Question;
 import com.example.SpringLogin.Exception.systemException;
 import com.example.SpringLogin.Services.EnseignantService.QuestionService;
@@ -9,11 +8,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
 @RestController
 @RequestMapping("/enseignant/question")
-public class QuestionController {
+public class EnseignantQuestionController {
 
     @Autowired
     private QuestionService questionService;

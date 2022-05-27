@@ -24,7 +24,7 @@ public class SessionExamen implements Serializable {
 
     @OneToMany(mappedBy = "sessionExamen",fetch = FetchType.LAZY,cascade = CascadeType.ALL)
     @JsonIgnore
-    private Collection<Présences> présences = new ArrayList<>();
+    private Collection<Presences> présences = new ArrayList<>();
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name ="planning_id")

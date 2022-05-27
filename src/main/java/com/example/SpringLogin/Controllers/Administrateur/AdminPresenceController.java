@@ -1,10 +1,6 @@
 package com.example.SpringLogin.Controllers.Administrateur;
 
-import com.example.SpringLogin.Configrations.SecurityServices.ContextHandlerClass;
-import com.example.SpringLogin.Entities.Administrateur;
-import com.example.SpringLogin.Entities.Présences;
 import com.example.SpringLogin.Exception.systemException;
-import com.example.SpringLogin.Repos.PrésencesRepo;
 import com.example.SpringLogin.Services.AdminService.AdminPresenceService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -13,8 +9,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/admin/presence")

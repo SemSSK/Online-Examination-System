@@ -17,8 +17,11 @@ class Moduleservice {
         console.log(id)
         return axios.get(Module_API_BASE_URL3 +'/'+ id,{withCredentials:true})
     }
-    updateModule(id,Module){
-        return axios.put(Module_API_BASE_URL4+'/'+id,Module,{withCredentials:true})
+    updateModule(Module){
+        return axios.put(Module_API_BASE_URL4,Module,{withCredentials:true,
+            headers: {
+            'Content-Type': 'application/json'
+        } })
     }
     deleteModule(id){ 
         return axios.delete(Module_API_BASE_URL5+'/'+ id,{withCredentials:true})
