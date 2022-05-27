@@ -12,7 +12,7 @@ import java.util.concurrent.TimeUnit;
 @Service
 public class LoginAttemptService {
 
-    private final int MAX_ATTEMPT = 10;
+    private final int MAX_ATTEMPT = 7;
     private final int EXPIRY_OF_CACHE_RECORD = 1; //Number of units in time needed to pass before removing cache record
     private final TimeUnit UNIT = TimeUnit.DAYS; // Unit of time used Can also be hours,minutes,seconds....
     private LoadingCache<String,Integer> attemptsCache;

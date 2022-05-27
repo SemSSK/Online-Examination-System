@@ -6,10 +6,12 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
+import java.util.Optional;
+
 
 @Repository
 public interface UtilisateurRepo extends JpaRepository<Utilisateur,Long> {
 
-    Utilisateur findByEmail(String email);
+    Optional<Utilisateur> findByEmail(String email);
 
 }
