@@ -1,7 +1,7 @@
 import { Button, Card, CardContent, CardHeader, Grid, TextField } from "@mui/material";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import Question from "../Questions/QuestionConsultation/Question/Question";
+import Question from "../Questions/QuestionConsultation/Question";
 import LibraryAddIcon from '@mui/icons-material/LibraryAdd';
 const QuestionToExam = (props) => {
     const [isReady, setIsReady] = useState(false);

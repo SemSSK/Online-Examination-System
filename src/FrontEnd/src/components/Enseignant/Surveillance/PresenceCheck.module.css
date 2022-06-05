@@ -318,6 +318,7 @@ a:hover {
   transition: all 0.3s;
   transform-origin: 0% 0%;
   position: relative;
+  perspective: 500px;
 }
 
 .student__camera img {

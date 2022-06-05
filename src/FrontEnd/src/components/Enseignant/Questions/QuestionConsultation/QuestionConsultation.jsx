@@ -1,6 +1,6 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import Question from "./Question/Question";
+import Question from "./Question";
 import { Button, Card, CardContent, Container, Grid } from "@mui/material";
 import AddIcon from '@mui/icons-material/Add';
 

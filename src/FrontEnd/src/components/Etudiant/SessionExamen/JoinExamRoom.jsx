@@ -1,9 +1,9 @@
-import { Button, Card, CardContent, CardHeader, Grid, TextField } from "@mui/material";
-import React, { useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import React from "react";
+import OtpInput from "react-otp-input";
+import '../../Authentication/loginStyle.css';
+
 const JoinExamRoom = (props) => {
 
-    const navigate = useNavigate();
 
     const joinSession = () => {
         props.setInSession(true);
@@ -13,25 +13,45 @@ const JoinExamRoom = (props) => {
         }));
     };
     
-    return (<Grid container display={"flex"} justifyContent={"center"}>
-            <Grid item xs={4}>
-                <Card variant="outlined">
-                    <CardHeader title={"Entrer le code de l'examen:"}></CardHeader>
-                    <CardContent>
-                        <TextField variant="outlined" placeholder="code examen" fullWidth onChange={(e) => {
-            props.setCode(e.target.value);
-        }}>
-                        </TextField>
-                    </CardContent>
-                    <CardContent style={{ margin: "auto" }}>
-                        <Button variant="outlined" onClick={(e) => {
-            joinSession();
-        }}>
-                            Start
-                        </Button>
-                    </CardContent>
-                </Card>
-            </Grid>
-        </Grid>);
+    return (
+        <div className="loginContainer">
+            <div className="content">
+                <div className="loginTitle_container">
+                    <h1 className="loginTitle"> Exam Code</h1>
+                </div>
+                <div className="prompt">
+                    Enter the Exam Code 
+                </div>
+                <OtpInput
+                    containerStyle={{
+                        display: "flex",
+                        justifyContent: "center",
+                        alignItems: "center",
+                        flexWrap: "nowrap",
+                        width: "100%"
+                    }}
+                    inputStyle={{
+                        height: "60px",
+                        width: "100%",
+                        outline: "none",
+                        border: "none",
+                        fontSize: "20px",
+                        background: "rgb(232, 240, 254)",
+                        color: "#595959",
+                        borderRadius: "25px",
+                        boxShadow: "inset 2px 2px 5px #babecc, inset -5px -5px 10px #ffffff73",
+
+                    }}
+                    value={props.code}
+                    onChange={(code) => props.setCode(code)}
+                    numInputs={6}
+                    separator={<span style={{margin: "3px"}}></span>}
+                />
+                <button className="btn"
+                    onClick={()=>joinSession()}
+                >Confirm</button>
+            </div>
+        </div>
+    );
 };
 export default JoinExamRoom;

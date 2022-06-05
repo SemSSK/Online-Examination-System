@@ -1,7 +1,7 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { Navigate } from "react-router-dom";
-import LoadingPage from "../components/LoadingPage/LoadingPage";
+// import LoadingPage from "../components/LoadingPage/LoadingPage";
 const ProtectedPath = (props) => {
     const [isLoading, setIsLoading] = useState(true);
     const [isAuthenticated, setIsAuthenticated] = useState();
@@ -20,11 +20,15 @@ const ProtectedPath = (props) => {
             setIsLoading(false);
         });
     }, []);
-    return (<>
-            {isLoading && <LoadingPage />}
-            {!isLoading && <>
-                {isAuthenticated ? props.component : <Navigate to={"/login"}></Navigate>}
-            </>}
-        </>);
+    return (
+        <>
+            {
+                !isLoading && 
+                <>
+                    {isAuthenticated ? props.component : <Navigate to={"/login"}></Navigate>}
+                </>
+            }
+        </>
+    );
 };
 export default ProtectedPath;

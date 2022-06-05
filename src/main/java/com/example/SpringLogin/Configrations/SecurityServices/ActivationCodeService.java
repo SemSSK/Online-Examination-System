@@ -1,6 +1,7 @@
 package com.example.SpringLogin.Configrations.SecurityServices;
 
 
+import com.example.SpringLogin.utilities.RandomStringGenerator;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.keygen.Base64StringKeyGenerator;
 import org.springframework.stereotype.Service;
@@ -18,7 +19,7 @@ public class ActivationCodeService {
     }
 
     public void MakeActivationCode(String email){
-        String code = new Base64StringKeyGenerator().generateKey();
+        String code =  RandomStringGenerator.getNumericString(6);
         System.out.println(code);
         ActivationCode activationCode = new ActivationCode(code);
         codesMap.put(email,activationCode);

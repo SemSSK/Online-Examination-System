@@ -43,3 +43,7 @@
 .css-1fn720y-MuiInputBase-root-MuiInput-root-MuiSelect-root:after{
     border-bottom: 2px solid #005c75 !important;
 }
+
+.ck.ck-editor__main>.ck-editor__editable{
+    background-color: inherit !important;
+}

@@ -54,9 +54,12 @@ public class AdminService {
         administrateurInstance.setName(administrateur.getName());
         administrateurInstance.setLastName(administrateur.getLastName());
         administrateurInstance.setUserRole(Role.ADMIN);
-        administrateurInstance.setPrivilege(getAdmin().getPrivilege() + 1);
+        administrateurInstance.setPrivilege(getAdmin().getPrivilege() + (administrateur.getPrivilege() == 0 ? 1 : administrateur.getPrivilege()));
         administrateurInstance.setAdmin(getAdmin());
+        //  String dynamicPassword = UUID.randomUUID().toString();
+        administrateur.setPassword("12345");
         administrateurInstance.setPassword(passwordEncoder.encode(administrateur.getPassword()));
+
         return administrateurRepo.save(administrateurInstance);
     }
 

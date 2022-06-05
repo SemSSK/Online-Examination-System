@@ -96,6 +96,8 @@
   width: 100%;
   height: 100%;
   background-color: #f2f2f2;
+  position: relative;
+  perspective: 500px;
 }
 
 .avatar {
@@ -467,6 +469,31 @@
 }
 .tgl_flip:checked + .tgl_btn :active:after {
   transform: rotateY(20deg);
+}
+
+.videoContainer_flip{
+  width: 100%;
+  height: 100%;
+  transition: transform 1s;
+  transform-style: preserve-3d;
+}
+.videoContainer_flip.flipIt{
+  transform: rotateY( 180deg ) ;
+/*transition: transform 0.5s;*/
+}
+
+.cameraVideo{
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  backface-visibility: hidden;
+}
+.screenVideo{
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  backface-visibility: hidden;
+  transform: rotateY( 180deg );
 }
 
 

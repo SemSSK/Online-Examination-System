@@ -22,6 +22,13 @@ const StudentsList =({socket,students,setStudents,navigateRef,peers,setPeers,...
             specialClassName: ""
         })
 
+    useEffect(()=>{
+        // navigateRef.current.swiper.
+        navigateRef.current.swiper.detachEvents()
+        navigateRef.current.swiper.disable()
+
+    },[])
+
 
     let startLastRowIndex = null;
     let lastRowCol = 1;

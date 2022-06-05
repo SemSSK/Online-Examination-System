@@ -1,0 +1,469 @@
+@import url('https://fonts.googleapis.com/css2?family=Merriweather:ital,wght@0,300;0,400;1,300&family=Roboto:wght@300;400&display=swap');
+body {
+    font-family: sans-serif, sans-serif;
+}
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    overflow: auto;
+    position: fixed;
+    /*Container becomes the effective body of the document, and multiple containers stack on top of each other just requiring the top to be clipped into a shape and expanded to cover the bottom, then copy the top to the bottom and delete the top.*/
+    top: 0px;
+    left: 0px;
+    right: 0px;
+    bottom: 0px;
+    background: var(--background);
+    color: var(--color);
+    max-width: none !important;
+    padding: 0 !important;
+
+}
+body .container *[class*="card"] {
+    background: var(--cardbackground);
+    color: var(--cardtext);
+    box-shadow: 0 0 1rem -0.25rem var(--cardshadow);
+}
+
+body .container *[class*="card"].card_b {
+    border: 1px solid var(--cardborder);
+}
+
+.container:not(.dark) {
+    --background: #fcfbfe;
+    --color: #323133;
+    --cardbackground: #ffffff;
+    --waitingCard: #e0e0e0;
+    --waitingCard__BoxShadow: #bebebe;
+    --waitingCard__BoxShadow2: #ffffff;
+    --cardborder: #e9e9e9;
+    --cardtext: #323133;
+    --cardtext2: #3c3b3d;
+    --cardshadow: rgba(0, 0, 0, 0.1);
+    --accent: #005c75;
+    --gradientColor: #005c75;
+    --ck_border: #3c3b3d;
+}
+.container.dark {
+    --background: #1c1b20;
+    --color: #f5f7fa;
+    --cardbackground: #2a3142;
+    --waitingCard: #212121;
+    --waitingCard__BoxShadow: #191919;
+    --waitingCard__BoxShadow2: #292929;
+    --cardborder: #252429;
+    --cardtext: #f5f7fa;
+    --cardtext2: #e6e9ed;
+    --cardshadow: rgba(0, 0, 0, 0.1);
+    --accent: #005c75;
+    --gradientColor: #032129;
+    --ck_border: #e6e9ed;
+}
+.videoWrraper {
+    position: fixed;
+    bottom: 0;
+    right: 0;
+}
+.darkmode {
+    position: fixed;
+    z-index: 1;
+    bottom: 1rem;
+    left: 1rem;
+    font-size: 1.75rem;
+    padding: 1rem;
+    margin: 1px;
+    border-radius: 100%;
+    border-color: var(--accent) !important;
+    box-shadow: 0 0 1rem -0.25rem var(--accent),
+    inset 0 0 1rem -0.75rem var(--accent);
+    color: var(--accent);
+    cursor: pointer;
+    transition: 0.25s -0.05s;
+}
+.darkmode:hover {
+    box-shadow: 0 0 1rem -0.25rem var(--accent),
+    inset 0 0 1rem -0.25rem var(--accent);
+    /* background:var(--background); */
+}
+.page_width {
+    max-width: 800px;
+    width: calc(100vw - 8rem);
+}
+.header_width {
+    width: 90vw;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.header {
+    z-index: 999;
+    align-self: stretch;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    position: sticky;
+    top: 0;
+    background: linear-gradient(to bottom, #003240 5%, var(--gradientColor) 85%);
+    box-shadow: 0px 2px 4px -1px rgb(0 0 0 / 20%),
+    0px 4px 5px 0px rgb(0 0 0 / 14%), 0px 1px 10px 0px rgb(0 0 0 / 12%);
+    height: 4rem;
+    line-height: 4rem;
+    font-size: 1.75rem;
+}
+.header .page_width {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+.header .logotext {
+    color: white;
+    flex: 1;
+}
+.header .logotext i {
+    position: relative;
+    top: 0.15rem;
+}
+
+.timing {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    width: 170px;
+    flex: 1;
+    color: #ffffff;
+}
+
+.timeLeft {
+    width: 140px;
+}
+
+.timeLoader {
+    position: relative;
+    margin-block: auto;
+    transform: scale(2);
+    border-radius: 50%;
+    border: 1px solid;
+    width: 20px;
+    height: 20px;
+    color: white;
+}
+
+.timeLoader::after {
+    position: absolute;
+    width: 0px;
+    height: 7.5px;
+    display: block;
+    border-left: 1px solid #fff;
+    content: "";
+    left: 10px;
+    border-radius: 1px;
+    top: 2.5px;
+    animation-duration: 10s;
+}
+
+.timeLoader::before {
+    position: absolute;
+    width: 0px;
+    height: 7.5px;
+    display: block;
+    border-left: 1px solid #fff;
+    content: "";
+    left: 10px;
+    border-radius: 1px;
+    top: 2.5px;
+    animation-duration: 40s;
+}
+
+.timeLoader::before,
+.timeLoader::after {
+    transform-origin: bottom;
+    animation-name: dial;
+    animation-iteration-count: infinite;
+    animation-timing-function: linear;
+}
+
+@keyframes dial {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+.rendreCopie_btn {
+    flex: 1;
+    display: flex;
+    justify-content: flex-end;
+}
+
+.rendreCopie_btn .btn {
+    --color: #00a97f;
+    --color2: rgb(246, 249, 249);
+    padding: 0.8em 1.75em;
+    background-color: #c41b54;
+    border-radius: 6px;
+    border: 0.3px solid var(--color);
+    transition: 0.5s;
+    position: relative;
+    overflow: hidden;
+    cursor: pointer;
+    z-index: 1;
+    font-weight: 300;
+    font-size: 17px;
+    font-family: "Roboto", "Segoe UI", sans-serif;
+    text-transform: uppercase;
+    color: #ffff;
+}
+
+.rendreCopie_btn .btn::after,
+.rendreCopie_btn .btn::before {
+    content: "";
+    display: block;
+    height: 100%;
+    width: 100%;
+    transform: skew(90deg) translate(-50%, -50%);
+    position: absolute;
+    inset: 50%;
+    left: 25%;
+    z-index: -1;
+    transition: 0.5s ease-out;
+    background-color: var(--color);
+}
+
+.rendreCopie_btn .btn::before {
+    top: -50%;
+    left: -25%;
+    transform: skew(90deg) rotate(180deg) translate(-50%, -50%);
+}
+
+.rendreCopie_btn .btn:hover::before {
+    transform: skew(45deg) rotate(180deg) translate(-50%, -50%);
+}
+
+.rendreCopie_btn .btn:hover::after {
+    transform: skew(45deg) translate(-50%, -50%);
+}
+
+.rendreCopie_btn .btn:hover {
+    color: var(--color2);
+}
+
+.rendreCopie_btn .btn:active {
+    filter: brightness(0.7);
+    transform: scale(0.98);
+}
+
+.page {
+    position: relative;
+    margin: 2rem 0;
+    padding: 2rem;
+}
+.page > div[id] {
+    position: absolute;
+    top: calc(-6rem - 2px);
+}
+/*.page ul {*/
+/*    list-style: none;*/
+/*    padding-left: 1rem;*/
+/*}*/
+/*.page ul li:before {*/
+/*    content: "•";*/
+/*    margin-right: 1rem;*/
+/*    color: var(--accent);*/
+/*}*/
+
+/*.page i {*/
+/*    color: var(--cardtext2);*/
+/*    font-family: serif, sans-serif;*/
+/*}*/
+.page a {
+    color: var(--accent);
+}
+.page h1 a:not(:hover) {
+    text-decoration: none;
+}
+
+.page p:last-child {
+    margin-bottom: 0;
+}
+.page h1 {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid #0277bd;
+    align-items: center;
+}
+.page h1 a {
+    text-decoration: none;
+    font-weight: 200;
+}
+.page h1 span {
+    font-size: 20px;
+}
+.page h1 a:hover {
+    font-weight: 400;
+}
+.page > figure {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.page p {
+    font-size: 22px;
+    font-family: "Merriweather", sans-serif;
+    margin-block: 1rem;
+}
+.page div[role="textbox"] > p {
+    font-size: 18px;
+}
+
+.page h1,
+.page h2,
+.page h3,
+.page h4,
+.page h5,
+.page h6 {
+    margin: 0;
+}
+
+.page h1:last-child,
+.page h2:last-child,
+.page h3:last-child,
+.page h4:last-child,
+.page h5:last-child,
+.page h6:last-child {
+    margin-bottom: 0;
+}
+
+.page:target-within {
+    /*I want CSS4 today*/
+    border-color: var(--accent) !important;
+}
+
+.readyTitle {
+    width: 100%;
+}
+.readyTitle h1 {
+    position: relative;
+    padding: 0;
+    margin: 0;
+    font-family: "Raleway", sans-serif;
+    font-weight: 300;
+    font-size: 26px;
+    color: var(--cardtext);
+    -webkit-transition: all 0.4s ease 0s;
+    -o-transition: all 0.4s ease 0s;
+    transition: all 0.4s ease 0s;
+    text-align: center;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    display: grid;
+    grid-template-columns: 1fr max-content 1fr;
+    grid-template-rows: 27px 0;
+    grid-gap: 20px;
+    align-items: center;
+}
+
+.readyTitle h1:after,
+.readyTitle h1:before {
+    content: " ";
+    display: block;
+    border-bottom: 1px solid #c50000;
+    border-top: 1px solid #c50000;
+    height: 5px;
+    /* background-color: #f8f8f8; */
+}
+
+.waitingContainer {
+    width: 100vw;
+    height: 70vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.waitingCard {
+    width: 700px;
+    height: 350px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    border-radius: 30px;
+    background: var(--waitingCard);
+    box-shadow: 15px 15px 30px var(--waitingCard__BoxShadow),
+    -15px -15px 30px var(--waitingCard__BoxShadow2);
+}
+
+.waitingCard .spinner .path {
+    animation: infinity-load 1.5s infinite cubic-bezier(0.65, 0.05, 0.36, 1);
+}
+
+@keyframes infinity-load {
+    to {
+        stroke-dashoffset: 10;
+    }
+}
+
+.clip {
+    z-index: 2;
+    position: fixed;
+    bottom: 3rem;
+    left: 3rem;
+    width: 0rem;
+    height: 0rem;
+    border-radius: 100%;
+}
+.container .content {
+    position: relative;
+    /* margin-top: 70px; */
+}
+.clip.anim {
+    animation: open 1s ease-in;
+}
+
+.CKEditor_container {
+    margin: 3rem 0;
+    border: 1px solid var(--ck_border);
+    border-radius: 5px;
+}
+.CKEditor_container:focus {
+    border: none;
+}
+
+.responseDvider {
+    /* position: absolute; */
+    width: 100%;
+
+    margin: 7rem 0 3rem 0;
+
+    border-bottom: 1px solid #0277bd;
+}
+
+.ck-editor__editable {
+    min-height: 200px !important;
+}
+
+@keyframes open {
+    0% {
+        bottom: 3rem;
+        left: 3rem;
+        width: 0rem;
+        height: 0rem;
+        clip-path: circle(0rem at center);
+    }
+    100% {
+        /* You can't use translate(-50%, -50%) to keep it aligned because it affects the container inside, so you need to animate the position */
+        bottom: calc(-250vmax + 3rem);
+        left: calc(-250vmax + 3rem);
+        width: 500vmax;
+        height: 500vmax;
+        clip-path: circle(100% at center);
+    }
+}

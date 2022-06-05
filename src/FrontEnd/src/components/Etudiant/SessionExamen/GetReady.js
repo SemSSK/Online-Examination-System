@@ -111,8 +111,8 @@ const GetReady = ({stream , setStream, readyToJoin, setReadyToJoin,surveillant,s
             recordState.getTracks().forEach( (track) =>
                     peers[surveillant].pc.addTrack(track, recordState) );
 
-            // peers[surveillant].pc.addTrack(videoState.getTracks()[0],videoState);
-            // peers[surveillant].pc.addTrack(recordState.getTracks()[0], recordState);
+            peers[surveillant].myCameraStream  = videoState;
+            peers[surveillant].myScreenStream  = recordState;
 
         }
     }
@@ -405,9 +405,7 @@ const GetReady = ({stream , setStream, readyToJoin, setReadyToJoin,surveillant,s
 
             // peers[surveillant].pc.removeTrack(peers[surveillant].sender);
             // close the peer connection
-            peers[surveillant].videoSender = null;
-            peers[surveillant].audioSender = null;
-            peers[surveillant].sender = null;
+
             peers[surveillant].pc.close();
             peers[surveillant].pc = null;
 
@@ -422,7 +420,7 @@ const GetReady = ({stream , setStream, readyToJoin, setReadyToJoin,surveillant,s
     return (
         <div className="getReady">
             <div className="localCamera">
-                <LocalVideoContainer stream={stream} setStream={setStream}  width={490} height={300} />
+                <LocalVideoContainer etudiant={etudiant} stream={stream} setStream={setStream}  width={490} height={300} />
             </div>
 
             {
@@ -445,7 +443,7 @@ const GetReady = ({stream , setStream, readyToJoin, setReadyToJoin,surveillant,s
                             <h1>Ready to Join ?</h1>
                         </div>
                         <div className="getReadyButton">
-                            <button className="button-85" role="button"
+                            <button className="button-85"
                                 onClick={()=>setReadyToJoin(!readyToJoin)}
                             >
                                 Join Now

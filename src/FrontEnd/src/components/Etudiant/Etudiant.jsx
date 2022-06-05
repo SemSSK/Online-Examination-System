@@ -1,10 +1,7 @@
-import { Drawer, Grid, List, ListItem, ListItemIcon, ListItemText, Toolbar, AppBar, Typography } from "@mui/material";
-import { makeStyles } from '@mui/styles';
 import React, { useEffect, useState } from "react";
-import { Routes, Route, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import DateRangeIcon from '@mui/icons-material/DateRange';
-import LogOut from "../Authentication/LogOut";
-import { Box } from "@mui/system";
+
 import Schedual from "./Planning/Schedual"
 import Profile from "../Profile";
 import newStyle from "../appStyling/newStyle.module.css";
@@ -107,7 +104,7 @@ const Etudiant = () => {
                 </div>
                 <div className={newStyle.systemLogo}>
                     <div className={newStyle.logo }>
-                        <img src={logo} alt="logo image" />
+                        <img src={logo} alt="logo" />
                     </div>
                     <div className={newStyle.systemTitle}>
                         <h1><span>E</span>-EXAM</h1>
@@ -122,9 +119,9 @@ const Etudiant = () => {
                             <ul className={newStyle.nav_list}>
                                 <Profile />
                                 <li className={newStyle.logoutButton}>
-                                    <a className={newStyle.button_17} onClick={()=>logout()}>
+                                    <button className={newStyle.button_17} onClick={()=>logout()}>
                                         Logout
-                                    </a>
+                                    </button>
                                 </li>
                             </ul>
 

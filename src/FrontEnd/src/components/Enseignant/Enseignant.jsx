@@ -1,5 +1,4 @@
-import { Drawer, Grid, List, ListItem, ListItemIcon, ListItemText, Toolbar, AppBar, Typography } from "@mui/material";
-import { makeStyles } from '@mui/styles';
+
 import React, { useEffect, useState } from "react";
 import { Routes, Route, useNavigate } from 'react-router-dom';
 import QuestionConsultation from "./Questions/QuestionConsultation/QuestionConsultation";
@@ -9,8 +8,6 @@ import QuizIcon from '@mui/icons-material/Quiz';
 import DateRangeIcon from '@mui/icons-material/DateRange';
 import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 import RateReviewIcon from '@mui/icons-material/RateReview';
-import LogOut from "../Authentication/LogOut";
-import { Box } from "@mui/system";
 import Module from "./Module/Module";
 import axios from "axios";
 import Profile from "../Profile";
@@ -118,7 +115,7 @@ const Enseignant = () => {
             .then(response => {
             if (response.data instanceof Array && response.data.length > 0) {
                 setAffectationModule(response.data);
-                console.log(affectationModule);
+                // console.log(affectationModule);
                 setCurrentModule(response.data[0]);
             }
             setIsLoaded(true);
@@ -176,7 +173,7 @@ const Enseignant = () => {
                             </div>
                             <div className={newStyle.systemLogo}>
                                 <div className={newStyle.logo}>
-                                    <img src={logo} alt="logo image"/>
+                                    <img src={logo} alt="logo"/>
                                 </div>
                                 <div className={newStyle.systemTitle}>
                                     <h1><span>E</span>-EXAM</h1>
@@ -194,9 +191,9 @@ const Enseignant = () => {
                                                 <Module affectationList={affectationModule} currentModule={currentModule} setCurrentModule={setCurrentModule}></Module>
                                             </li>
                                             <li className={newStyle.logoutButton}>
-                                                <a href="#" className={newStyle.button_17} onClick={()=>logout()}>
+                                                <button className={newStyle.button_17} onClick={()=>logout()}>
                                                     Logout
-                                                </a>
+                                                </button>
                                             </li>
                                         </ul>
                                     </div>

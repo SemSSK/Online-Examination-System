@@ -1,6 +1,6 @@
 import { Button, Card, CardContent, Grid, Typography } from "@mui/material";
 import React from "react";
-import Question from "../Questions/QuestionConsultation/Question/Question";
+import Question from "../Questions/QuestionConsultation/Question";
 import LayersClearIcon from '@mui/icons-material/LayersClear';
 const AddedQuestionList = (props) => {
     return (<Card variant="outlined">

@@ -1,6 +1,9 @@
 import React,{useEffect, useRef, useState} from "react";
 import axios from "axios";
-import {  SwiperSlide } from 'swiper/react';
+import {  SwiperSlide } from "swiper/react";
+
+
+
 import presenceCheck from './PresenceCheck.module.css';
 import avatar from "../../appStyling/avatar.png";
 import studentList from "./studentList.module.css";
@@ -9,11 +12,13 @@ import './swiperStudentStyle.css'
 // export const peers = {};
 const StudentCard = ({updateState,socket,peers,setPeers, ...props}) => {
     
-    const [studentCamera, setStudentCamera] = useState(null);
-    const [videoSource, setVideoSource] = useState("camera")
+    // const [studentCamera, setStudentCamera] = useState(null);
+    // const [videoSource, setVideoSource] = useState("camera")
+    const [flipClass,setFlipClass]= useState('');
     const etudiant = props.presence.etudiant;
     const videoRef = useRef();
     const videoRef2 = useRef();
+    // const videoNavigateRef = useRef();
     // const recordRef = useRef();
     window.onbeforeunload = function (e) {
         stop();
@@ -86,8 +91,15 @@ const StudentCard = ({updateState,socket,peers,setPeers, ...props}) => {
     //     if(peers[etudiant] && (peers[etudiant].cameraStream || peers[etudiant].screenStream))
     //         changeMedia()
     // },[videoSource])
-
-
+    //
+    // useEffect(()=>{
+    //     if(videoSource==="camera"){
+    //         setFlipClass('')
+    //     }else{
+    //         setFlipClass(studentList.flip)
+    //     }
+    //     console.log(flipClass)
+    // },[videoSource])
 
     // effect
     
@@ -112,7 +124,7 @@ const StudentCard = ({updateState,socket,peers,setPeers, ...props}) => {
                 //     // resetVideo();
                 //     socketConnection.removeEventListener('message',messageHandler)
                 // }
-                // break;
+                 break;
             }
 
             case 'offer': {
@@ -378,14 +390,15 @@ const StudentCard = ({updateState,socket,peers,setPeers, ...props}) => {
                 })
             }
         }
-        else{
+        else if(!videoRef2.current.srcObject && videoRef.current.srcObject.id !== event.streams[0].id){
+
             setPeers(prevPeers => {
                 let newPeers = {...prevPeers}
                 newPeers[etudiant].recordStream = event.streams[0]
                 return newPeers
             })
             if(videoRef2.current) {
-                console.log("camera...");
+                console.log("screen...");
                 videoRef2.current.srcObject = event.streams[0];
                 console.log("stream: ",videoRef2.current.srcObject)
                 videoRef2.current.addEventListener('loadedmetadata',  function () {
@@ -481,6 +494,12 @@ const StudentCard = ({updateState,socket,peers,setPeers, ...props}) => {
                 videoRef.current.pause();
                 videoRef.current.srcObject = null;
             }
+            if (videoRef2.current || videoRef2.current?.srcObject) {
+                if(videoRef2.current.srcObject && videoRef2.current.srcObject.getTracks() !== null)
+                    videoRef2.current.srcObject.getTracks().forEach(track => track.stop());
+                videoRef2.current.pause();
+                videoRef2.current.srcObject = null;
+            }
 
             // peers[props.presence.etudiant].pc.removeTrack(peers[props.presence.etudiant].sender);
             // close the peer connection
@@ -529,19 +548,31 @@ const StudentCard = ({updateState,socket,peers,setPeers, ...props}) => {
 
                 <div className={presenceCheck.student__camera}>
                     <div className={studentList.switch}
-                         onClick={()=>setVideoSource(s => s === "camera" ? "screen" : "camera")}
+
                     >
                         <input id="cb5" className={studentList.tgl + " " +studentList.tgl_flip} type="checkbox" />
-                        <label className={studentList.tgl_btn}  htmlFor="cb5"></label>
+                        <label className={studentList.tgl_btn}  htmlFor="cb5"
+                               onClick={() => {
+                                   console.log("class: ",flipClass)
+                                   setFlipClass(s => s === '' ? studentList.flipIt : '');
+                               }}
+                        ></label>
                     </div>
-                    <video style={{height:"100%", width:"100%"}} muted='muted' ref={videoRef}/>
-                </div>
-                <div className={presenceCheck.student__camera}>
-                    <video style={{height:"100%", width:"100%"}} muted='muted' ref={videoRef2}/>
+                   <div className={studentList.videoContainer_flip +' '+ flipClass}
+                   >
+                       <div className={studentList.cameraVideo} >
+                            <video style={{height:"100%", width:"100%"}} muted='muted' ref={videoRef}/>
+                       </div>
+                       <div className={studentList.screenVideo}>
+                            <video  style={{height:"100%", width:"100%" ,transform: "scaleX(1)"}} muted='muted' ref={videoRef2}/>
+                       </div>
+                   </div>
+
                 </div>
 
+
                 <div className={presenceCheck.student__actions}>
-                    <button className={presenceCheck.button +" "+ presenceCheck.btn_accept} role="button"
+                    <button className={presenceCheck.button +" "+ presenceCheck.btn_accept}
                             onClick={()=> {
                                 document.querySelector('.student_slider__item.swiper-slide-active ')?.classList.add('joining');
                                 setTimeout(() => {
@@ -555,11 +586,12 @@ const StudentCard = ({updateState,socket,peers,setPeers, ...props}) => {
                     >
                     Accept
                     </button>
-                    <button className={presenceCheck.button +" "+ presenceCheck.btn_refuse} role="button"
+                    <button className={presenceCheck.button +" "+ presenceCheck.btn_refuse}
                             onClick={()=>{
                                 document.querySelector('.student_slider__item.swiper-slide-active ')?.classList.add('leaving');
                                 setTimeout(() =>{
                                         document.querySelector('.leaving ')?.classList.remove('leaving')
+                                        block()
                                         // updateState(etudiant,"REFUSED")
                                         markAbsent()
                                     },1000

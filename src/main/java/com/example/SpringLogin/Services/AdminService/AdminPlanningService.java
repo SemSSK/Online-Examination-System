@@ -7,14 +7,12 @@ import com.example.SpringLogin.Enumarators.SessionExamenStates;
 import com.example.SpringLogin.Exception.systemException;
 import com.example.SpringLogin.Repos.PlanningExamenRepo;
 import com.example.SpringLogin.Repos.SessionExamenRepo;
+import com.example.SpringLogin.utilities.RandomStringGenerator;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.parameters.P;
-import org.springframework.security.crypto.keygen.Base64StringKeyGenerator;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Service
 @Transactional(readOnly = true)
@@ -150,8 +148,8 @@ public class AdminPlanningService {
         planningExamen.setSessionExamens(examSessions);
         planningExamen.setEtudiants(examEtudiants);
         planningExamen.setAdmin(getAdmin());
-        String codeEtudiant = UUID.randomUUID().toString();
-        String codeSurveillant = UUID.randomUUID().toString();
+        String codeEtudiant = RandomStringGenerator.getNumericString(6);
+        String codeSurveillant = RandomStringGenerator.getNumericString(6);
         planningExamen.setCodeEtudiant(codeEtudiant);
         planningExamen.setCodeSurveillant(codeSurveillant);
 

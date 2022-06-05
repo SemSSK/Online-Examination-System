@@ -13,14 +13,14 @@ function App() {
     return (<div className="App">
         <BrowserRouter>
           <Routes>
-              <Route path='/login' element={<LogIn></LogIn>}></Route>
-              <Route path='/activation' element={<ProtectedPath component={<Confirmation></Confirmation>}></ProtectedPath>}></Route>
-              <Route path='/logout' element={<LogOut></LogOut>}></Route>
-              <Route path='/admin/*' element={<ProtectedPath role="ADMIN" component={<Administrateur></Administrateur>}></ProtectedPath>}></Route>
+              <Route path='/login' element={<LogIn/>}></Route>
+              <Route path='/activation' element={<ProtectedPath component={<Confirmation/>}></ProtectedPath>}></Route>
+              <Route path='/logout' element={<LogOut/>}></Route>
+              <Route path='/admin/*' element={<ProtectedPath role="ADMIN" component={<Administrateur/>}></ProtectedPath>}></Route>
               <Route path='/etudiant/*' element={<ProtectedPath role="ETUDIANT" component={<Etudiant />}></ProtectedPath>}></Route>
               <Route path='/enseignant/*' element={<ProtectedPath role="ENSEIGNANT" component={<Enseignant />}></ProtectedPath>}></Route>
-              <Route path='/surveillant' element={<ProtectedPath role="ENSEIGNANT" component={<Surveillance></Surveillance>}></ProtectedPath>}></Route>
-              <Route path='/examroom' element={<ProtectedPath role="ETUDIANT" component={<PassExam></PassExam>}></ProtectedPath>}></Route>
+              <Route path='/surveillant' element={<ProtectedPath role="ENSEIGNANT" component={<Surveillance/>}></ProtectedPath>}></Route>
+              <Route path='/examroom' element={<ProtectedPath role="ETUDIANT" component={<PassExam/>}></ProtectedPath>}></Route>
           </Routes>
         </BrowserRouter>
     </div>);

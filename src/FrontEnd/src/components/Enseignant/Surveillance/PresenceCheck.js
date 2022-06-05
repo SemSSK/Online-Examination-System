@@ -1,4 +1,4 @@
-import React,{useState,useEffect} from "react";
+import React from "react";
 import StudentsList from "./StudentsList";
 import StudentsSwiper from "./StudentsSwiper";
 import { Swiper, SwiperSlide } from "swiper/react";
@@ -43,7 +43,7 @@ const PresenceCheck = ({socket, code, session, ListEtudiant, setListEtudiant,pee
                     initialSlide={1}
                     cubeEffect={{
                         shadow: false,
-                        slideShadows: true,
+                        slideShadows: false,
                         shadowOffset: 5,
                         shadowScale: 0.94,
                     }}

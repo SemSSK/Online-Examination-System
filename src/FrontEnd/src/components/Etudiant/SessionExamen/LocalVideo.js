@@ -138,6 +138,10 @@ const LocalVideo = ({ width, height, willCollapse,stream,setStream}) => {
         <div  className={isCollapsed ? "videoContainer videoIsCollapsed" : "videoContainer"}>
             <video  ref={localVideoRef}  />
             {
+                !stream &&     <div className="loadingContainer"> <div className="spinner"><span></span><span></span><span></span></div></div>
+
+            }
+            {
                 willCollapse ? 
                                <div className={isCollapsed ? "collapseIconContainer iconCollapseActive" : "collapseIconContainer"}>
                                     <IconButton

@@ -103,6 +103,9 @@ const StudentsSwiper =({socket,students,setStudents,navigateRef,peers,setPeers,.
                     navigateRef.current.swiper.slideNext()
                     navigateRef.current.swiper.detachEvents()
                     navigateRef.current.swiper.disable()
+                    setTimeout(()=>{
+                        navigateRef.current.swiper.destroy(false,true);
+                    },1000);
                     startSession()
                 }}
                          className={PresenceCheck.button_6} role="button">Start Session</button>

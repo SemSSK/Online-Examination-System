@@ -2,7 +2,6 @@ import { Box } from "@mui/material";
 import React, { useState,useEffect, useRef } from "react";
 import ExamRoom from "./ExamRoom";
 import JoinExamRoom from "./JoinExamRoom";
-import SimplePeer from "simple-peer";
 import { useNavigate } from "react-router-dom";
 import GetReady from "./GetReady"
 import newStyle from '../../appStyling/newStyle.module.css'
@@ -14,6 +13,7 @@ const PassExam = () => {
     const [stream, setStream] = useState(null);
     const [readyToJoin, setReadyToJoin] = useState(false);
     const [presence, setPresence] = useState(null);
+    const [timeToAskForCopy,setTimeToAskForCopy] = useState(false);
     const navigate = useNavigate();
     
     
@@ -50,6 +50,8 @@ const PassExam = () => {
     //     }
     // },[peer,videoState])
 
+
+    //creation of websocket connection should be after checking of exam code so better to be in GetReady component
     useEffect(() => {
         const ws = new WebSocket("ws://localhost:8080/examRoom");
         if (ws !== null) {
@@ -101,7 +103,7 @@ const PassExam = () => {
                         sessionExamen={presence.sessionExamen}
                         socket={socket}
                     />
-                : <ExamRoom stream={stream} socket={socket} code={code} presence={presence} ></ExamRoom>
+                : <ExamRoom  socket={socket} code={code} presence={presence} ></ExamRoom>
             : <div className={newStyle.loadingContainer}><div className={newStyle.loader}> <span>Loading...</span> </div></div>
         }
 
